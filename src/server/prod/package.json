@@ -22,7 +22,7 @@
     "tape": "^4.8.0"
   },
   "scripts": {
-    "start": "node ./bin.js -- $@",
+    "start": "node ./bin.js listen",
     "test": "standard && tape test.js"
   },
   "bin": {

@@ -2,7 +2,6 @@
   "name": "secret-party-online-3d-videochat",
   "version": "0.0.1",
   "description": "People can socialise in videochat like in real life situations where conversations spark in different places",
-  "main": "webpack.config.js",
   "scripts": {
     "bundle:pre": "npm install",
     "bundle": "webpack",
@@ -10,8 +9,9 @@
     "server:dev:run": "npm --prefix src/server/dev start",
     "server:dev": "npm run bundle:pre && npm run bundle && npm run server:dev:pre && npm run server:dev:run",
     "server:prod:pre": "npm --prefix src/server/prod install",
-    "server:prod:run": "npm --prefix src/server/prod start -- $@",
-    "server:prod": "npm run bundle:pre && npm run bundle && npm run server:prod:pre && npm run server:prod:run -- $@"
+    "server:prod:run": "npm --prefix src/server/prod start",
+    "build": "npm run bundle:pre && npm run bundle && npm run server:prod:pre",
+    "start": "npm run server:prod:run"
   },
   "dependencies": {
     "@babylonjs/gui": "^4.1.0",

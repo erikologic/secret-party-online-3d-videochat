@@ -8,7 +8,7 @@ var limiter = require('size-limit-stream')
 var eos = require('end-of-stream')
 
 var nodeStatic = require('node-static');
-var fileServer = new nodeStatic.Server('./www');
+var fileServer = new nodeStatic.Server('../../../www');
 
 var flushHeaders = function (res) {
   if (res.flushHeaders) {
