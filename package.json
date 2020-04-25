@@ -10,7 +10,7 @@
     "server:dev": "npm run bundle:pre && npm run bundle && npm run server:dev:pre && npm run server:dev:run",
     "server:prod:pre": "npm --prefix src/server/prod install",
     "server:prod:run": "npm --prefix src/server/prod start",
-    "build": "npm run bundle:pre && npm run bundle && npm run server:prod:pre",
+    "build": "npm run server:prod:pre",
     "start": "npm run server:prod:run"
   },
   "dependencies": {
