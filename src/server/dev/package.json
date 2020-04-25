@@ -1,0 +1,14 @@
+{
+  "name": "dev",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "node-static": "^0.7.11"
+  }
+}

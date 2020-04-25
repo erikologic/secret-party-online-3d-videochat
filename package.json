@@ -1,0 +1,47 @@
+{
+  "name": "secret-party-online-3d-videochat",
+  "version": "0.0.1",
+  "description": "People can socialise in videochat like in real life situations where conversations spark in different places",
+  "main": "webpack.config.js",
+  "scripts": {
+    "bundle:pre": "npm install",
+    "bundle": "webpack",
+    "server:dev:pre": "npm --prefix src/server/dev install",
+    "server:dev:run": "npm --prefix src/server/dev start",
+    "server:dev": "npm run bundle:pre && npm run bundle && npm run server:dev:pre && npm run server:dev:run",
+    "server:prod:pre": "npm --prefix src/server/prod install",
+    "server:prod:run": "npm --prefix src/server/prod start -- $@",
+    "server:prod": "npm run bundle:pre && npm run bundle && npm run server:prod:pre && npm run server:prod:run -- $@"
+  },
+  "dependencies": {
+    "@babylonjs/gui": "^4.1.0",
+    "@babylonjs/loaders": "^4.1.0",
+    "babylonjs": "^4.2.0-alpha.11",
+    "cuid": "^2.1.8",
+    "dat-gui": "^0.5.0",
+    "debug": "^4.1.1",
+    "inherits": "^2.0.4",
+    "node-gyp": "^6.1.0",
+    "once": "^1.4.0",
+    "signalhub": "^4.9.0",
+    "simple-peer": "^9.6.2",
+    "socket.io": "^2.0.4",
+    "three": "^0.115.0",
+    "through2": "^3.0.1",
+    "webrtc-swarm": "^2.9.0"
+  },
+  "devDependencies": {
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrenrich84/secret-party-online-3d-videochat.git"
+  },
+  "author": "mrenrich84@gmail.com",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/mrenrich84/secret-party-online-3d-videochat/issues"
+  },
+  "homepage": "https://github.com/mrenrich84/secret-party-online-3d-videochat#readme"
+}
