@@ -10,7 +10,7 @@ export class Network {
 
     connect() {
         console.log("loading hub");
-        const hub = signalhub('lets-party', ['https://lets-party-videochat.herokuapp.com/']);
+        const hub = signalhub('lets-party', ['https://secret-party-online.herokuapp.com/']);
         console.log(hub);
         const turnServerIp = "35.236.234.201";
         const sw = swarm(hub,

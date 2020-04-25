@@ -21,24 +21,18 @@ export function createScene(engine, canvas) {
     getCamera(scene, canvas);
     getGround(scene);
 
-    const babylonLogoMesh = BABYLON.SceneLoader.ImportMesh(
-        null,
-        "/dist/piscina/",
-        "piscina.babylon",
-        scene);
-
-    // BABYLON.SceneLoader.ImportMesh(
-    //     "dragon",
-    //     "https://models.babylonjs.com/Georgia-Tech-Dragon/",
-    //     "dragon.babylon",
-    //     scene,
-    //     (objs) => {
-    //         console.log(objs);
-    //         const dragon = objs[0]
-    //         window.dragon = dragon;
-    //         dragon.scaling = new BABYLON.Vector3(100, 100, 100)
-    //         dragon.position = new BABYLON.Vector3(30, -10, -50);
-    //     });
+    BABYLON.SceneLoader.ImportMesh(
+        "dragon",
+        "https://models.babylonjs.com/Georgia-Tech-Dragon/",
+        "dragon.babylon",
+        scene,
+        (objs) => {
+            console.log(objs);
+            const dragon = objs[0]
+            window.dragon = dragon;
+            dragon.scaling = new BABYLON.Vector3(100, 100, 100)
+            dragon.position = new BABYLON.Vector3(30, -10, -50);
+        });
 
 
     return scene;
