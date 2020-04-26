@@ -1,4 +1,4 @@
-import * as BABYLON from "babylonjs";
+import {Engine} from "@babylonjs/core";
 import {createScene} from './scene';
 import { Peer3d } from "./peer-3d";
 
@@ -21,7 +21,7 @@ export class ThreeD {
         this.peers = {};
 
         this.canvas = document.getElementById("renderCanvas");
-        this.engine = new BABYLON.Engine(
+        this.engine = new Engine(
             this.canvas,
             true, {
                 preserveDrawingBuffer: true,
@@ -29,6 +29,7 @@ export class ThreeD {
             });
         if (!this.engine) throw 'engine should not be null.';
         this.scene = createScene(this.engine, this.canvas);
+
         window.scene = this.scene; // TODO remove me
         this.camera = this.scene.cameras[0];
 

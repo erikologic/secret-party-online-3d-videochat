@@ -2,7 +2,10 @@ import {ThreeD} from "./3d";
 import {Network} from "./network";
 import {getLocalStream, showLocalVideoStream} from "./local-stream";
 
-window.init = function () {
+var startButton = document.getElementById('startButton');
+startButton.addEventListener('click', init);
+
+function init () {
     var overlay = document.getElementById( 'overlay' );
     overlay.remove();
 

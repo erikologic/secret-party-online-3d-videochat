@@ -1,9 +1,20 @@
-import * as BABYLON from "babylonjs";
+import {
+    Color3,
+    Color4,
+    Mesh,
+    MeshBuilder,
+    Quaternion,
+    Sound,
+    StandardMaterial,
+    Vector3,
+    VideoTexture
+} from "@babylonjs/core";
+
 
 const VIDEO_DIMENSIONS = {
     height: 2,
     width: 1.5,
-    sideOrientation: BABYLON.Mesh.FRONTSIDE
+    sideOrientation: Mesh.FRONTSIDE
 };
 
 export class Peer3d {
@@ -43,18 +54,19 @@ export class Peer3d {
     destroy() {
         this.mesh && this.mesh.dispose();
     }
+
     movePeer(buffer) {
         const {absoluteRotation, globalPosition} = JSON.parse(buffer.toString());
         console.log({absoluteRotation, globalPosition});
-        this.mesh && (this.mesh.rotationQuaternion = new BABYLON.Quaternion(absoluteRotation.x, absoluteRotation.y, absoluteRotation.z, absoluteRotation.w));
-        this.mesh && this.mesh.setAbsolutePosition(new BABYLON.Vector3(globalPosition.x, globalPosition.y, globalPosition.z));
+        this.mesh && (this.mesh.rotationQuaternion = new Quaternion(absoluteRotation.x, absoluteRotation.y, absoluteRotation.z, absoluteRotation.w));
+        this.mesh && this.mesh.setAbsolutePosition(new Vector3(globalPosition.x, globalPosition.y, globalPosition.z));
     }
 
     _addSpatialAudio(stream, scene, box) {
         var audio = new Audio();
         audio.muted = true;
         audio.srcObject = stream;
-        var remoteSound = new BABYLON.Sound(`RemoteSound_${this.id}`, stream, scene, null, {
+        var remoteSound = new Sound(`RemoteSound_${this.id}`, stream, scene, null, {
             streaming: true,
             autoplay: true,
             spatialSound: true,
@@ -62,38 +74,38 @@ export class Peer3d {
         });
         remoteSound.attachToMesh(box);
         remoteSound.setDirectionalCone(90, 180, 0.3);
-        remoteSound.setLocalDirectionToMesh(new BABYLON.Vector3(0, 0, 1));
+        remoteSound.setLocalDirectionToMesh(new Vector3(0, 0, 1));
     }
 
     _getMaterial() {
-        var mat = new BABYLON.StandardMaterial(`VideoBoxMaterial_${this.id}`);
-        mat.diffuseColor = new BABYLON.Color4(0, 0, 0, 1);
+        var mat = new StandardMaterial(`VideoBoxMaterial_${this.id}`);
+        mat.diffuseColor = new Color4(0, 0, 0, 1);
         return mat;
     }
 
     _getVideoPanelMaterial(videoTexture) {
-        var videoPanelMaterial = new BABYLON.StandardMaterial(`VideoPanelMaterial_${this.id}`);
+        var videoPanelMaterial = new StandardMaterial(`VideoPanelMaterial_${this.id}`);
         videoPanelMaterial.roughness = 1;
-        videoPanelMaterial.emissiveColor = new BABYLON.Color3.White();
+        videoPanelMaterial.emissiveColor = new Color3.White();
         videoPanelMaterial.diffuseTexture = videoTexture;
         return videoPanelMaterial;
     }
 
     _getVideoPanel() {
-        var videoPanel = BABYLON.MeshBuilder.CreatePlane("VideoPanel", VIDEO_DIMENSIONS);
-        videoPanel.position = (new BABYLON.Vector3(0, 0, 0.1)).addInPlace(this.mesh.position);
+        var videoPanel = MeshBuilder.CreatePlane("VideoPanel", VIDEO_DIMENSIONS);
+        videoPanel.position = (new Vector3(0, 0, 0.1)).addInPlace(this.mesh.position);
         videoPanel.toLeftHanded();
         return videoPanel;
     }
 
     _getBox() {
-        var box = BABYLON.MeshBuilder.CreateBox(`VideoBox_${this.id}`, {
+        var box = MeshBuilder.CreateBox(`VideoBox_${this.id}`, {
             sideOrientation: VIDEO_DIMENSIONS.sideOrientation,
             width: VIDEO_DIMENSIONS.width + 0.1,
             height: VIDEO_DIMENSIONS.height + 0.1,
             depth: 0.100000
         });
-        box.position = new BABYLON.Vector3(Math.random() * 100, Math.random() * 100, Math.random() * 100);
+        box.position = new Vector3(Math.random() * 100, Math.random() * 100, Math.random() * 100);
         box.checkCollisions = true;
         return box;
     }
@@ -121,7 +133,7 @@ export class Peer3d {
 
         return new Promise((resolve) => {
             let onPlaying = () => {
-                resolve(new BABYLON.VideoTexture(`VideoTextureStream_${this.id}`, video, scene, true, false));
+                resolve(new VideoTexture(`VideoTextureStream_${this.id}`, video, scene, true, false));
                 video.removeEventListener("playing", onPlaying);
             };
 
