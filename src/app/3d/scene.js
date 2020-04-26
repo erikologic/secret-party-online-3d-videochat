@@ -34,6 +34,7 @@ export function createScene(engine, canvas) {
             dragon.position = new BABYLON.Vector3(30, 0, -50);
         });
 
+    scene.clearColor = new BABYLON.Color3(80/256,166/256,255/256)
 
     return scene;
 }
