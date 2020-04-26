@@ -35,6 +35,7 @@ export function createScene(engine, canvas) {
         });
 
     scene.clearColor = new BABYLON.Color3(80/256,166/256,255/256)
+    scene.fogMode = BABYLON.Scene.FOGMODE_LINEAR;
 
     return scene;
 }
