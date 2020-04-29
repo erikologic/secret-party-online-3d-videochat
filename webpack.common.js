@@ -10,6 +10,7 @@ module.exports = {
     entry: path.resolve(appDirectory, "src"),
     output: {
         filename: 'index.js',
+        path: path.resolve(__dirname, 'public/dist')
     },
     resolve: {
         extensions: ['.ts', '.js']
@@ -37,11 +38,6 @@ module.exports = {
         ]
     },
     plugins: [
-        new CleanWebpackPlugin(),
-        new HtmlWebpackPlugin({
-            inject: true,
-            template: path.resolve(appDirectory, "public/index.html"),
-            hash: true
-        }),
+        new CleanWebpackPlugin()
     ]
 }
