@@ -39,6 +39,13 @@ module.exports = function (opts) {
   })
 
   var onRequest = cors(function (req, res) {
+      if (req.headers['x-forwarded-proto'] === 'http') {
+          const httpsUrl = `https://${req.headers.host}`;
+          res.writeHead(301,
+              {Location: httpsUrl}
+          );
+          res.end();
+      }
     if (
         req.url === '/' ||
         req.url.startsWith('/index.htm') ||
