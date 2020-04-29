@@ -3,6 +3,7 @@
         "module": "esNext",
 		"target": "es5",
 		"moduleResolution": "node",
+        "esModuleInterop": true,
 		"strict": true,
 		"noImplicitAny": true,
         "noImplicitReturns": true,
@@ -11,10 +12,7 @@
         "strictFunctionTypes": true,
         "skipLibCheck": true,
 		"preserveConstEnums":true,
-		"sourceMap": true
+		"sourceMap": true,
+        "allowJs": true
 	},
-	"files": [
-        "src/index.ts",
-        "src/externalFileTypes.d.ts"
-	]
 }

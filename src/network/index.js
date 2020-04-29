@@ -2,12 +2,12 @@ import swarm from "./webrtc-swarm";
 import signalhub from "signalhub";
 
 export class Network {
-    constructor({onPeerConnect, onPeerDisconnect}) {
+    constructor() {
         this.connect = this.connect.bind(this);
-        this.onPeerConnect = onPeerConnect;
-        this.onPeerDisconnect = onPeerDisconnect;
+        this.onPeerConnect = undefined;
+        this.onPeerDisconnect = undefined;
     }
-
+    
     connect() {
         console.log("loading hub");
         const hub = signalhub('lets-party', ['https://secret-party-online.herokuapp.com/']);
