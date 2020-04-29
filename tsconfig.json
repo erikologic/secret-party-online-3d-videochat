@@ -1,0 +1,18 @@
+{
+	"compilerOptions": {
+        "module": "esNext",
+		"target": "es5",
+		"moduleResolution": "node",
+        "esModuleInterop": true,
+		"strict": true,
+		"noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "skipLibCheck": true,
+		"preserveConstEnums":true,
+		"sourceMap": true,
+        "allowJs": true
+	},
+}

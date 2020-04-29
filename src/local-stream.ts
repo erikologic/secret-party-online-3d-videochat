@@ -8,13 +8,15 @@ const userMediaConstraints = {
     }
 };
 
-export function getLocalStream() {
+export function getLocalStream(): Promise<MediaStream> {
     console.log('Getting user media with constraints', userMediaConstraints);
     return navigator.mediaDevices.getUserMedia(userMediaConstraints)
 }
 
-export function showLocalVideoStream(stream) {
+export function showLocalVideoStream(stream: MediaStream): void {
     console.log('Adding local stream.');
-    var localVideo = document.querySelector('#localVideo');
-    localVideo.srcObject = stream;
+    const localVideo = document.querySelector('#localVideo');
+    if (localVideo) {
+        (localVideo as HTMLVideoElement).srcObject = stream;
+    }
 }
