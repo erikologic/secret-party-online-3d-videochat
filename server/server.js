@@ -50,7 +50,7 @@ module.exports = function (opts) {
         req.url === '/' ||
         req.url.startsWith('/index.htm') ||
         req.url.startsWith('/dist') ||
-        req.url.startsWith('/static')
+        req.url.startsWith('/asset')
     ) {
       fileServer.serve(req, res);
       return;
