@@ -12,8 +12,9 @@ import {
 
 
 const VIDEO_DIMENSIONS = {
-    height: 2,
-    width: 1.5,
+    height: 0.9,
+    width: 0.6,
+    depth: 0.05,
     sideOrientation: Mesh.FRONTSIDE
 };
 
@@ -98,7 +99,7 @@ export class Peer3d {
 
     private getVideoPanel(): Mesh {
         const videoPanel = MeshBuilder.CreatePlane("VideoPanel", VIDEO_DIMENSIONS);
-        if (this.mesh) videoPanel.position = (new Vector3(0, 0, 0.1)).addInPlace(this.mesh.position); // TODO find a better way to do this
+        if (this.mesh) videoPanel.position = new Vector3(0, 0, (VIDEO_DIMENSIONS.depth /2 +0.001));
         videoPanel.toLeftHanded();
         return videoPanel;
     }
@@ -108,9 +109,9 @@ export class Peer3d {
             sideOrientation: VIDEO_DIMENSIONS.sideOrientation,
             width: VIDEO_DIMENSIONS.width + 0.1,
             height: VIDEO_DIMENSIONS.height + 0.1,
-            depth: 0.100000
+            depth: VIDEO_DIMENSIONS.depth
         });
-        box.position = new Vector3(Math.random() * 100, Math.random() * 100, Math.random() * 100);
+        box.position = new Vector3(0, 0, 0);
         box.checkCollisions = true;
         return box;
     }
@@ -156,6 +157,8 @@ export class Peer3d {
                 const videoPanel = this.getVideoPanel();
                 videoPanel.material = this.getVideoPanelMaterial(videoTexture, scene);
                 this.mesh.addChild(videoPanel);
+                videoPanel.receiveShadows = true;
+                this.mesh.receiveShadows = true;
                 scene.addMesh(this.mesh);
                 this.addSpatialAudio(stream, scene, this.mesh);
             });
