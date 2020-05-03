@@ -21,7 +21,7 @@ export class CustomDeviceOrientationCamera extends FreeCamera {
      * @param position The start position camera
      * @param scene The scene the camera belongs to
      */
-    constructor(name: string, position: Vector3, scene: Scene, touchMoveSensibility = 20.0) {
+    constructor(name: string, position: Vector3, scene: Scene, touchMoveSensibility = 80.0) {
         super(name, position, scene);
         this._quaternionCache = new Quaternion();
         this.inputs.addDeviceOrientation();

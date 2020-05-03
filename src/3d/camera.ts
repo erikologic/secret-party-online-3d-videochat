@@ -1,19 +1,31 @@
 import {CustomDeviceOrientationCamera} from "./CustomDeviceOrientationCamera";
-import {Scene, UniversalCamera, Vector3} from '@babylonjs/core';
+import {Camera, FreeCamera, Scene, UniversalCamera, Vector3} from '@babylonjs/core';
 
-const isMobile = window.orientation !== 'undefined';
+const isMobile = window.orientation !== undefined;
 
-const createMobileCamera = (initialPosition: Vector3, scene: Scene) => {
-    const camera = new CustomDeviceOrientationCamera("DevOr_camera", initialPosition, scene);
+const createMobileCamera = (initialPosition: Vector3, scene: Scene): FreeCamera => {
+    const camera = new CustomDeviceOrientationCamera("Camera", initialPosition, scene);
     camera.enableHorizontalDragging();
+    camera.fov = 1.2;
+    scene.getEngine().onResizeObservable.add((engine) => {
+        const canvas = engine.getRenderingCanvas();
+        if (canvas) {
+            camera.fovMode = canvas.height > canvas.width ? Camera.FOVMODE_VERTICAL_FIXED : Camera.FOVMODE_HORIZONTAL_FIXED;
+        }
+    });
     return camera;
 };
 
-const createDesktopCamera = (initialPosition: Vector3, scene: Scene) => new UniversalCamera("DevOr_camera", initialPosition, scene);
+const createDesktopCamera = (initialPosition: Vector3, scene: Scene): FreeCamera => {
+    const camera = new FreeCamera("Camera", initialPosition, scene);
+    camera.speed = 0.175;
+    camera.inertia = 0.875;
+    camera.angularSensibility= 3000;
+    return camera;
+}
 
 export function createCamera(scene: Scene, canvas: HTMLCanvasElement): void {
     const initialPosition =  new Vector3(0, 2, 0);
-    // const camera = new CustomDeviceOrientationCamera("DevOr_camera", initialPosition, scene);
     const camera = isMobile 
         ? createMobileCamera(initialPosition, scene)
         : createDesktopCamera(initialPosition, scene);
@@ -21,7 +33,7 @@ export function createCamera(scene: Scene, canvas: HTMLCanvasElement): void {
     camera.attachControl(canvas, true);
 
     //Set the ellipsoid around the camera (e.g. your player's size)
-    camera.ellipsoid = new Vector3(1,1,1);
+    camera.ellipsoid = new Vector3(0.2,0.8,0.2);
     
     //Then apply collisions and gravity to the active camera
     camera.checkCollisions = true;
