@@ -20,7 +20,14 @@ const createDesktopCamera = (initialPosition: Vector3, scene: Scene): FreeCamera
     const camera = new FreeCamera("Camera", initialPosition, scene);
     camera.speed = 0.175;
     camera.inertia = 0.875;
-    camera.angularSensibility= 3000;
+    camera.angularSensibility = 6000;
+
+    setTimeout(() => {
+        window.addEventListener("click", () => {
+            scene.getEngine().enterPointerlock();
+        });
+    }, 1000);
+
     return camera;
 }
 
