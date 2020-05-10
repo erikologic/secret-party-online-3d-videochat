@@ -1,5 +1,13 @@
 import {CustomDeviceOrientationCamera} from "./CustomDeviceOrientationCamera";
-import {Camera, FreeCamera, Scene, UniversalCamera, Vector3} from '@babylonjs/core';
+import {
+    Camera,
+    FreeCamera,
+    Scene,
+    SceneOptimizer,
+    SceneOptimizerOptions,
+    UniversalCamera,
+    Vector3
+} from '@babylonjs/core';
 
 const isMobile = window.orientation !== undefined;
 
@@ -13,6 +21,8 @@ const createMobileCamera = (initialPosition: Vector3, scene: Scene): FreeCamera 
             camera.fovMode = canvas.height > canvas.width ? Camera.FOVMODE_VERTICAL_FIXED : Camera.FOVMODE_HORIZONTAL_FIXED;
         }
     });
+    
+    new SceneOptimizer(scene, SceneOptimizerOptions.HighDegradationAllowed());
     return camera;
 };
 
