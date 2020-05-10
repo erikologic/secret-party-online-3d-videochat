@@ -1,9 +1,18 @@
 const userMediaConstraints = {
     audio: true,
     video: {
-        width: { max: 256 },
-        height: { max: 144 },
-        frameRate: 20,
+        width: {
+            ideal: 160,
+            max: 640
+        },
+        height: {
+            ideal: 120,
+            max: 480
+        },
+        frameRate: {
+            ideal: 20,
+            max: 30
+        },
         facingMode: 'user'
     }
 };
