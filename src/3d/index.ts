@@ -21,9 +21,6 @@ export class ThreeD {
     private camera: Camera;
     
     constructor() {
-        this.startEngine = this.startEngine.bind(this);
-        this.addPeer = this.addPeer.bind(this);
-        this.removePeer = this.removePeer.bind(this);
         this.peers = {};
 
         this.canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;

@@ -25,17 +25,6 @@ export class Peer3d {
     private mesh: Mesh | undefined;
     
     constructor(peer: any, id: string, scene: Scene) {
-        this.movePeer = this.movePeer.bind(this);
-        this.send = this.send.bind(this);
-        this.destroy = this.destroy.bind(this);
-        this.addSpatialAudio = this.addSpatialAudio.bind(this);
-        this.getMaterial = this.getMaterial.bind(this);
-        this.getVideoPanelMaterial = this.getVideoPanelMaterial.bind(this);
-        this.getVideoPanel = this.getVideoPanel.bind(this);
-        this.getBox = this.getBox.bind(this);
-        this.CreateFromStreamAsync = this.CreateFromStreamAsync.bind(this);
-        this.addTo = this.addTo.bind(this);
-
         this.peer = peer;
         this.scene = scene;
         this.id = id;
