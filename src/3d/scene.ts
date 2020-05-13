@@ -9,6 +9,28 @@ import {createCamera} from "./camera";
 import {importMesh} from "./mesh-importer";
 import {createSky} from "./sky";
 
+const assetList = [
+    "Amaca decimated compressed.glb",
+    "Bar decimated.glb",
+    "Bridge decimated compressed.glb",
+    "Gazebo 1 decimated compressed.glb",
+    "Isle Base compressed.glb",
+    "Isle tent compressed.glb",
+    "Lights decimated compressed.glb",
+    "Perimeter.glb",
+    "Poltrona 1 decimated compressed.glb",
+    "Round poltrona compressed.glb",
+    "Sofa decimated.glb",
+    "Stool decimated compressed.glb",
+    "Stool decimated.glb",
+    "Sun bed decimated compressed.glb",
+    "Swimming pool decimated compressed.glb",
+    "Tent.glb",
+    "Tree decimated.glb",
+    "Umbrella.glb",
+    "Yakuzi decimated compressed.glb"
+];
+
 function setupScene(engine: Engine): Scene {
     const scene = new Scene(engine);
     scene.clearColor = new Color4(80 / 256, 166 / 256, 255 / 256, 1);
@@ -28,9 +50,8 @@ export function createScene(engine: Engine, canvas: HTMLCanvasElement): Scene {
     const shadowGenerator = new ShadowGenerator(1024, light);
     createSky(scene);
     createCamera(scene, canvas);
-    
-    ["Bar decimated.glb", "Perimeter.glb", "Sofa decimated.glb", "Stool decimated compressed.glb", "Tent.glb", "Tree decimated.glb", "Umbrella.glb"]
-        .forEach(filename => importMesh(scene, filename, shadowGenerator));
+
+    assetList.forEach(filename => importMesh(scene, filename, shadowGenerator));
     
     // scene.debugLayer.show()
     return scene;
