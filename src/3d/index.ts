@@ -1,25 +1,15 @@
 import {Camera, Engine, Scene} from "@babylonjs/core";
 import {createScene} from './scene';
-import { Peer3d } from "./peer-3d";
-
-function marshalCameraPosition(camera: Camera): string {
-    return JSON.stringify({
-        absoluteRotation: {
-            ...camera.absoluteRotation
-        },
-        globalPosition: {
-            ...camera.globalPosition
-        }
-    });
-}
+import {Peer3d} from "./peer-3d";
+import {sendCameraPositionFactory} from "./send-camera-position";
 
 export class ThreeD {
-    private peers: any;
-    private canvas: HTMLCanvasElement;
-    private engine: Engine;
-    private scene: Scene;
-    private camera: Camera;
-    
+    private readonly peers: { [id: string]: Peer3d };
+    private readonly canvas: HTMLCanvasElement;
+    private readonly engine: Engine;
+    private readonly scene: Scene;
+    private readonly camera: Camera;
+
     constructor() {
         this.peers = {};
 
@@ -36,6 +26,7 @@ export class ThreeD {
         // @ts-ignore
         window.scene = this.scene; // TODO remove me
         this.camera = this.scene.cameras[0];
+        this.camera.onViewMatrixChangedObservable.add(sendCameraPositionFactory(this.peers));
 
         // Resize
         window.addEventListener("resize", () => {
@@ -44,14 +35,8 @@ export class ThreeD {
     }
 
     startEngine(): void {
-        let lastCameraPos = "";
         this.engine.runRenderLoop(() => {
             if (this.scene) {
-                const newCameraPos = marshalCameraPosition(this.camera);
-                if (lastCameraPos !== newCameraPos) {
-                    lastCameraPos = newCameraPos;
-                    Object.values(this.peers).forEach((peer: any) => peer.send(newCameraPos));
-                }
                 this.scene.render();
             }
         });
