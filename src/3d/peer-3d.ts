@@ -1,4 +1,5 @@
 import {
+    Camera,
     Color3,
     Color4,
     Mesh,
@@ -9,6 +10,7 @@ import {
     Vector3,
     VideoTexture
 } from "@babylonjs/core";
+import {deserializer, serializer} from "./de-serializer";
 
 
 const VIDEO_DIMENSIONS = {
@@ -38,9 +40,9 @@ export class Peer3d {
         peer.on('data', (data: any) => this.movePeer(data));
     }
 
-    send(cameraPos: string): void {
+    send(camera: Camera): void {
         try {
-            this.peer.send(cameraPos);
+            this.peer.send(serializer(camera));
         } catch (e) {
             console.log(e);
         }
@@ -51,7 +53,7 @@ export class Peer3d {
     }
 
     movePeer(buffer: Buffer): void {
-        const {absoluteRotation, globalPosition} = JSON.parse(buffer.toString());
+        const {absoluteRotation, globalPosition} = deserializer(buffer);
         console.log({absoluteRotation, globalPosition});
         this.mesh && (this.mesh.rotationQuaternion = new Quaternion(absoluteRotation.x, absoluteRotation.y, absoluteRotation.z, absoluteRotation.w));
         this.mesh && this.mesh.setAbsolutePosition(new Vector3(globalPosition.x, globalPosition.y, globalPosition.z));
