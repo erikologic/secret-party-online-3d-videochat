@@ -59,6 +59,15 @@ export class Peer3d {
     }
 
     private addSpatialAudio(stream: MediaStream, scene: Scene, box: Mesh): void {
+        // this is for testing purposes
+        // const remoteSound = new Sound("music", "/asset/audio.mp3", scene, null, {
+        //     loop: true,
+        //     autoplay: true,
+        //     spatialSound: true,
+        //     distanceModel: "exponential",
+        //     maxDistance: 100,
+        //     rolloffFactor: 1.3
+        // });
         const audio = new Audio();
         audio.muted = true;
         audio.srcObject = stream;
@@ -66,7 +75,10 @@ export class Peer3d {
             streaming: true,
             autoplay: true,
             spatialSound: true,
-            loop: true
+            loop: true,
+            distanceModel: "exponential",
+            maxDistance: 100,
+            rolloffFactor: 1.3
         });
         remoteSound.attachToMesh(box);
         remoteSound.setDirectionalCone(90, 180, 0.3);
