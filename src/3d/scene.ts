@@ -22,7 +22,6 @@ const assetList = [
     "Round poltrona compressed.glb",
     "Sofa decimated.glb",
     "Stool decimated compressed.glb",
-    "Stool decimated.glb",
     "Sun bed decimated compressed.glb",
     "Swimming pool decimated compressed.glb",
     "Tent.glb",
