@@ -1,5 +1,5 @@
-import {Camera, Engine} from "@babylonjs/core";
-import {Peer3d} from "./peer-3d";
+import {Camera} from "@babylonjs/core";
+import {Peer3d} from "./peer3d";
 
 const millisFor30Fps = 1000 / 30;
 

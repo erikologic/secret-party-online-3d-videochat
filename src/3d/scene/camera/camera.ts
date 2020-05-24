@@ -5,7 +5,6 @@ import {
     Scene,
     SceneOptimizer,
     SceneOptimizerOptions,
-    UniversalCamera,
     Vector3
 } from '@babylonjs/core';
 
@@ -39,7 +38,7 @@ const createDesktopCamera = (initialPosition: Vector3, scene: Scene): FreeCamera
     }, 1000);
 
     return camera;
-}
+};
 
 export function createCamera(scene: Scene, canvas: HTMLCanvasElement): void {
     const initialPosition =  new Vector3(0, 2, 0);

@@ -14,13 +14,7 @@ export class CustomDeviceOrientationCamera extends FreeCamera {
     private _tmpDragQuaternion = new Quaternion();
     private _disablePointerInputWhenUsingDeviceOrientation = true;
     private touchMoveSensibility: number;
-
-    /**
-     * Creates a new device orientation camera
-     * @param name The name of the camera
-     * @param position The start position camera
-     * @param scene The scene the camera belongs to
-     */
+    
     constructor(name: string, position: Vector3, scene: Scene, touchMoveSensibility = 80.0) {
         super(name, position, scene);
         this._quaternionCache = new Quaternion();
