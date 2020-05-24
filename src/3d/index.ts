@@ -1,6 +1,6 @@
 import {Camera, Engine, Scene} from "@babylonjs/core";
 import {createScene} from './scene';
-import {Peer3d} from "./peer-3d";
+import {Peer3d} from "./peer3d";
 import {sendCameraPositionFactory} from "./send-camera-position";
 
 export class ThreeD {

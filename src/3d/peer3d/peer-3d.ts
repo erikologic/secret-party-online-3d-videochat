@@ -1,7 +1,6 @@
 import {
     Camera,
     Color3,
-    Color4,
     Mesh,
     MeshBuilder,
     Quaternion, Scene,
