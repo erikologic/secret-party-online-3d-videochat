@@ -48,7 +48,7 @@ export function createCamera(scene: Scene, canvas: HTMLCanvasElement): void {
     camera.attachControl(canvas, true);
 
     camera.fov = 1.2;
-    camera.minZ = 0.1;
+    camera.minZ = 0;
     
     //Set the ellipsoid around the camera (e.g. your player's size)
     camera.ellipsoid = new Vector3(0.2,0.8,0.2);

@@ -11,10 +11,11 @@ import {
 } from "@babylonjs/core";
 import {deserializer, serializer} from "./de-serializer";
 
-
+const VIDEO_RATIO = 4/3;
+const VIDEO_HEIGHT = 0.9;
 const VIDEO_DIMENSIONS = {
-    height: 0.9,
-    width: 0.6,
+    height: VIDEO_HEIGHT,
+    width: VIDEO_RATIO * VIDEO_HEIGHT,
     depth: 0.05,
     sideOrientation: Mesh.FRONTSIDE
 };
