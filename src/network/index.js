@@ -12,14 +12,14 @@ export class Network {
         console.log("loading hub");
         const hub = signalhub('lets-party', ['https://secret-party-online.herokuapp.com/']);
         console.log(hub);
-        const turnServerIp = "35.245.157.49";
+        const turnServer = "secret-party.duckdns.org";
         const sw = swarm(hub,
             {
                 config: {
                     iceServers: [
                         {urls: 'stun:stun.l.google.com:19302'},
-                        { urls: `stun:${turnServerIp}:3478` },
-                        { urls: `turn:${turnServerIp}:3478`, username: "username1", credential: "password1" },
+                        { urls: `stun:${turnServer}:3478` },
+                        { urls: `turn:${turnServer}:3478`, username: "username1", credential: "password1" },
                     ],
                 },
             });
