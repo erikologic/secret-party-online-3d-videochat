@@ -12,7 +12,7 @@ export class Network {
         console.log("loading hub");
         const hub = signalhub('lets-party', ['https://secret-party-online.herokuapp.com/']);
         console.log(hub);
-        const turnServerIp = "34.86.189.8";
+        const turnServerIp = "35.245.157.49";
         const sw = swarm(hub,
             {
                 config: {
