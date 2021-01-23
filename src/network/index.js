@@ -10,7 +10,7 @@ export class Network {
     
     connect() {
         console.log("loading hub");
-        const hub = signalhub('lets-party', ['https://secret-party-online.herokuapp.com/']);
+        const hub = signalhub('lets-party', ['https://secret-party.duckdns.org/']);
         console.log(hub);
         const turnServer = "secret-party.duckdns.org";
         const sw = swarm(hub,

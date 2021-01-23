@@ -17,7 +17,7 @@ var argv = minimist(process.argv.slice(2), {
     port: process.env.PORT || 80
   }
 })
-
+console.log({argv})
 var cmd = argv._[0]
 
 if (argv.version) console.log(require('./package.json').version)
