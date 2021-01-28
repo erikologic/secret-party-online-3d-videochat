@@ -46,7 +46,6 @@ function getDisplayStream(): Promise<MediaStream> {
 }
 
 export function getStream(): Promise<MediaStream> {
-    console.log('Getting user media with constraints', userMediaConstraints);
     return shouldShowDisplay() ? getDisplayStream() : getWebCamStream();
 }
 

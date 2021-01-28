@@ -41,6 +41,7 @@ const createDesktopCamera = (initialPosition: Vector3, scene: Scene): FreeCamera
 
 export function createCamera(scene: Scene, canvas: HTMLCanvasElement): void {
     const initialPosition =  new Vector3(0, 2, 0);
+    console.log({isMobile})
     const camera = isMobile 
         ? createMobileCamera(initialPosition, scene)
         : createDesktopCamera(initialPosition, scene);

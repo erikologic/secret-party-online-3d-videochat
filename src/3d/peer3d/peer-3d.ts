@@ -54,7 +54,7 @@ export class Peer3d {
 
     movePeer(buffer: Buffer): void {
         const {absoluteRotation, globalPosition} = deserializer(buffer);
-        console.log( {absoluteRotation, globalPosition})
+        // console.log( {absoluteRotation, globalPosition})
         this.mesh && (this.mesh.rotationQuaternion = new Quaternion(absoluteRotation.x, absoluteRotation.y, absoluteRotation.z, absoluteRotation.w));
         this.mesh && this.mesh.setAbsolutePosition(new Vector3(globalPosition.x, globalPosition.y, globalPosition.z));
     }

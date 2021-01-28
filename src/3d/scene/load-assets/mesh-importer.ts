@@ -9,13 +9,13 @@ export function importMesh(scene: Scene, filename: string, shadowGenerator: Shad
         scene,
         (objs) => {
             objs.forEach(obj => {
-                console.log("Imported ", obj.id, obj.name);
+                // console.log("Imported ", obj.id, obj.name);
                 obj.checkCollisions = true;
                 obj.receiveShadows = true;
                 shadowGenerator?.getShadowMap()?.renderList?.push(obj);
             });
         }, (event) => {
-            console.log(event);
+            // console.log(event);
         }, (scene, error) => {
             console.log(error)
         });
