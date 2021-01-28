@@ -27,7 +27,8 @@ export class ThreeD {
         window.scene = this.scene; // TODO remove me
         this.camera = this.scene.cameras[0];
         this.camera.onViewMatrixChangedObservable.add(sendCameraPositionFactory(this.peers));
-
+        setInterval(() => sendCameraPositionFactory(this.peers), 1000);
+        
         // Resize
         window.addEventListener("resize", () => {
             this.engine.resize();
