@@ -105,6 +105,25 @@ function setup (swarm, peer, id) {
     peer.once('close', onclose)
 }
 
+function shouldShowDisplay() {
+    return (new URL(location)).searchParams.get('showDisplay');
+}
+
+function updateBandwidthRestriction(sdp, bandwidth) {
+    let modifier = 'AS';
+    if (adapter.browserDetails.browser === 'firefox') {
+        bandwidth = (bandwidth >>> 0) * 1000;
+        modifier = 'TIAS';
+    }
+    if (sdp.indexOf('b=' + modifier + ':') === -1) {
+        // insert b= after c= line.
+        sdp = sdp.replace(/c=IN (.*)\r\n/, 'c=IN $1\r\nb=' + modifier + ':' + bandwidth + '\r\n');
+    } else {
+        sdp = sdp.replace(new RegExp('b=' + modifier + ':.*\r\n'), 'b=' + modifier + ':' + bandwidth + '\r\n');
+    }
+    return sdp;
+}
+
 function subscribe (swarm, hub) {
     hub.subscribe('all').pipe(through.obj(function (data, enc, cb) {
         data = swarm.unwrap(data, 'all');
@@ -133,7 +152,13 @@ function subscribe (swarm, hub) {
                 channelConfig: swarm.channelConfig,
                 config: swarm.config,
                 stream: swarm.stream,
-                offerConstraints: swarm.offerConstraints
+                offerConstraints: swarm.offerConstraints,
+                sdpTransform: (sdp) => {
+                    if (shouldShowDisplay()) {
+                        sdp = sdp.replace('useinbandfec=1', 'useinbandfec=1; stereo=1; maxaveragebitrate=160000');
+                    }
+                    return updateBandwidthRestriction(sdp, 150);
+                }
             });
 
             setup(swarm, peer, data.from);
