@@ -54,6 +54,7 @@ export class Peer3d {
 
     movePeer(buffer: Buffer): void {
         const {absoluteRotation, globalPosition} = deserializer(buffer);
+        console.log( {absoluteRotation, globalPosition})
         this.mesh && (this.mesh.rotationQuaternion = new Quaternion(absoluteRotation.x, absoluteRotation.y, absoluteRotation.z, absoluteRotation.w));
         this.mesh && this.mesh.setAbsolutePosition(new Vector3(globalPosition.x, globalPosition.y, globalPosition.z));
     }
@@ -161,6 +162,7 @@ export class Peer3d {
                 this.mesh.addChild(videoPanel);
                 videoPanel.receiveShadows = true;
                 this.mesh.receiveShadows = true;
+                this.mesh.position.y = 1.6
                 scene.addMesh(this.mesh);
                 this.addSpatialAudio(stream, scene, this.mesh);
             });
