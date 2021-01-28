@@ -5,7 +5,8 @@ import {
     Scene,
     SceneOptimizer,
     SceneOptimizerOptions,
-    Vector3
+    Vector3,
+    Animation, CircleEase, EasingFunction
 } from '@babylonjs/core';
 
 const isMobile = window.orientation !== undefined;
@@ -18,10 +19,38 @@ const createMobileCamera = (initialPosition: Vector3, scene: Scene): FreeCamera 
         if (canvas) {
             camera.fovMode = canvas.height > canvas.width ? Camera.FOVMODE_VERTICAL_FIXED : Camera.FOVMODE_HORIZONTAL_FIXED;
         }
-    });
-    
+    });    
     new SceneOptimizer(scene, SceneOptimizerOptions.HighDegradationAllowed());
     return camera;
+};
+
+const addWASD = (camera: FreeCamera): void => {
+    camera.keysUp.push(87);
+    camera.keysDown.push(83);
+    camera.keysLeft.push(65);
+    camera.keysRight.push(68);
+};
+
+const addJump = (camera: FreeCamera, scene: Scene) => {
+    camera.animations = []
+    const animation = new Animation("a", "position.y", 20, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
+    const keys = [];
+    keys.push({frame: 0, value: camera.position.y});
+    keys.push({frame: 10, value: camera.position.y + 2});
+    keys.push({frame: 20, value: camera.position.y});
+    animation.setKeys(keys);
+    const easingFunction = new CircleEase();
+    easingFunction.setEasingMode(EasingFunction.EASINGMODE_EASEINOUT);
+    animation.setEasingFunction(easingFunction);
+    camera.animations.push(animation);
+
+    window.addEventListener("keyup", (event) => {
+        switch (event.keyCode) {
+            case 32:
+                scene.beginAnimation(camera, 0, 60, false);
+                break;
+        }
+    });
 };
 
 const createDesktopCamera = (initialPosition: Vector3, scene: Scene): FreeCamera => {
@@ -29,20 +58,22 @@ const createDesktopCamera = (initialPosition: Vector3, scene: Scene): FreeCamera
     camera.speed = 0.175;
     camera.inertia = 0.875;
     camera.angularSensibility = 6000;
-
+    addWASD(camera);
+    
     setTimeout(() => {
+        addJump(camera, scene);
         window.addEventListener("click", () => {
             scene.getEngine().enterPointerlock();
-        });
+        });        
     }, 1000);
 
     return camera;
 };
 
 export function createCamera(scene: Scene, canvas: HTMLCanvasElement): void {
-    const initialPosition =  new Vector3(0, 2, 0);
+    const initialPosition = new Vector3(0, 2, 0);
     console.log({isMobile})
-    const camera = isMobile 
+    const camera = isMobile
         ? createMobileCamera(initialPosition, scene)
         : createDesktopCamera(initialPosition, scene);
     scene.activeCamera = camera;
@@ -50,10 +81,10 @@ export function createCamera(scene: Scene, canvas: HTMLCanvasElement): void {
 
     camera.fov = 1.2;
     camera.minZ = 0;
-    
+
     //Set the ellipsoid around the camera (e.g. your player's size)
-    camera.ellipsoid = new Vector3(0.2,0.8,0.2);
-    
+    camera.ellipsoid = new Vector3(0.2, 0.8, 0.2);
+
     //Then apply collisions and gravity to the active camera
     camera.checkCollisions = true;
     camera.applyGravity = true;
