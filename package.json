@@ -52,7 +52,6 @@
         "local:pre": "npm run bundle:pre && npm run lint && npm run local:start",
         "server:pre": "npm --prefix server install",
         "server:start": "npm --prefix server start",
-        "server:dev:start": "npm --prefix server run start:dev",
         "build": "npm run bundle:pre && npm run lint && npm run bundle && npm run server:pre",
         "start": "npm run server:start",
         "test": "jest"
