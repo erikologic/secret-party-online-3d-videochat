@@ -1,6 +1,8 @@
 import swarm from "./webrtc-swarm";
 import signalhub from "signalhub";
 
+const hubUrl = process.env.ENV === 'dev' ? 'http://localhost:8080' : 'https://secret-party.duckdns.org/';
+
 export class Network {
     constructor() {
         this.connect = this.connect.bind(this);
@@ -10,7 +12,7 @@ export class Network {
     
     connect() {
         console.log("loading hub");
-        const hub = signalhub('lets-party', ['https://secret-party.duckdns.org/']);
+        const hub = signalhub('lets-party', [hubUrl]);
         console.log(hub);
         const turnServer = "secret-party.duckdns.org";
         const sw = swarm(hub,

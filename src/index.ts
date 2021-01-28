@@ -1,6 +1,6 @@
 import {ThreeD} from "./3d";
 import {Network} from "./network";
-import {getLocalStream, showLocalVideoStream} from "./local-stream";
+import {getStream, showLocalVideoStream} from "./local-stream";
 
 function init(): void {
     const overlay = document.getElementById('overlay');
@@ -9,7 +9,7 @@ function init(): void {
     const myThreeD = new ThreeD();
     myThreeD.startEngine();
 
-    getLocalStream()
+    getStream()
         .then(localStream => {
             showLocalVideoStream(localStream);
 

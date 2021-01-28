@@ -17,9 +17,25 @@ const userMediaConstraints = {
     }
 };
 
-export function getLocalStream(): Promise<MediaStream> {
+function shouldShowDisplay() {
+    // @ts-ignore
+    return (new URL(location)).searchParams.get('showDisplay');
+}
+
+function getWebCamStream(): Promise<MediaStream> {
     console.log('Getting user media with constraints', userMediaConstraints);
     return navigator.mediaDevices.getUserMedia(userMediaConstraints)
+}
+
+function getDisplayStream(): Promise<MediaStream> {
+    console.log('Getting user media with constraints', userMediaConstraints);
+    // @ts-ignore
+    return navigator.mediaDevices.getDisplayMedia(userMediaConstraints)
+}
+
+export function getStream(): Promise<MediaStream> {
+    console.log('Getting user media with constraints', userMediaConstraints);
+    return shouldShowDisplay() ? getDisplayStream() : getWebCamStream();
 }
 
 export function showLocalVideoStream(stream: MediaStream): void {
