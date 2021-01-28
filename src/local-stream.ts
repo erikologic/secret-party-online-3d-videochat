@@ -21,8 +21,11 @@ const displayMediaConstraints = {
     audio: {
         autoGainControl: false,
         echoCancellation: false,
-        googAutoGainControl: false,
-        noiseSuppression: false
+        latency: 0,
+        noiseSuppression: false,
+        sampleRate: 48000,
+        sampleSize: 16,
+        volume: 1.0
     }
 }
 
