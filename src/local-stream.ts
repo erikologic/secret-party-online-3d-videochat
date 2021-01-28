@@ -16,6 +16,15 @@ const userMediaConstraints = {
         facingMode: 'user'
     }
 };
+const displayMediaConstraints = {
+    ...userMediaConstraints,
+    audio: {
+        autoGainControl: false,
+        echoCancellation: false,
+        googAutoGainControl: false,
+        noiseSuppression: false
+    }
+}
 
 function shouldShowDisplay() {
     // @ts-ignore
@@ -28,9 +37,9 @@ function getWebCamStream(): Promise<MediaStream> {
 }
 
 function getDisplayStream(): Promise<MediaStream> {
-    console.log('Getting user media with constraints', userMediaConstraints);
+    console.log('Getting display media with constraints', displayMediaConstraints);
     // @ts-ignore
-    return navigator.mediaDevices.getDisplayMedia(userMediaConstraints)
+    return navigator.mediaDevices.getDisplayMedia(displayMediaConstraints)
 }
 
 export function getStream(): Promise<MediaStream> {
