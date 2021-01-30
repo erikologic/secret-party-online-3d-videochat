@@ -8,10 +8,10 @@ server {
 server {
 
     listen 443;
-    server_name secret-party.duckdns.org;
+    server_name YOUR_REGISTERED_URL;
 
-    ssl_certificate /etc/letsencrypt/live/secret-party.duckdns.org/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/secret-party.duckdns.org/privkey.pem; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/YOUR_REGISTERED_URL/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/YOUR_REGISTERED_URL/privkey.pem;
 
     ssl on;
     ssl_session_cache  builtin:1000  shared:SSL:10m;
@@ -32,7 +32,7 @@ server {
       proxy_pass          http://localhost:8080;
       proxy_read_timeout  90;
 
-      proxy_redirect      http://localhost:8080 https://secret-party.duckdns.org;
+      proxy_redirect      http://localhost:8080 https://YOUR_REGISTERED_URL;
     }
   
 }
