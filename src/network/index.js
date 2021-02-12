@@ -1,8 +1,6 @@
 import swarm from "./webrtc-swarm";
 import signalhub from "signalhub";
 
-const hubUrl = process.env.ENV === 'dev' ? 'http://localhost:8080' : 'https://YOUR_REGISTERED_URL/';
-
 export class Network {
     constructor() {
         this.connect = this.connect.bind(this);
@@ -11,10 +9,10 @@ export class Network {
     }
     
     connect() {
-        console.log("loading hub");
-        const hub = signalhub('lets-party', [hubUrl]);
+        console.log("loading hub: ",process.env.HUB_URL);
+        const hub = signalhub('lets-party', [process.env.HUB_URL]);
         console.log(hub);
-        const turnServer = "YOUR_REGISTERED_URL";
+        const turnServer = process.env.TURN_IP;
         const sw = swarm(hub,
             {
                 config: {
