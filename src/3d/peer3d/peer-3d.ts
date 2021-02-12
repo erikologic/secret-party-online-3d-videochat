@@ -89,6 +89,7 @@ export class Peer3d {
     private getMaterial(scene: Scene): StandardMaterial {
         const mat = new StandardMaterial(`VideoBoxMaterial_${this.id}`, scene);
         mat.diffuseColor = new Color3(0, 0, 0);
+        mat.specularPower = Number.MAX_VALUE;
         return mat;
     }
 
@@ -97,6 +98,7 @@ export class Peer3d {
         videoPanelMaterial.roughness = 1;
         videoPanelMaterial.emissiveColor = Color3.White();
         videoPanelMaterial.diffuseTexture = videoTexture;
+        videoPanelMaterial.specularPower = Number.MAX_VALUE;
         return videoPanelMaterial;
     }
 
