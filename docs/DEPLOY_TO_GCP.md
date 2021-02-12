@@ -90,10 +90,14 @@ nvm install --lts
 ```
 You might need to log out and log in again at this stage
 
-### Update the codebase with your registered URL
+### Create an env file
+From the root of the project:
 ```
-# obviously replace your.registered.url.com with the URL you have registered
-grep -rl YOUR_REGISTERED_URL src --exclude-dir=.git | xargs sed -i '' 's/YOUR_REGISTERED_URL/your.registered.url/g'
+cp .env.example .env
+```
+Edit the value:
+```
+nano .env
 ```
 
 ### Run the servers
