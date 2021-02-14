@@ -43,7 +43,8 @@ module.exports = {
         new CleanWebpackPlugin(),
         new Dotenv({
             safe: true, // load '.env.example' to verify the '.env' variables are all set. Can also be a string to a different file.
-            systemvars: true, // load all the predefined 'process.env' variables which will trump anything local per dotenv specs.
+            systemvars: true, // load all the predefined 'process.env' variables which will trump anything local per dotenv specs.,
+            defaults: true // load '.env.defaults' as the default values if empty.
         })
     ]
 }
