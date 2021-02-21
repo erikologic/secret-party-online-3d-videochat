@@ -1,7 +1,7 @@
 import "@babylonjs/loaders/glTF";
 import {Scene, SceneLoader, ShadowGenerator} from "@babylonjs/core";
 
-export function importMesh(scene: Scene, filename: string, shadowGenerator: ShadowGenerator): void {
+export function importMesh(scene: Scene, filename: string): void {
     SceneLoader.ImportMesh(
         "",
         "/asset/",
@@ -11,8 +11,6 @@ export function importMesh(scene: Scene, filename: string, shadowGenerator: Shad
             objs.forEach(obj => {
                 // console.log("Imported ", obj.id, obj.name);
                 obj.checkCollisions = true;
-                obj.receiveShadows = true;
-                shadowGenerator?.getShadowMap()?.renderList?.push(obj);
             });
         }, (event) => {
             // console.log(event);

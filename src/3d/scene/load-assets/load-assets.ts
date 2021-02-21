@@ -38,4 +38,4 @@ const assetList = [
     'Yakuzi tent decimated compressed.glb'
 ];
 
-export const loadAssets = (scene: Scene, shadowGenerator: ShadowGenerator): void => assetList.forEach(filename => importMesh(scene, filename, shadowGenerator));
+export const loadAssets = (scene: Scene): void => assetList.forEach(filename => importMesh(scene, filename));

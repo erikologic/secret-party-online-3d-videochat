@@ -24,11 +24,10 @@ function setupScene(engine: Engine): Scene {
 
 export function createScene(engine: Engine, canvas: HTMLCanvasElement): Scene {
     const scene = setupScene(engine);
-    const light = lights.addTo(scene);
-    const shadowGenerator = new ShadowGenerator(1024, light);
+    lights.addTo(scene);
     createSky(scene);
     createCamera(scene, canvas);
-    loadAssets(scene, shadowGenerator);
+    loadAssets(scene);
     
     // scene.debugLayer.show()
     return scene;
