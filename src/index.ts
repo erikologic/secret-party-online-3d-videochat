@@ -6,6 +6,11 @@ import {
     showLocalVideoStream
 } from "./local-stream";
 
+console.log('config', {
+    HUB_URL: process.env.HUB_URL,
+    TURN_IP: process.env.TURN_IP,
+})
+
 function init(): void {
     const overlay = document.getElementById('overlay');
     overlay?.remove();
