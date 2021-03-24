@@ -24,5 +24,3 @@ services:
         network_mode: "host"
         volumes:
             - ../turnserver/turnserver.conf:/etc/coturn/turnserver.conf
-
-        
