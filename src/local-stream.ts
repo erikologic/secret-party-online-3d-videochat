@@ -56,3 +56,19 @@ export function showLocalVideoStream(stream: MediaStream): void {
         (localVideo as HTMLVideoElement).srcObject = stream;
     }
 }
+
+export function addASuperCrappyMuteAndDisableVideoShortcut(stream: MediaStream): void {
+    window.onkeydown = ({code}: KeyboardEvent) => {
+        if (code === 'KeyM') {
+            const audioStream = stream.getAudioTracks()[0]
+            audioStream.enabled = !audioStream.enabled
+            console.log('Is my audio enabled? ' + audioStream.enabled)
+        }
+        
+        if (code === 'KeyV') {
+            const videoStream = stream.getVideoTracks()[0]
+            videoStream.enabled = !videoStream.enabled
+            console.log('Is my video enabled? ' + videoStream.enabled)
+        }
+    }
+}

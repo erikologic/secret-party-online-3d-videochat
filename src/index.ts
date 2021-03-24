@@ -1,6 +1,10 @@
 import {ThreeD} from "./3d";
 import {Network} from "./network";
-import {getStream, showLocalVideoStream} from "./local-stream";
+import {
+    addASuperCrappyMuteAndDisableVideoShortcut,
+    getStream,
+    showLocalVideoStream
+} from "./local-stream";
 
 function init(): void {
     const overlay = document.getElementById('overlay');
@@ -11,6 +15,8 @@ function init(): void {
 
     getStream()
         .then(localStream => {
+            addASuperCrappyMuteAndDisableVideoShortcut(localStream);
+            
             showLocalVideoStream(localStream);
 
             const networkLayer = new Network();
