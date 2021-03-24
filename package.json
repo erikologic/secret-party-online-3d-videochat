@@ -55,6 +55,7 @@
         "server:start": "npm --prefix server start",
         "build": "npm run bundle:pre && npm run lint && npm run bundle && npm run server:pre",
         "start": "npm run server:start",
+        "build:start": "npm run build && npm start",
         "test": "jest"
     },
     "repository": {

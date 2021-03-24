@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+    nginx:
+        image: nginx
+        ports:
+            - 80:80
+            - 443:443
+        volumes:
+            - ../nginx/default:/etc/nginx/conf.d/default.conf
+            - /etc/letsencrypt:/etc/letsencrypt
+            - /var/log/nginx:/var/log/nginx
+    app:
+        image: library/node:12-alpine
+        volumes:
+            - ../:/opt
+        working_dir: /opt
+        entrypoint: npm run build:start
+        environment:
+            - HUB_URL=https://${URL}
+            - TURN_IP=${EXTERNAL_IP}
+    coturn:
+        image: instrumentisto/coturn
+        network_mode: "host"
+        volumes:
+            - ../turnserver/turnserver.conf:/etc/coturn/turnserver.conf

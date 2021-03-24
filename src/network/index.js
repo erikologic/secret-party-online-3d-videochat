@@ -9,7 +9,6 @@ export class Network {
     }
     
     connect() {
-        console.log("loading hub: ",process.env.HUB_URL);
         const hub = signalhub('lets-party', [process.env.HUB_URL]);
         console.log(hub);
         const turnServer = process.env.TURN_IP;
