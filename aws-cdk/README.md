@@ -42,7 +42,9 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 - signup/log in DuckDNS
 - create a domain
 - copy the token
+- checkout the project
 - shell in this project folder: `cd secret-party-online-3d-videochat/aws-cdk`
+- install the dependencies: `npm i`
 - create an .env configuration file from the example one: `cp .env.example .env`
 - edit the content: `vi .env` 
 
