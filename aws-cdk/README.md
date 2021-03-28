@@ -74,7 +74,7 @@ To debug the deployment you can:
 - inspect the instance by logging into it via Session Manager: https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-sessions-start.html 
 
 
-The logs of the deploy script can be found:
+The logs of the deploy/launch script can be found:
 - on the instance, under `/var/log/user-data.log`
 - with some delay, in the EC2 web console logs section: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-console.html#instance-console-console-output
 
