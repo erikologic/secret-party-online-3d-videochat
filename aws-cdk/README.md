@@ -85,4 +85,4 @@ The logs of the deploy/launch script can be found:
 
 ## Destroy
 When your party is over, just run `npx cdk destroy`  
-It will remove all the resources and stop you from putting more cents in the Bezos pockets!  
+It will remove all the resources and stop you from putting more cents into Bezos pockets!  
