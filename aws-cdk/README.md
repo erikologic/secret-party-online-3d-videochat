@@ -25,11 +25,7 @@ The running cost are ATM less than 2$/hour.
 In order to configure DuckDNS, its token will be passed unencrypted to the instance via userdata.  
 This is an accepted security risk - if you agree, skip the section below.
 
-If you don't feel comfortable with this choice, you can:
-- disable all the safety/type checks around any `DUCKDNS` env
-- disable the deployment of userdata
-- log in the EC2 via Session Manager  
-- run commands from `script/deploy.sh` on the instance manually
+If you don't feel comfortable with this choice, you will have to [manually deploy/launch the app](#manually-deploylaunch-the-app) on the instance
 
 ## Useful commands
 
@@ -65,6 +61,12 @@ E.g. you are in London, and your `AWS_REGION` is `eu-west-1` (Dublin)
 You might want to deploy in a region closer to you, e.g. `eu-west-2` (London)  
 You can overwrite your env var like this: `AWS_REGION=eu-west-2 npx cdk deploy`  
 
+## Manually deploy/launch the app
+- disable all the safety/type checks around any `DUCKDNS_` env
+- disable the deployment of userdata
+- log in the EC2 via Session Manager  
+- run the commands from `script/deploy.sh` on the instance manually
+
 ## Monitoring / troubleshooting
 To debug the deployment you can:
 - check in CloudFormation that the deployment went fine
@@ -77,8 +79,9 @@ The logs of the deploy script can be found:
 - with some delay, in the EC2 web console logs section: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-console.html#instance-console-console-output
 
 ### How to fix a broken deployment
- - log in the instance
- - manually run the various commands in the `script/deploy.sh` file. 
+- log in the instance
+- manually run the various commands in the `script/deploy.sh` file. 
+- try to redeploy using the [manually deploy/launch the app](#manually-deploylaunch-the-app) procedure
 
 ## Destroy
 When your party is over, just run `npx cdk destroy`  
