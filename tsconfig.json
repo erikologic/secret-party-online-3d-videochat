@@ -21,4 +21,5 @@
         "es2015.promise"
       ]
     },
+    "exclude": ["aws-cdk"]
 }
