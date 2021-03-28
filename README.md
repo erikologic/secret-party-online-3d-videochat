@@ -33,7 +33,10 @@ The next upcoming features I'd like to see realised:
 ## How to use it
 🥺 Sorry, there is no public deployment yet.     
 
-🛠 You can follow the procedure at [DEPLOY_TO_GCP.md](docs/DEPLOY_TO_GCP.md) to create your private instance.  
+🛠 You can deploy it yourself:
+ - ![AWS Logo](docs/asset/aws-logo.png) [on AWS using CDK IaaC](aws-cdk/README.md) - preferred
+ - ![GCP Logo](docs/asset/gcp-logo.png) [manually on Google Cloud](docs/DEPLOY_TO_GCP.md)
+   
 _[Contact me](#contacts) if you need help with that._
 
 ## Contributing
