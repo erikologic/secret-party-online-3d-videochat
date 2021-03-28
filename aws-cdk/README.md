@@ -8,7 +8,7 @@ This AWS CDK IaaC project will:
 - Follow the [setup](#setup)
 - Log in to AWS on your shell
 - `AWS_REGION=your-closest-aws-region npx cdk deploy` to launch the app
-- wait 5 mins and then go to your app address
+- wait 5 mins and then go to your app URL
 - `AWS_REGION=your-closest-aws-region npx cdk destroy` when the party is over
 
 ### What resources will be created?
