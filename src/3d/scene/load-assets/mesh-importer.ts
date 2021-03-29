@@ -4,7 +4,7 @@ import {Scene, SceneLoader, ShadowGenerator} from "@babylonjs/core";
 export function importMesh(scene: Scene, filename: string): void {
     SceneLoader.ImportMesh(
         "",
-        "/asset/",
+        "/asset/3d-app/3d-asset/",
         filename,
         scene,
         (objs) => {
