@@ -54,14 +54,52 @@
         #overlay > div {
             margin-bottom: 5vh;
         }
+
+        #ribbon {
+            /* positioning */
+            position: fixed;
+            padding: 5px 45px;
+            width: 128px;
+            /* top right of the page */
+            top: 50px;
+            right: -50px;
+            -webkit-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+            /* effects with some shadow */
+            box-shadow: 0 0 0 3px #7d138b, 0 0 20px -3px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 0 0 #ffffff, 0 0 5px rgba(0, 0, 0, 0.3);
+            /* looks */
+            background-color: #7d138b;
+            color: #ffffff;
+            font-size: 13px;
+            font-family: sans-serif;
+            text-decoration: none;
+            font-weight: bold;
+            /* ribbon effects */
+            border: 2px dotted #ffffff;
+            /* webkit antialias fix */
+            -webkit-backface-visibility: hidden;
+            letter-spacing: .5px;
+        }
         
         #logo {
-            display: flex;
-            justify-content: center;
+            background: url("/asset/start-page/secret-party-logo.png");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            height: 40vh;
+            /*display: flex;*/
+            /*justify-content: center;*/
         }
         
         #logo > img {
             max-width: 100%;
+        }
+        
+        #logo > div.glow {
+            /*position: absolute;*/
         }
         
         #textStuff {
@@ -97,6 +135,10 @@
             font-size: 1rem;
         }
         
+        #keys > p {
+            line-height: 0.5rem;
+        }
+        
         #startButtonContainer {
             display: flex;
             align-items: center;
@@ -112,13 +154,44 @@
              cursor: pointer; 
              text-transform: uppercase; 
         }
+        
+        #join {
+            flex-grow: 4;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        
+        #join > a {
+            font-size: 2.5rem;
+            color: #fff;
+        }
+        
+        .glow {
+            font-size: 2.5rem;
+            color: #fff;
+            -webkit-animation: glow 1s ease-in-out infinite alternate;
+            -moz-animation: glow 1s ease-in-out infinite alternate;
+            animation: glow 1s ease-in-out infinite alternate;
+        }
+
+        @-webkit-keyframes glow {
+            from {
+                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+            }
+            to {
+                text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
+            }
+        }
     </style>
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 </head>
     <body>
         <div id="overlay">
+            <a id="ribbon" href='https://github.com/mrenrich84/secret-party-online-3d-videochat' target="_blank" >Fork me on GitHub</a>
             <div id="logo">
-                <img src="/asset/start-page/secret-party-logo.png">
+<!--                <img src="/asset/start-page/secret-party-logo.png">-->
             </div>
             <div id="textStuff">
                 <div id="chrome">
@@ -129,15 +202,18 @@
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M192 208c0-17.67-14.33-32-32-32h-16c-35.35 0-64 28.65-64 64v48c0 35.35 28.65 64 64 64h16c17.67 0 32-14.33 32-32V208zm176 144c35.35 0 64-28.65 64-64v-48c0-35.35-28.65-64-64-64h-16c-17.67 0-32 14.33-32 32v112c0 17.67 14.33 32 32 32h16zM256 0C113.18 0 4.58 118.83 0 256v16c0 8.84 7.16 16 16 16h16c8.84 0 16-7.16 16-16v-16c0-114.69 93.31-208 208-208s208 93.31 208 208h-.12c.08 2.43.12 165.72.12 165.72 0 23.35-18.93 42.28-42.28 42.28H320c0-26.51-21.49-48-48-48h-32c-26.51 0-48 21.49-48 48s21.49 48 48 48h181.72c49.86 0 90.28-40.42 90.28-90.28V256C507.42 118.83 398.82 0 256 0z"/></svg>
                     <span>Wear your headset!</span>
                 </div>
-                <div id="shortcuts">
-                    <h3>Shortcuts:</h3>
-                    <p>M: mute</p>
-                    <p>V: disable video</p>
+                <div id="keys">
+                    <h3>Keys:</h3>
+                    <p>WASD: move</p>
+                    <p>Space: jump</p>
+                    <p>M: un/mute</p>
+                    <p>V: disable/enable video</p>
                 </div>
             </div>
             <div id="startButtonContainer">
-                <button>Enter the party!</button>
+                <button id="startButton" class="glow" >Enter the party!</button>
             </div>
+            <div id="join"><a target="_blank" href='https://github.com/mrenrich84/secret-party-online-3d-videochat/blob/master/docs/CONTRIBUTING.md'>join the project!</a></div>
         </div>
         
         <video id="localVideo" autoplay muted playsinline></video>
