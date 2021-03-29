@@ -4,10 +4,10 @@
     "description": "People can socialise in video chat like in real life situations where conversations spark in different places",
     "main": "index.ts",
     "dependencies": {
-        "@babylonjs/loaders": "^4.1.0",
-        "@babylonjs/materials": "^4.1.0",
         "@babylonjs/core": "^4.1.0",
         "@babylonjs/inspector": "^4.1.0",
+        "@babylonjs/loaders": "^4.1.0",
+        "@babylonjs/materials": "^4.1.0",
         "cuid": "^2.1.8",
         "dat-gui": "^0.5.0",
         "debug": "^4.1.1",

@@ -27,15 +27,6 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 loader: 'ts-loader'
-            },
-            {
-                test: /\.(png|jpg|gif|gltf|glb|babylon|obj|stl)$/i,
-                use: [{
-                    loader: 'url-loader',
-                    options: {
-                        limit: 8192,
-                    },
-                }, ],
             }
         ]
     },
