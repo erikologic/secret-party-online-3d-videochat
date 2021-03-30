@@ -44,7 +44,7 @@ const addJump = (camera: FreeCamera, scene: Scene) => {
     animation.setEasingFunction(easingFunction);
     camera.animations.push(animation);
 
-    window.addEventListener("keyup", (event) => {
+    window.addEventListener("keydown", (event) => {
         switch (event.keyCode) {
             case 32:
                 scene.beginAnimation(camera, 0, 60, false);
