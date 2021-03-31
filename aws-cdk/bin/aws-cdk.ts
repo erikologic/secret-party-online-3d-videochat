@@ -9,7 +9,7 @@ require('dotenv').config()
 const domain = getEnvVar("DUCKDNS_DOMAIN", "You need to provide your DuckDNS (sub) domain");
 const token = getEnvVar("DUCKDNS_TOKEN", "You need to provide your DuckDNS token");
 const email = getEnvVar("EMAIL", "You need to provide an email for signing the Let's Encrypt HTTPS certificates");
-const appName = domain + '_SecretParty';
+const appName = domain + 'SecretParty';
 const appConfig: AppConfigProps = { appName, email, duckDns: {domain, token} };
 
 const stackConfig: cdk.StackProps = {
@@ -20,4 +20,4 @@ const stackConfig: cdk.StackProps = {
 }
 
 const app = new cdk.App();
-new VideochatApp(app, 'myVideochatApp', stackConfig, appConfig); // TODO app name depnding on user
+new VideochatApp(app, appName, stackConfig, appConfig);

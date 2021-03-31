@@ -35,7 +35,7 @@ export class VideochatApp extends cdk.Stack {
         const vpcSubnets = vpc.selectSubnets({subnetType: SubnetType.PUBLIC});
         const machineImage = MachineImage.latestAmazonLinux({generation: AmazonLinuxGeneration.AMAZON_LINUX_2});
 
-        const securityGroup = new SecurityGroup(this, appConfig.appName + 'SecurityGroup', {
+        const securityGroup = new SecurityGroup(this, id + 'SecurityGroup', {
             vpc,
             description: 'Allow access to the app',
             allowAllOutbound: true
@@ -57,7 +57,7 @@ export class VideochatApp extends cdk.Stack {
             `logger -t user-data -s 2>/dev/console`
         userData.addCommands(execDeployScriptWithLogging);
         
-        const instance = new Instance(this, appConfig.appName + 'Instance', {
+        const instance = new Instance(this, id + 'Instance', {
             instanceType,
             machineImage,
             securityGroup,
