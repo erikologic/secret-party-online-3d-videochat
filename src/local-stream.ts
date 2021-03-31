@@ -63,6 +63,15 @@ export function addASuperCrappyMuteAndDisableVideoShortcut(stream: MediaStream):
             const audioStream = stream.getAudioTracks()[0]
             audioStream.enabled = !audioStream.enabled
             console.log('Is my audio enabled? ' + audioStream.enabled)
+            if (audioStream.enabled) {
+                document.getElementById('mic-icon-on')!.style!.display = 'block'
+                document.getElementById('mic-icon-off')!.style!.display = 'none'
+                document.getElementById('mic')!.className = 'mic-background-on'
+            } else {
+                document.getElementById('mic-icon-on')!.style!.display = 'none'
+                document.getElementById('mic-icon-off')!.style!.display = 'block'
+                document.getElementById('mic')!.className = 'mic-background-off'
+            }
         }
         
         if (code === 'KeyV') {
