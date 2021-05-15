@@ -1,8 +1,7 @@
 export class Room {
-    constructor(private local: Local, private remoteRoom: RemoteRoom) {
-    }
+    constructor(private local: Local, private remoteRoom: RemoteRoom) {}
 
-    async join(_room: string) {
+    async join(_room: string): Promise<void> {
         await this.local.getWebcamStream();
         await this.remoteRoom.join();
     }
