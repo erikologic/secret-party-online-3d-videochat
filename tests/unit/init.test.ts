@@ -1,46 +1,47 @@
 import {
     Avatar,
     Local,
-    LocalMedia,
+    LocalStream,
     Peer,
-    RemoteMedia,
+    RemoteStream,
     RemoteRoom,
     Room,
     VirtualWorld,
 } from "../../src/init";
 
 describe("when entering a room", () => {
-    const localMedia: LocalMedia = {
-        media: undefined,
+    const localStream: LocalStream = {
+        stream: undefined,
     };
 
-    const remoteMedia: RemoteMedia = {
-        media: undefined,
+    const remoteStream: RemoteStream = {
+        stream: undefined,
     };
 
     const peer: Peer = {
-        getMedia: jest.fn().mockResolvedValue(remoteMedia),
+        getStream: jest.fn().mockResolvedValue(remoteStream),
         id: "aPeer",
     };
 
     const remoteRoom: RemoteRoom = {
         getPeers: jest.fn().mockResolvedValue([peer]),
-        sendLocalMedia: jest.fn().mockResolvedValue(undefined),
+        sendLocalStream: jest.fn().mockResolvedValue(undefined),
         join: jest.fn().mockResolvedValue(undefined),
     };
 
     const local: Local = {
         showWebcamStream: jest.fn(),
-        getWebcamStream: jest.fn().mockResolvedValue(localMedia),
+        getWebcamStream: jest.fn().mockResolvedValue(localStream),
     };
 
     const avatar: Avatar = {
         _id: "",
+        showStream: jest.fn(),
     };
 
     const virtualWord: VirtualWorld = {
         start: jest.fn().mockResolvedValue(undefined),
-        createAvatar: jest.fn().mockResolvedValue(avatar),
+        createAvatar: jest.fn().mockReturnValue(avatar),
     };
 
     beforeEach(async () => {
@@ -66,8 +67,10 @@ describe("when entering a room", () => {
             expect(local.showWebcamStream).toHaveBeenCalled();
         });
 
-        it("send local media to the remoteRoom", () => {
-            expect(remoteRoom.sendLocalMedia).toHaveBeenCalledWith(localMedia);
+        it("send local stream to the remoteRoom", () => {
+            expect(remoteRoom.sendLocalStream).toHaveBeenCalledWith(
+                localStream
+            );
         });
 
         it("spin up the virtual world", () => {
@@ -84,14 +87,20 @@ describe("when entering a room", () => {
             expect(virtualWord.createAvatar).toHaveBeenCalled();
         });
 
-        test("when a peer is found will try fetch her media", () => {
-            expect(peer.getMedia).toHaveBeenCalled();
+        test("when a peer is found will try fetch her stream", () => {
+            expect(peer.getStream).toHaveBeenCalled();
         });
+        test.todo("when fails fetching peer stream");
+
+        test("when peer stream is found will attach it to its avatar", () => {
+            expect(avatar.showStream).toHaveBeenCalledWith(remoteStream);
+        });
+        test.todo("when fails attaching peer stream");
 
         test.todo("move peer in the virtual world");
-        test.todo("attach peer media to its avatar");
-        test.todo("fetch peer media for peer depending on distance");
+        test.todo("fetch peer stream for peer depending on distance");
     });
 
     test.todo("syncs users known with users in the room");
+    test.todo("when I move it will broadcast the movements");
 });
