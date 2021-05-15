@@ -9,10 +9,12 @@ export class Room {
         const localMedia = await this.local.getWebcamStream();
         await this.local.showWebcamStream();
         await this.remoteRoom.join();
-        const peers = await this.remoteRoom.getPeers();
-        await peers[0].getMedia();
         await this.remoteRoom.sendLocalMedia(localMedia);
         await this.virtualWord.start();
+
+        const peers = await this.remoteRoom.getPeers();
+        this.virtualWord.addPeer(peers[0]);
+        await peers[0].getMedia();
     }
 }
 
@@ -33,6 +35,7 @@ export interface RemoteRoom {
 }
 
 export interface VirtualWorld {
+    addPeer: (peer: Peer) => void;
     start: () => Promise<void>;
 }
 

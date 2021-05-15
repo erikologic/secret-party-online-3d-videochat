@@ -35,6 +35,7 @@ describe("when entering a room", () => {
 
     const virtualWord: VirtualWorld = {
         start: jest.fn().mockResolvedValue(undefined),
+        addPeer: jest.fn(),
     };
 
     beforeEach(async () => {
@@ -66,7 +67,16 @@ describe("when entering a room", () => {
         expect(remoteRoom.getPeers).toHaveBeenCalled();
     });
 
+    test("when a peer is found will create its avatar", () => {
+        expect(virtualWord.addPeer).toHaveBeenCalledWith(peer);
+    });
+
     test("when a peer is found will try fetch her media", () => {
         expect(peer.getMedia).toHaveBeenCalled();
     });
+
+    test.todo("is using the right browser");
+    test.todo("can get access to webcam");
+    test.todo("fetch media for peer depending on distance");
+    test.todo("syncs users known with users in the room");
 });
