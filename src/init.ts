@@ -6,22 +6,28 @@ export class Room {
     ) {}
 
     async join(_room: string): Promise<void> {
-        await this.local.getWebcamStream();
+        const localMedia = await this.local.getWebcamStream();
         await this.local.showWebcamStream();
         await this.remoteRoom.join();
+        await this.remoteRoom.sendLocalMedia(localMedia);
         await this.virtualWord.start();
     }
 }
 
 export interface Local {
     showWebcamStream: () => void;
-    getWebcamStream: () => Promise<void>;
+    getWebcamStream: () => Promise<LocalMedia>;
 }
 
 export interface RemoteRoom {
+    sendLocalMedia: (localMedia: LocalMedia) => Promise<void>;
     join: () => Promise<void>;
 }
 
 export interface VirtualWorld {
     start: () => Promise<void>;
+}
+
+export interface LocalMedia {
+    media: any;
 }
