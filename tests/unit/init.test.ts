@@ -1,6 +1,8 @@
 import {
     Local,
     LocalMedia,
+    Peer,
+    RemoteMedia,
     RemoteRoom,
     Room,
     VirtualWorld,
@@ -11,7 +13,17 @@ describe("when entering a room", () => {
         media: undefined,
     };
 
+    const remoteMedia: RemoteMedia = {
+        media: undefined,
+    };
+
+    const peer: Peer = {
+        getMedia: jest.fn().mockResolvedValue(remoteMedia),
+        id: "aPeer",
+    };
+
     const remoteRoom: RemoteRoom = {
+        getPeers: jest.fn().mockResolvedValue([peer]),
         sendLocalMedia: jest.fn().mockResolvedValue(undefined),
         join: jest.fn().mockResolvedValue(undefined),
     };
@@ -48,5 +60,13 @@ describe("when entering a room", () => {
 
     it("spin up the virtual world", () => {
         expect(virtualWord.start).toHaveBeenCalled();
+    });
+
+    it("fetch other peers in the room", () => {
+        expect(remoteRoom.getPeers).toHaveBeenCalled();
+    });
+
+    test("when a peer is found will try fetch her media", () => {
+        expect(peer.getMedia).toHaveBeenCalled();
     });
 });
