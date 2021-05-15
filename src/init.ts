@@ -13,7 +13,7 @@ export class Room {
         await this.virtualWord.start();
 
         const peers = await this.remoteRoom.getPeers();
-        this.virtualWord.addPeer(peers[0]);
+        this.virtualWord.createAvatar();
         await peers[0].getMedia();
     }
 }
@@ -34,8 +34,12 @@ export interface RemoteRoom {
     join: () => Promise<void>;
 }
 
+export interface Avatar {
+    _id: string;
+}
+
 export interface VirtualWorld {
-    addPeer: (peer: Peer) => void;
+    createAvatar: () => Avatar;
     start: () => Promise<void>;
 }
 

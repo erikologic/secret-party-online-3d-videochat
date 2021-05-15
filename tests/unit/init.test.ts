@@ -1,4 +1,5 @@
 import {
+    Avatar,
     Local,
     LocalMedia,
     Peer,
@@ -33,9 +34,13 @@ describe("when entering a room", () => {
         getWebcamStream: jest.fn().mockResolvedValue(localMedia),
     };
 
+    const avatar: Avatar = {
+        _id: "",
+    };
+
     const virtualWord: VirtualWorld = {
         start: jest.fn().mockResolvedValue(undefined),
-        addPeer: jest.fn(),
+        createAvatar: jest.fn().mockResolvedValue(avatar),
     };
 
     beforeEach(async () => {
@@ -43,40 +48,50 @@ describe("when entering a room", () => {
         await room.join("aRoom");
     });
 
-    it("gets the local webcam video stream", async () => {
-        expect(local.getWebcamStream).toHaveBeenCalled();
+    describe("initialisation", () => {
+        test.todo("is using the right browser");
+        test.todo("can get access to webcam");
+
+        it("gets the local webcam video stream", async () => {
+            expect(local.getWebcamStream).toHaveBeenCalled();
+        });
+
+        it("join remote room", async () => {
+            expect(remoteRoom.join).toHaveBeenCalled();
+        });
+
+        test.todo("cannot access remote room");
+
+        it("show the local webcam video to the local user", async () => {
+            expect(local.showWebcamStream).toHaveBeenCalled();
+        });
+
+        it("send local media to the remoteRoom", () => {
+            expect(remoteRoom.sendLocalMedia).toHaveBeenCalledWith(localMedia);
+        });
+
+        it("spin up the virtual world", () => {
+            expect(virtualWord.start).toHaveBeenCalled();
+        });
+
+        it("fetch other peers in the room", () => {
+            expect(remoteRoom.getPeers).toHaveBeenCalled();
+        });
     });
 
-    it("show the local webcam video to the local user", async () => {
-        expect(local.showWebcamStream).toHaveBeenCalled();
+    describe("connecting to other peers", () => {
+        test("when a peer is found will create its avatar", () => {
+            expect(virtualWord.createAvatar).toHaveBeenCalled();
+        });
+
+        test("when a peer is found will try fetch her media", () => {
+            expect(peer.getMedia).toHaveBeenCalled();
+        });
+
+        test.todo("move peer in the virtual world");
+        test.todo("attach peer media to its avatar");
+        test.todo("fetch peer media for peer depending on distance");
     });
 
-    it("join remote room", async () => {
-        expect(remoteRoom.join).toHaveBeenCalled();
-    });
-
-    it("send local media to the remoteRoom", () => {
-        expect(remoteRoom.sendLocalMedia).toHaveBeenCalledWith(localMedia);
-    });
-
-    it("spin up the virtual world", () => {
-        expect(virtualWord.start).toHaveBeenCalled();
-    });
-
-    it("fetch other peers in the room", () => {
-        expect(remoteRoom.getPeers).toHaveBeenCalled();
-    });
-
-    test("when a peer is found will create its avatar", () => {
-        expect(virtualWord.addPeer).toHaveBeenCalledWith(peer);
-    });
-
-    test("when a peer is found will try fetch her media", () => {
-        expect(peer.getMedia).toHaveBeenCalled();
-    });
-
-    test.todo("is using the right browser");
-    test.todo("can get access to webcam");
-    test.todo("fetch media for peer depending on distance");
     test.todo("syncs users known with users in the room");
 });
