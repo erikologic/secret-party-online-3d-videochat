@@ -6,10 +6,12 @@ export class Room {
     ) {}
 
     async join(_room: string): Promise<void> {
-        const localStream = await this.local.getWebcamStream();
-        await this.local.showWebcamStream();
+        const localVideo = await this.local.getLocalWebcamVideo();
+        await this.local.showLocalWebcamVideo();
         await this.remoteRoom.join();
-        await this.remoteRoom.sendLocalStream(localStream);
+        const localAudio = await this.local.getLocalWebcamAudio();
+        await this.remoteRoom.sendLocalAudio(localAudio);
+        await this.remoteRoom.sendLocalVideo(localVideo);
         await this.virtualWord.start();
 
         const [peer] = await this.remoteRoom.getPeers();
@@ -23,8 +25,9 @@ export class Room {
 }
 
 export interface Local {
-    showWebcamStream: () => void;
-    getWebcamStream: () => Promise<LocalStream>;
+    showLocalWebcamVideo: () => void;
+    getLocalWebcamVideo: () => Promise<LocalVideo>;
+    getLocalWebcamAudio: () => Promise<LocalAudio>;
 }
 
 export interface Peer {
@@ -36,7 +39,8 @@ export interface Peer {
 
 export interface RemoteRoom {
     getPeers: () => Promise<Peer[]>;
-    sendLocalStream: (localStream: LocalStream) => Promise<void>;
+    sendLocalAudio: (localAudio: LocalAudio) => Promise<void>;
+    sendLocalVideo: (localVideo: LocalVideo) => Promise<void>;
     join: () => Promise<void>;
 }
 
@@ -52,13 +56,9 @@ export interface VirtualWorld {
     start: () => Promise<void>;
 }
 
-interface Stream {
-    stream: any;
-}
-
-export type LocalStream = Stream;
+export type LocalAudio = {};
+export type LocalVideo = {};
+export type RemoteAudio = {};
+export type RemoteVideo = {};
 
 export type PeerPosition = {};
-
-export type RemoteVideo = {};
-export type RemoteAudio = {};

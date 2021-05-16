@@ -1,7 +1,7 @@
 import {
     Avatar,
     Local,
-    LocalStream,
+    LocalVideo,
     Peer,
     RemoteRoom,
     Room,
@@ -9,15 +9,13 @@ import {
     PeerPosition,
     RemoteVideo,
     RemoteAudio,
+    LocalAudio,
 } from "../../src/init";
 
 describe("when entering a room", () => {
+    const localAudio: LocalAudio = {};
+    const localVideo: LocalVideo = {};
     const remoteAudio: RemoteAudio = {};
-
-    const localStream: LocalStream = {
-        stream: undefined,
-    };
-
     const remoteVideo: RemoteVideo = {};
 
     const peer: Peer = {
@@ -31,13 +29,15 @@ describe("when entering a room", () => {
 
     const remoteRoom: RemoteRoom = {
         getPeers: jest.fn().mockResolvedValue([peer]),
-        sendLocalStream: jest.fn().mockResolvedValue(undefined),
+        sendLocalAudio: jest.fn().mockResolvedValue(undefined),
+        sendLocalVideo: jest.fn().mockResolvedValue(undefined),
         join: jest.fn().mockResolvedValue(undefined),
     };
 
     const local: Local = {
-        showWebcamStream: jest.fn(),
-        getWebcamStream: jest.fn().mockResolvedValue(localStream),
+        showLocalWebcamVideo: jest.fn(),
+        getLocalWebcamVideo: jest.fn().mockResolvedValue(localVideo),
+        getLocalWebcamAudio: jest.fn().mockResolvedValue(localAudio),
     };
 
     const avatar: Avatar = {
@@ -61,10 +61,6 @@ describe("when entering a room", () => {
         test.todo("is using the right browser");
         test.todo("can get access to webcam");
 
-        it("gets the local webcam video stream", async () => {
-            expect(local.getWebcamStream).toHaveBeenCalled();
-        });
-
         it("join remote room", async () => {
             expect(remoteRoom.join).toHaveBeenCalled();
         });
@@ -72,13 +68,15 @@ describe("when entering a room", () => {
         test.todo("cannot access remote room");
 
         it("show the local webcam video to the local user", async () => {
-            expect(local.showWebcamStream).toHaveBeenCalled();
+            expect(local.showLocalWebcamVideo).toHaveBeenCalled();
         });
 
-        it("send local stream to the remoteRoom", () => {
-            expect(remoteRoom.sendLocalStream).toHaveBeenCalledWith(
-                localStream
-            );
+        it("send local video to the remoteRoom", () => {
+            expect(remoteRoom.sendLocalVideo).toHaveBeenCalledWith(localVideo);
+        });
+
+        it("send local audio to the remoteRoom", () => {
+            expect(remoteRoom.sendLocalAudio).toHaveBeenCalledWith(localAudio);
         });
 
         it("spin up the virtual world", () => {
