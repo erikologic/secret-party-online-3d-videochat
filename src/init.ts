@@ -15,6 +15,8 @@ export class Room {
         await this.remoteRoom.sendLocalAudio(localAudio);
         await this.remoteRoom.sendLocalVideo(localVideo);
         await this.virtualWord.start();
+        this.virtualWord.onPositionUpdate =
+            this.remoteRoom.broadcastLocalPosition;
 
         const peers = await this.remoteRoom.getPeers();
         for await (const peer of peers) {
@@ -43,6 +45,7 @@ export interface Peer {
 }
 
 export interface RemoteRoom {
+    broadcastLocalPosition: (localPosition: LocalPosition) => Promise<void>;
     setLocalConfiguration: (configuration: LocalConfiguration) => Promise<void>;
     getPeers: () => Promise<Peer[]>;
     sendLocalAudio: (localAudio: LocalAudio) => Promise<void>;
@@ -58,6 +61,7 @@ export interface Avatar {
 }
 
 export interface VirtualWorld {
+    onPositionUpdate: (position: PeerPosition) => Promise<void>;
     createAvatar: () => Avatar;
     start: () => Promise<void>;
 }
@@ -68,6 +72,7 @@ export type RemoteAudio = {};
 export type RemoteVideo = {};
 
 export type PeerPosition = {};
+export type LocalPosition = {};
 
 export interface LocalConfiguration {
     name: string;

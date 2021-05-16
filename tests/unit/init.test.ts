@@ -12,6 +12,7 @@ import {
     LocalAudio,
     LocalConfiguration,
     PeerConfiguration,
+    LocalPosition,
 } from "../../src/init";
 
 describe("when entering a room", () => {
@@ -25,6 +26,7 @@ describe("when entering a room", () => {
     const peerConfiguration: PeerConfiguration = {
         name: "peer",
     };
+    const localPosition: LocalPosition = {};
 
     let peer: Peer;
 
@@ -38,8 +40,8 @@ describe("when entering a room", () => {
 
     beforeEach(async () => {
         peer = {
-            getAudio: jest.fn().mockResolvedValue(remoteAudio),
-            getVideo: jest.fn().mockResolvedValue(remoteVideo),
+            getAudio: () => Promise.resolve(remoteAudio),
+            getVideo: () => Promise.resolve(remoteVideo),
             id: "aPeer",
             onPositionUpdate: () => {
                 throw new Error("not implemented");
@@ -53,6 +55,7 @@ describe("when entering a room", () => {
             sendLocalVideo: jest.fn().mockResolvedValue(undefined),
             join: jest.fn().mockResolvedValue(undefined),
             setLocalConfiguration: jest.fn().mockResolvedValue(undefined),
+            broadcastLocalPosition: jest.fn(),
         };
 
         local = {
@@ -72,6 +75,9 @@ describe("when entering a room", () => {
         virtualWord = {
             start: jest.fn().mockResolvedValue(undefined),
             createAvatar: jest.fn().mockReturnValue(avatar),
+            onPositionUpdate: async (): Promise<void> => {
+                throw new Error("not implemented");
+            },
         };
 
         const room = new Room(local, remoteRoom, virtualWord);
@@ -153,9 +159,16 @@ describe("when entering a room", () => {
             peer.onPositionUpdate(position);
             expect(avatar.moveTo).toHaveBeenCalledWith(position);
         });
-        test.todo("fetch peer stream for peer depending on distance");
+        test.todo("fetch peer video depending on distance");
+        test.todo("fetch peer audio depending on distance");
     });
 
     test.todo("syncs users known with users in the room");
-    test.todo("when I move it will broadcast the movements");
+
+    test("local movements will be broadcast", async () => {
+        await virtualWord.onPositionUpdate(localPosition);
+        expect(remoteRoom.broadcastLocalPosition).toHaveBeenCalledWith(
+            localPosition
+        );
+    });
 });
