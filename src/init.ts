@@ -9,6 +9,8 @@ export class Room {
         const localVideo = await this.local.getLocalWebcamVideo();
         await this.local.showLocalWebcamVideo();
         await this.remoteRoom.join();
+        const localConfiguration = await this.local.getLocalConfiguration();
+        await this.remoteRoom.setLocalConfiguration(localConfiguration);
         const localAudio = await this.local.getLocalWebcamAudio();
         await this.remoteRoom.sendLocalAudio(localAudio);
         await this.remoteRoom.sendLocalVideo(localVideo);
@@ -28,6 +30,7 @@ export interface Local {
     showLocalWebcamVideo: () => void;
     getLocalWebcamVideo: () => Promise<LocalVideo>;
     getLocalWebcamAudio: () => Promise<LocalAudio>;
+    getLocalConfiguration: () => LocalConfiguration;
 }
 
 export interface Peer {
@@ -38,6 +41,7 @@ export interface Peer {
 }
 
 export interface RemoteRoom {
+    setLocalConfiguration: (configuration: LocalConfiguration) => Promise<void>;
     getPeers: () => Promise<Peer[]>;
     sendLocalAudio: (localAudio: LocalAudio) => Promise<void>;
     sendLocalVideo: (localVideo: LocalVideo) => Promise<void>;
@@ -62,3 +66,7 @@ export type RemoteAudio = {};
 export type RemoteVideo = {};
 
 export type PeerPosition = {};
+
+export interface LocalConfiguration {
+    name: string;
+}

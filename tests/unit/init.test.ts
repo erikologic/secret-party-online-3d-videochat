@@ -10,6 +10,7 @@ import {
     RemoteVideo,
     RemoteAudio,
     LocalAudio,
+    LocalConfiguration,
 } from "../../src/init";
 
 describe("when entering a room", () => {
@@ -17,6 +18,9 @@ describe("when entering a room", () => {
     const localVideo: LocalVideo = {};
     const remoteAudio: RemoteAudio = {};
     const remoteVideo: RemoteVideo = {};
+    const localConfiguration: LocalConfiguration = {
+        name: "myName",
+    };
 
     const peer: Peer = {
         getAudio: jest.fn().mockResolvedValue(remoteAudio),
@@ -32,12 +36,14 @@ describe("when entering a room", () => {
         sendLocalAudio: jest.fn().mockResolvedValue(undefined),
         sendLocalVideo: jest.fn().mockResolvedValue(undefined),
         join: jest.fn().mockResolvedValue(undefined),
+        setLocalConfiguration: jest.fn().mockResolvedValue(undefined),
     };
 
     const local: Local = {
         showLocalWebcamVideo: jest.fn(),
         getLocalWebcamVideo: jest.fn().mockResolvedValue(localVideo),
         getLocalWebcamAudio: jest.fn().mockResolvedValue(localAudio),
+        getLocalConfiguration: () => localConfiguration,
     };
 
     const avatar: Avatar = {
@@ -63,6 +69,12 @@ describe("when entering a room", () => {
 
         it("join remote room", async () => {
             expect(remoteRoom.join).toHaveBeenCalled();
+        });
+
+        it("sends the local configuration to the other peers", () => {
+            expect(remoteRoom.setLocalConfiguration).toHaveBeenCalledWith(
+                localConfiguration
+            );
         });
 
         test.todo("cannot access remote room");
