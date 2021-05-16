@@ -16,13 +16,15 @@ export class Room {
         await this.remoteRoom.sendLocalVideo(localVideo);
         await this.virtualWord.start();
 
-        const [peer] = await this.remoteRoom.getPeers();
-        const avatar = this.virtualWord.createAvatar();
-        peer.onPositionUpdate = avatar.moveTo;
-        const remoteVideo = await peer.getVideo();
-        avatar.showVideo(remoteVideo);
-        const remoteAudio = await peer.getAudio();
-        avatar.showAudio(remoteAudio);
+        const peers = await this.remoteRoom.getPeers();
+        for await (const peer of peers) {
+            const avatar = this.virtualWord.createAvatar();
+            peer.onPositionUpdate = avatar.moveTo;
+            const remoteVideo = await peer.getVideo();
+            avatar.showVideo(remoteVideo);
+            const remoteAudio = await peer.getAudio();
+            avatar.showAudio(remoteAudio);
+        }
     }
 }
 

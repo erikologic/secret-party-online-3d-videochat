@@ -22,43 +22,53 @@ describe("when entering a room", () => {
         name: "myName",
     };
 
-    const peer: Peer = {
-        getAudio: jest.fn().mockResolvedValue(remoteAudio),
-        getVideo: jest.fn().mockResolvedValue(remoteVideo),
-        id: "aPeer",
-        onPositionUpdate: () => {
-            throw new Error("not implemented");
-        },
-    };
+    let peer: Peer;
 
-    const remoteRoom: RemoteRoom = {
-        getPeers: jest.fn().mockResolvedValue([peer]),
-        sendLocalAudio: jest.fn().mockResolvedValue(undefined),
-        sendLocalVideo: jest.fn().mockResolvedValue(undefined),
-        join: jest.fn().mockResolvedValue(undefined),
-        setLocalConfiguration: jest.fn().mockResolvedValue(undefined),
-    };
+    let remoteRoom: RemoteRoom;
 
-    const local: Local = {
-        showLocalWebcamVideo: jest.fn(),
-        getLocalWebcamVideo: jest.fn().mockResolvedValue(localVideo),
-        getLocalWebcamAudio: jest.fn().mockResolvedValue(localAudio),
-        getLocalConfiguration: () => localConfiguration,
-    };
+    let local: Local;
 
-    const avatar: Avatar = {
-        _id: "",
-        showVideo: jest.fn(),
-        showAudio: jest.fn(),
-        moveTo: jest.fn(),
-    };
+    let avatar: Avatar;
 
-    const virtualWord: VirtualWorld = {
-        start: jest.fn().mockResolvedValue(undefined),
-        createAvatar: jest.fn().mockReturnValue(avatar),
-    };
+    let virtualWord: VirtualWorld;
 
     beforeEach(async () => {
+        peer = {
+            getAudio: jest.fn().mockResolvedValue(remoteAudio),
+            getVideo: jest.fn().mockResolvedValue(remoteVideo),
+            id: "aPeer",
+            onPositionUpdate: () => {
+                throw new Error("not implemented");
+            },
+        };
+
+        remoteRoom = {
+            getPeers: jest.fn().mockResolvedValue([peer]),
+            sendLocalAudio: jest.fn().mockResolvedValue(undefined),
+            sendLocalVideo: jest.fn().mockResolvedValue(undefined),
+            join: jest.fn().mockResolvedValue(undefined),
+            setLocalConfiguration: jest.fn().mockResolvedValue(undefined),
+        };
+
+        local = {
+            showLocalWebcamVideo: jest.fn(),
+            getLocalWebcamVideo: jest.fn().mockResolvedValue(localVideo),
+            getLocalWebcamAudio: jest.fn().mockResolvedValue(localAudio),
+            getLocalConfiguration: () => localConfiguration,
+        };
+
+        avatar = {
+            _id: "",
+            showVideo: jest.fn(),
+            showAudio: jest.fn(),
+            moveTo: jest.fn(),
+        };
+
+        virtualWord = {
+            start: jest.fn().mockResolvedValue(undefined),
+            createAvatar: jest.fn().mockReturnValue(avatar),
+        };
+
         const room = new Room(local, remoteRoom, virtualWord);
         await room.join("aRoom");
     });
@@ -103,6 +113,18 @@ describe("when entering a room", () => {
     describe("connecting to other peers", () => {
         test("when a peer is found will create its avatar", () => {
             expect(virtualWord.createAvatar).toHaveBeenCalled();
+        });
+
+        test("creates an avatar for each peer found", async () => {
+            jest.clearAllMocks();
+            const fivePeers = Array(5).fill(peer);
+            const getPeersMock = remoteRoom.getPeers as jest.Mock;
+            getPeersMock.mockResolvedValue(fivePeers);
+
+            const room = new Room(local, remoteRoom, virtualWord);
+            await room.join("aRoom");
+
+            expect(virtualWord.createAvatar).toHaveBeenCalledTimes(5);
         });
 
         test("when a peer is found will try fetch her video", () => {
