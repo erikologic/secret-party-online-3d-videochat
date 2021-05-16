@@ -3,24 +3,26 @@ import {
     Local,
     LocalStream,
     Peer,
-    RemoteStream,
     RemoteRoom,
     Room,
     VirtualWorld,
     PeerPosition,
+    RemoteVideo,
+    RemoteAudio,
 } from "../../src/init";
 
 describe("when entering a room", () => {
+    const remoteAudio: RemoteAudio = {};
+
     const localStream: LocalStream = {
         stream: undefined,
     };
 
-    const remoteStream: RemoteStream = {
-        stream: undefined,
-    };
+    const remoteVideo: RemoteVideo = {};
 
     const peer: Peer = {
-        getStream: jest.fn().mockResolvedValue(remoteStream),
+        getAudio: jest.fn().mockResolvedValue(remoteAudio),
+        getVideo: jest.fn().mockResolvedValue(remoteVideo),
         id: "aPeer",
         onPositionUpdate: () => {
             throw new Error("not implemented");
@@ -40,7 +42,8 @@ describe("when entering a room", () => {
 
     const avatar: Avatar = {
         _id: "",
-        showStream: jest.fn(),
+        showVideo: jest.fn(),
+        showAudio: jest.fn(),
         moveTo: jest.fn(),
     };
 
@@ -92,13 +95,23 @@ describe("when entering a room", () => {
             expect(virtualWord.createAvatar).toHaveBeenCalled();
         });
 
-        test("when a peer is found will try fetch her stream", () => {
-            expect(peer.getStream).toHaveBeenCalled();
+        test("when a peer is found will try fetch her video", () => {
+            expect(peer.getVideo).toHaveBeenCalled();
         });
-        test.todo("when fails fetching peer stream");
+        test.todo("when fails fetching peer video");
 
-        test("when peer stream is found will attach it to its avatar", () => {
-            expect(avatar.showStream).toHaveBeenCalledWith(remoteStream);
+        test("when peer video is found will attach it to its avatar", () => {
+            expect(avatar.showVideo).toHaveBeenCalledWith(remoteVideo);
+        });
+        test.todo("when fails attaching peer video");
+
+        test("when a peer is found will try fetch her audio", () => {
+            expect(peer.getAudio).toHaveBeenCalled();
+        });
+        test.todo("when fails fetching peer audio");
+
+        test("when peer audio is found will attach it to its avatar", () => {
+            expect(avatar.showAudio).toHaveBeenCalledWith(remoteAudio);
         });
         test.todo("when fails attaching peer stream");
 
