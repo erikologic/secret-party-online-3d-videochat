@@ -7,6 +7,7 @@ import {
     RemoteRoom,
     Room,
     VirtualWorld,
+    PeerPosition,
 } from "../../src/init";
 
 describe("when entering a room", () => {
@@ -21,6 +22,9 @@ describe("when entering a room", () => {
     const peer: Peer = {
         getStream: jest.fn().mockResolvedValue(remoteStream),
         id: "aPeer",
+        onPositionUpdate: () => {
+            throw new Error("not implemented");
+        },
     };
 
     const remoteRoom: RemoteRoom = {
@@ -37,6 +41,7 @@ describe("when entering a room", () => {
     const avatar: Avatar = {
         _id: "",
         showStream: jest.fn(),
+        moveTo: jest.fn(),
     };
 
     const virtualWord: VirtualWorld = {
@@ -97,7 +102,11 @@ describe("when entering a room", () => {
         });
         test.todo("when fails attaching peer stream");
 
-        test.todo("move peer in the virtual world");
+        test("when the peer moves, its avatar will move in the virtual world", () => {
+            const position: PeerPosition = {};
+            peer.onPositionUpdate(position);
+            expect(avatar.moveTo).toHaveBeenCalledWith(position);
+        });
         test.todo("fetch peer stream for peer depending on distance");
     });
 
