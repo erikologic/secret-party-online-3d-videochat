@@ -11,6 +11,7 @@ import {
     RemoteAudio,
     LocalAudio,
     LocalConfiguration,
+    PeerConfiguration,
 } from "../../src/init";
 
 describe("when entering a room", () => {
@@ -20,6 +21,9 @@ describe("when entering a room", () => {
     const remoteVideo: RemoteVideo = {};
     const localConfiguration: LocalConfiguration = {
         name: "myName",
+    };
+    const peerConfiguration: PeerConfiguration = {
+        name: "peer",
     };
 
     let peer: Peer;
@@ -40,6 +44,7 @@ describe("when entering a room", () => {
             onPositionUpdate: () => {
                 throw new Error("not implemented");
             },
+            getConfiguration: () => Promise.resolve(peerConfiguration),
         };
 
         remoteRoom = {
@@ -58,10 +63,10 @@ describe("when entering a room", () => {
         };
 
         avatar = {
-            _id: "",
             showVideo: jest.fn(),
             showAudio: jest.fn(),
             moveTo: jest.fn(),
+            setConfiguration: jest.fn(),
         };
 
         virtualWord = {
@@ -127,25 +132,21 @@ describe("when entering a room", () => {
             expect(virtualWord.createAvatar).toHaveBeenCalledTimes(5);
         });
 
-        test("when a peer is found will try fetch her video", () => {
-            expect(peer.getVideo).toHaveBeenCalled();
+        test("sets the avatar configuration to the peer configuration", () => {
+            expect(avatar.setConfiguration).toHaveBeenCalledWith(
+                peerConfiguration
+            );
         });
-        test.todo("when fails fetching peer video");
 
         test("when peer video is found will attach it to its avatar", () => {
             expect(avatar.showVideo).toHaveBeenCalledWith(remoteVideo);
         });
         test.todo("when fails attaching peer video");
 
-        test("when a peer is found will try fetch her audio", () => {
-            expect(peer.getAudio).toHaveBeenCalled();
-        });
-        test.todo("when fails fetching peer audio");
-
         test("when peer audio is found will attach it to its avatar", () => {
             expect(avatar.showAudio).toHaveBeenCalledWith(remoteAudio);
         });
-        test.todo("when fails attaching peer stream");
+        test.todo("when fails attaching peer audio");
 
         test("when the peer moves, its avatar will move in the virtual world", () => {
             const position: PeerPosition = {};

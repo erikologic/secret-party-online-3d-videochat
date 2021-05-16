@@ -19,11 +19,10 @@ export class Room {
         const peers = await this.remoteRoom.getPeers();
         for await (const peer of peers) {
             const avatar = this.virtualWord.createAvatar();
+            avatar.setConfiguration(await peer.getConfiguration());
             peer.onPositionUpdate = avatar.moveTo;
-            const remoteVideo = await peer.getVideo();
-            avatar.showVideo(remoteVideo);
-            const remoteAudio = await peer.getAudio();
-            avatar.showAudio(remoteAudio);
+            avatar.showVideo(await peer.getVideo());
+            avatar.showAudio(await peer.getAudio());
         }
     }
 }
@@ -40,6 +39,7 @@ export interface Peer {
     getVideo: () => Promise<RemoteVideo>;
     id: string;
     onPositionUpdate: (position: PeerPosition) => void;
+    getConfiguration: () => Promise<PeerConfiguration>;
 }
 
 export interface RemoteRoom {
@@ -51,10 +51,10 @@ export interface RemoteRoom {
 }
 
 export interface Avatar {
+    setConfiguration: (configuration: PeerConfiguration) => void;
     moveTo: (position: PeerPosition) => void;
     showVideo: (remoteVideo: RemoteVideo) => void;
     showAudio: (remoteAudio: RemoteAudio) => void;
-    _id: string;
 }
 
 export interface VirtualWorld {
@@ -70,5 +70,8 @@ export type RemoteVideo = {};
 export type PeerPosition = {};
 
 export interface LocalConfiguration {
+    name: string;
+}
+export interface PeerConfiguration {
     name: string;
 }
