@@ -1,4 +1,5 @@
 import { Local, Peer, RemoteRoom, VirtualWorld } from "./domain/types";
+import { Listener } from "./shared/myEventEmitter";
 
 export class Room {
     constructor(
@@ -25,13 +26,14 @@ export class Room {
 
         await this.remoteRoom
             .getPeers()
-            .then((peers) => Promise.allSettled(peers.map(this.createPeer)));
+            .then((peers) => peers.map(this.createPeer))
+            .then(Promise.allSettled);
     }
 
-    private createPeer = async (peer: Peer): Promise<void> => {
+    private createPeer: Listener<Peer> = async (peer) => {
         const avatar = this.virtualWord.createAvatar();
         avatar.setConfiguration(await peer.getConfiguration());
-        peer.onPositionUpdate = avatar.moveTo;
+        peer.onPositionUpdate.subscribe(avatar.moveTo);
         avatar.showVideo(await peer.getVideo());
         avatar.showAudio(await peer.getAudio());
     };

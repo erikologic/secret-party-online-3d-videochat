@@ -1,4 +1,4 @@
-import { MyEventEmitter } from "../shared/myEventEmitter";
+import { Listener, MyEventEmitter } from "../shared/myEventEmitter";
 
 export interface Local {
     showLocalWebcamVideo: () => void;
@@ -11,12 +11,12 @@ export interface Peer {
     getAudio: () => Promise<RemoteAudio>;
     getVideo: () => Promise<RemoteVideo>;
     id: string;
-    onPositionUpdate: (position: PeerPosition) => void;
+    onPositionUpdate: MyEventEmitter<PeerPosition>;
     getConfiguration: () => Promise<PeerConfiguration>;
 }
 
 export interface RemoteRoom {
-    broadcastLocalPosition: (localPosition: LocalPosition) => Promise<void>;
+    broadcastLocalPosition: Listener<LocalPosition>;
     setLocalConfiguration: (configuration: LocalConfiguration) => Promise<void>;
     getPeers: () => Promise<Peer[]>;
     sendLocalAudio: (localAudio: LocalAudio) => Promise<void>;
@@ -27,7 +27,7 @@ export interface RemoteRoom {
 
 export interface Avatar {
     setConfiguration: (configuration: PeerConfiguration) => void;
-    moveTo: (position: PeerPosition) => void;
+    moveTo: Listener<PeerPosition>;
     showVideo: (remoteVideo: RemoteVideo) => void;
     showAudio: (remoteAudio: RemoteAudio) => void;
 }

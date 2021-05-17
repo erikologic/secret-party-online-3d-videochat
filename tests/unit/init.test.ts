@@ -44,9 +44,7 @@ describe("when entering a room", () => {
             getAudio: () => Promise.resolve(remoteAudio),
             getVideo: () => Promise.resolve(remoteVideo),
             id: "aPeer",
-            onPositionUpdate: () => {
-                throw new Error("not implemented");
-            },
+            onPositionUpdate: new MyEventEmitter(),
             getConfiguration: () => Promise.resolve(peerConfiguration),
         };
 
@@ -156,7 +154,7 @@ describe("when entering a room", () => {
 
         test("when the peer moves, its avatar will move in the virtual world", () => {
             const position: PeerPosition = {};
-            peer.onPositionUpdate(position);
+            peer.onPositionUpdate.emit(position);
             expect(avatar.moveTo).toHaveBeenCalledWith(position);
         });
         test.todo("fetch peer video depending on distance");
