@@ -8,6 +8,7 @@ export interface Local {
 }
 
 export interface Peer {
+    onDisconnect: MyEventEmitter<void>;
     getAudio: () => Promise<RemoteAudio>;
     getVideo: () => Promise<RemoteVideo>;
     id: string;
@@ -26,6 +27,7 @@ export interface RemoteRoom {
 }
 
 export interface Avatar {
+    remove: Listener<void>;
     setConfiguration: (configuration: PeerConfiguration) => void;
     moveTo: Listener<PeerPosition>;
     showVideo: (remoteVideo: RemoteVideo) => void;

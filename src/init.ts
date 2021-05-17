@@ -26,8 +26,7 @@ export class Room {
 
         await this.remoteRoom
             .getPeers()
-            .then((peers) => peers.map(this.createPeer))
-            .then(Promise.allSettled);
+            .then((peers) => Promise.allSettled(peers.map(this.createPeer)));
     }
 
     private createPeer: Listener<Peer> = async (peer) => {
@@ -36,5 +35,7 @@ export class Room {
         peer.onPositionUpdate.subscribe(avatar.moveTo);
         avatar.showVideo(await peer.getVideo());
         avatar.showAudio(await peer.getAudio());
+
+        peer.onDisconnect.subscribe(avatar.remove);
     };
 }

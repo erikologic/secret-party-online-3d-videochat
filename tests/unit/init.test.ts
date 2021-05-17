@@ -41,11 +41,12 @@ describe("when entering a room", () => {
 
     beforeEach(async () => {
         peer = {
+            id: "aPeer",
             getAudio: () => Promise.resolve(remoteAudio),
             getVideo: () => Promise.resolve(remoteVideo),
-            id: "aPeer",
-            onPositionUpdate: new MyEventEmitter(),
             getConfiguration: () => Promise.resolve(peerConfiguration),
+            onPositionUpdate: new MyEventEmitter(),
+            onDisconnect: new MyEventEmitter(),
         };
 
         remoteRoom = {
@@ -66,6 +67,7 @@ describe("when entering a room", () => {
         };
 
         avatar = {
+            remove: jest.fn(),
             showVideo: jest.fn(),
             showAudio: jest.fn(),
             moveTo: jest.fn(),
@@ -183,5 +185,15 @@ describe("when entering a room", () => {
         expect(avatar.setConfiguration).toHaveBeenCalledWith(
             newPeerConfiguration
         );
+    });
+
+    describe("when a peer disconnect", () => {
+        beforeEach(async () => {
+            await peer.onDisconnect.emit();
+        });
+
+        it("removes the avatar", () => {
+            expect(avatar.remove).toHaveBeenCalledTimes(1);
+        });
     });
 });
