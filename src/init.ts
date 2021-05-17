@@ -1,3 +1,5 @@
+import { MyEventEmitter } from "./shared/myEventEmitter";
+
 export class Room {
     constructor(
         private local: Local,
@@ -14,6 +16,8 @@ export class Room {
         const localAudio = await this.local.getLocalWebcamAudio();
         await this.remoteRoom.sendLocalAudio(localAudio);
         await this.remoteRoom.sendLocalVideo(localVideo);
+        this.remoteRoom.onNewPeer.subscribe(this.createPeer);
+
         await this.virtualWord.start();
         this.virtualWord.onPositionUpdate =
             this.remoteRoom.broadcastLocalPosition;
@@ -27,6 +31,14 @@ export class Room {
             avatar.showAudio(await peer.getAudio());
         }
     }
+
+    private createPeer = async (peer: Peer): Promise<void> => {
+        const avatar = this.virtualWord.createAvatar();
+        avatar.setConfiguration(await peer.getConfiguration());
+        peer.onPositionUpdate = avatar.moveTo;
+        avatar.showVideo(await peer.getVideo());
+        avatar.showAudio(await peer.getAudio());
+    };
 }
 
 export interface Local {
@@ -51,6 +63,7 @@ export interface RemoteRoom {
     sendLocalAudio: (localAudio: LocalAudio) => Promise<void>;
     sendLocalVideo: (localVideo: LocalVideo) => Promise<void>;
     join: () => Promise<void>;
+    onNewPeer: MyEventEmitter<Peer>;
 }
 
 export interface Avatar {

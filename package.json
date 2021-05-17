@@ -62,7 +62,8 @@
         "build": "npm run bundle:pre && npm run lint && npm run bundle && npm run server:pre",
         "start": "npm run server:start",
         "build:start": "npm run build && npm start",
-        "test": "jest"
+        "test": "jest",
+        "type:check":  "tsc --noEmit"
     },
     "repository": {
         "type": "git",
@@ -75,7 +76,8 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "lint-staged"
+            "pre-commit": "lint-staged",
+            "pre-push": "npm run type:check"
         }
     },
     "lint-staged": {

@@ -14,6 +14,7 @@ import {
     PeerConfiguration,
     LocalPosition,
 } from "../../src/init";
+import { MyEventEmitter } from "../../src/shared/myEventEmitter";
 
 describe("when entering a room", () => {
     const localAudio: LocalAudio = {};
@@ -56,6 +57,7 @@ describe("when entering a room", () => {
             join: jest.fn().mockResolvedValue(undefined),
             setLocalConfiguration: jest.fn().mockResolvedValue(undefined),
             broadcastLocalPosition: jest.fn(),
+            onNewPeer: new MyEventEmitter<Peer>(),
         };
 
         local = {
@@ -169,6 +171,21 @@ describe("when entering a room", () => {
         await virtualWord.onPositionUpdate(localPosition);
         expect(remoteRoom.broadcastLocalPosition).toHaveBeenCalledWith(
             localPosition
+        );
+    });
+
+    test("when a new user will connect creates its avatar", async () => {
+        const newPeerConfiguration: PeerConfiguration = {
+            name: "newPeer",
+        };
+        const newPeer: Peer = {
+            ...peer,
+            id: "newPeer",
+            getConfiguration: () => Promise.resolve(newPeerConfiguration),
+        };
+        await remoteRoom.onNewPeer.emit(newPeer);
+        expect(avatar.setConfiguration).toHaveBeenCalledWith(
+            newPeerConfiguration
         );
     });
 });
