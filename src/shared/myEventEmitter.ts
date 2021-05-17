@@ -27,4 +27,8 @@ export class MyEventEmitter<T> {
             this.listeners.map((listener) => listener(event))
         );
     };
+
+    unsubscribeAll = () => {
+        this.listeners = [];
+    };
 }

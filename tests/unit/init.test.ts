@@ -28,6 +28,7 @@ describe("when entering a room", () => {
         name: "peer",
     };
     const localPosition: LocalPosition = {};
+    const position: PeerPosition = {};
 
     let peer: Peer;
 
@@ -155,7 +156,6 @@ describe("when entering a room", () => {
         test.todo("when fails attaching peer audio");
 
         test("when the peer moves, its avatar will move in the virtual world", () => {
-            const position: PeerPosition = {};
             peer.onPositionUpdate.emit(position);
             expect(avatar.moveTo).toHaveBeenCalledWith(position);
         });
@@ -194,6 +194,11 @@ describe("when entering a room", () => {
 
         it("removes the avatar", () => {
             expect(avatar.remove).toHaveBeenCalledTimes(1);
+        });
+
+        it("stops listening to peer events", async () => {
+            await peer.onPositionUpdate.emit(position);
+            expect(avatar.moveTo).not.toHaveBeenCalled();
         });
     });
 });

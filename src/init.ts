@@ -36,6 +36,9 @@ export class Room {
         avatar.showVideo(await peer.getVideo());
         avatar.showAudio(await peer.getAudio());
 
-        peer.onDisconnect.subscribe(avatar.remove);
+        peer.onDisconnect.subscribe(async () => {
+            await avatar.remove();
+            peer.onPositionUpdate.unsubscribeAll();
+        });
     };
 }
