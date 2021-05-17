@@ -22,14 +22,9 @@ export class Room {
         this.virtualWord.onPositionUpdate =
             this.remoteRoom.broadcastLocalPosition;
 
-        const peers = await this.remoteRoom.getPeers();
-        for await (const peer of peers) {
-            const avatar = this.virtualWord.createAvatar();
-            avatar.setConfiguration(await peer.getConfiguration());
-            peer.onPositionUpdate = avatar.moveTo;
-            avatar.showVideo(await peer.getVideo());
-            avatar.showAudio(await peer.getAudio());
-        }
+        await this.remoteRoom
+            .getPeers()
+            .then((peers) => Promise.allSettled(peers.map(this.createPeer)));
     }
 
     private createPeer = async (peer: Peer): Promise<void> => {
