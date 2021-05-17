@@ -57,7 +57,7 @@ describe("when entering a room", () => {
             join: jest.fn().mockResolvedValue(undefined),
             setLocalConfiguration: jest.fn().mockResolvedValue(undefined),
             broadcastLocalPosition: jest.fn(),
-            onNewPeer: new MyEventEmitter<Peer>(),
+            onNewPeer: new MyEventEmitter(),
         };
 
         local = {
@@ -77,9 +77,7 @@ describe("when entering a room", () => {
         virtualWord = {
             start: jest.fn().mockResolvedValue(undefined),
             createAvatar: jest.fn().mockReturnValue(avatar),
-            onPositionUpdate: async (): Promise<void> => {
-                throw new Error("not implemented");
-            },
+            onPositionUpdate: new MyEventEmitter(),
         };
 
         const room = new Room(local, remoteRoom, virtualWord);
@@ -168,7 +166,7 @@ describe("when entering a room", () => {
     test.todo("syncs users known with users in the room");
 
     test("local movements will be broadcast", async () => {
-        await virtualWord.onPositionUpdate(localPosition);
+        await virtualWord.onPositionUpdate.emit(localPosition);
         expect(remoteRoom.broadcastLocalPosition).toHaveBeenCalledWith(
             localPosition
         );

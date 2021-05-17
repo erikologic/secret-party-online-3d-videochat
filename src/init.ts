@@ -19,8 +19,9 @@ export class Room {
         this.remoteRoom.onNewPeer.subscribe(this.createPeer);
 
         await this.virtualWord.start();
-        this.virtualWord.onPositionUpdate =
-            this.remoteRoom.broadcastLocalPosition;
+        this.virtualWord.onPositionUpdate.subscribe(
+            this.remoteRoom.broadcastLocalPosition
+        );
 
         await this.remoteRoom
             .getPeers()
@@ -69,7 +70,7 @@ export interface Avatar {
 }
 
 export interface VirtualWorld {
-    onPositionUpdate: (position: PeerPosition) => Promise<void>;
+    onPositionUpdate: MyEventEmitter<PeerPosition>;
     createAvatar: () => Avatar;
     start: () => Promise<void>;
 }
