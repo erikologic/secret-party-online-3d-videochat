@@ -104,11 +104,11 @@ describe("when entering a room", () => {
             expect(local.showLocalWebcamVideo).toHaveBeenCalled();
         });
 
-        it("send local video to the remoteRoom", () => {
+        it("send local video to the other peers", () => {
             expect(remoteRoom.sendLocalVideo).toHaveBeenCalledWith(localVideo);
         });
 
-        it("send local audio to the remoteRoom", () => {
+        it("send local audio to the other peers", () => {
             expect(remoteRoom.sendLocalAudio).toHaveBeenCalledWith(localAudio);
         });
 
@@ -126,7 +126,7 @@ describe("when entering a room", () => {
             expect(virtualWord.createAvatar).toHaveBeenCalled();
         });
 
-        test("creates an avatar for each peer found", async () => {
+        test("when several peers are found, creates an avatar for each peer found", async () => {
             jest.clearAllMocks();
             const fivePeers = Array(5).fill(peer);
             const getPeersMock = remoteRoom.getPeers as jest.Mock;
