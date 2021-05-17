@@ -1,5 +1,5 @@
-import { Room } from "../../src/init";
-import { MyEventEmitter } from "../../src/shared/myEventEmitter";
+import { RoomController } from "../../../src/domain/room-controller";
+import { MyEventEmitter } from "../../../src/shared/myEventEmitter";
 import {
     Avatar,
     Local,
@@ -14,7 +14,7 @@ import {
     RemoteRoom,
     RemoteVideo,
     VirtualWorld,
-} from "../../src/domain/types";
+} from "../../../src/domain/types";
 
 describe("when entering a room", () => {
     const localAudio: LocalAudio = {};
@@ -81,7 +81,7 @@ describe("when entering a room", () => {
             onPositionUpdate: new MyEventEmitter(),
         };
 
-        const room = new Room(local, remoteRoom, virtualWord);
+        const room = new RoomController(local, remoteRoom, virtualWord);
         await room.join("aRoom");
     });
 
@@ -133,7 +133,7 @@ describe("when entering a room", () => {
             const getPeersMock = remoteRoom.getPeers as jest.Mock;
             getPeersMock.mockResolvedValue(fivePeers);
 
-            const room = new Room(local, remoteRoom, virtualWord);
+            const room = new RoomController(local, remoteRoom, virtualWord);
             await room.join("aRoom");
 
             expect(virtualWord.createAvatar).toHaveBeenCalledTimes(5);

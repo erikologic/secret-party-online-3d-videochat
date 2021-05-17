@@ -1,7 +1,7 @@
-import { Local, Peer, RemoteRoom, VirtualWorld } from "./domain/types";
-import { Listener } from "./shared/myEventEmitter";
+import { Local, Peer, RemoteRoom, VirtualWorld } from "./types";
+import { Listener } from "../shared/myEventEmitter";
 
-export class Room {
+export class RoomController {
     constructor(
         private local: Local,
         private remoteRoom: RemoteRoom,
