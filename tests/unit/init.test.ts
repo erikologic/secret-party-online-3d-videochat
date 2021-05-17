@@ -1,20 +1,20 @@
+import { Room } from "../../src/init";
+import { MyEventEmitter } from "../../src/shared/myEventEmitter";
 import {
     Avatar,
     Local,
-    LocalVideo,
-    Peer,
-    RemoteRoom,
-    Room,
-    VirtualWorld,
-    PeerPosition,
-    RemoteVideo,
-    RemoteAudio,
     LocalAudio,
     LocalConfiguration,
-    PeerConfiguration,
     LocalPosition,
-} from "../../src/init";
-import { MyEventEmitter } from "../../src/shared/myEventEmitter";
+    LocalVideo,
+    Peer,
+    PeerConfiguration,
+    PeerPosition,
+    RemoteAudio,
+    RemoteRoom,
+    RemoteVideo,
+    VirtualWorld,
+} from "../../src/domain/types";
 
 describe("when entering a room", () => {
     const localAudio: LocalAudio = {};
