@@ -4,11 +4,9 @@ import {
     Avatar,
     Local,
     LocalAudio,
-    LocalConfiguration,
     LocalPosition,
     LocalVideo,
     Peer,
-    PeerConfiguration,
     PeerPosition,
     RemoteAudio,
     RemoteRoom,
@@ -19,16 +17,38 @@ import {
 describe("when entering a room", () => {
     const localAudio: LocalAudio = {};
     const localVideo: LocalVideo = {};
-    const remoteAudio: RemoteAudio = {};
-    const remoteVideo: RemoteVideo = {};
-    const localConfiguration: LocalConfiguration = {
-        name: "myName",
+    const remoteAudio: RemoteAudio = {
+        stream: {} as MediaStream,
     };
-    const peerConfiguration: PeerConfiguration = {
-        name: "peer",
+    const remoteVideo: RemoteVideo = {
+        stream: {} as MediaStream,
     };
-    const localPosition: LocalPosition = {};
-    const position: PeerPosition = {};
+    const localPosition: LocalPosition = {
+        absoluteRotation: {
+            x: 0,
+            y: 1,
+            z: 2,
+            w: 3,
+        },
+        globalPosition: {
+            x: 4,
+            y: 5,
+            z: 6,
+        },
+    };
+    const position: PeerPosition = {
+        absoluteRotation: {
+            x: 6,
+            y: 5,
+            z: 4,
+            w: 3,
+        },
+        globalPosition: {
+            x: 2,
+            y: 1,
+            z: 0,
+        },
+    };
 
     let peer: Peer;
 
@@ -45,7 +65,6 @@ describe("when entering a room", () => {
             id: "aPeer",
             getAudio: () => Promise.resolve(remoteAudio),
             getVideo: () => Promise.resolve(remoteVideo),
-            getConfiguration: () => Promise.resolve(peerConfiguration),
             onPositionUpdate: new MyEventEmitter(),
             onDisconnect: new MyEventEmitter(),
         };
@@ -55,7 +74,6 @@ describe("when entering a room", () => {
             sendLocalAudio: jest.fn().mockResolvedValue(undefined),
             sendLocalVideo: jest.fn().mockResolvedValue(undefined),
             join: jest.fn().mockResolvedValue(undefined),
-            setLocalConfiguration: jest.fn().mockResolvedValue(undefined),
             broadcastLocalPosition: jest.fn(),
             onNewPeer: new MyEventEmitter(),
         };
@@ -64,7 +82,6 @@ describe("when entering a room", () => {
             showLocalWebcamVideo: jest.fn(),
             getLocalWebcamVideo: jest.fn().mockResolvedValue(localVideo),
             getLocalWebcamAudio: jest.fn().mockResolvedValue(localAudio),
-            getLocalConfiguration: () => localConfiguration,
         };
 
         avatar = {
@@ -72,7 +89,6 @@ describe("when entering a room", () => {
             showVideo: jest.fn(),
             showAudio: jest.fn(),
             moveTo: jest.fn(),
-            setConfiguration: jest.fn(),
         };
 
         virtualWord = {
@@ -91,12 +107,6 @@ describe("when entering a room", () => {
 
         it("join remote room", async () => {
             expect(remoteRoom.join).toHaveBeenCalled();
-        });
-
-        it("sends the local configuration to the other peers", () => {
-            expect(remoteRoom.setLocalConfiguration).toHaveBeenCalledWith(
-                localConfiguration
-            );
         });
 
         test.todo("cannot access remote room");
@@ -139,11 +149,9 @@ describe("when entering a room", () => {
             expect(virtualWord.createAvatar).toHaveBeenCalledTimes(5);
         });
 
-        test("sets the avatar configuration to the peer configuration", () => {
-            expect(avatar.setConfiguration).toHaveBeenCalledWith(
-                peerConfiguration
-            );
-        });
+        test.todo(
+            "sets the avatar configuration to the peer configuration when configuration is emitted"
+        );
 
         test("when peer video is found will attach it to its avatar", () => {
             expect(avatar.showVideo).toHaveBeenCalledWith(remoteVideo);
@@ -173,18 +181,12 @@ describe("when entering a room", () => {
     });
 
     test("when a new user will connect creates its avatar", async () => {
-        const newPeerConfiguration: PeerConfiguration = {
-            name: "newPeer",
-        };
         const newPeer: Peer = {
             ...peer,
             id: "newPeer",
-            getConfiguration: () => Promise.resolve(newPeerConfiguration),
         };
         await remoteRoom.onNewPeer.emit(newPeer);
-        expect(avatar.setConfiguration).toHaveBeenCalledWith(
-            newPeerConfiguration
-        );
+        expect(virtualWord.createAvatar).toHaveBeenCalledTimes(2);
     });
 
     describe("when a peer disconnect", () => {

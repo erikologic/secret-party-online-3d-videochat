@@ -4,7 +4,7 @@ export interface Local {
     showLocalWebcamVideo: () => void;
     getLocalWebcamVideo: () => Promise<LocalVideo>;
     getLocalWebcamAudio: () => Promise<LocalAudio>;
-    getLocalConfiguration: () => LocalConfiguration;
+    // getLocalConfiguration: () => LocalConfiguration;
 }
 
 export interface Peer {
@@ -13,12 +13,10 @@ export interface Peer {
     getVideo: () => Promise<RemoteVideo>;
     id: string;
     onPositionUpdate: MyEventEmitter<PeerPosition>;
-    getConfiguration: () => Promise<PeerConfiguration>;
 }
 
 export interface RemoteRoom {
     broadcastLocalPosition: Listener<LocalPosition>;
-    setLocalConfiguration: (configuration: LocalConfiguration) => Promise<void>;
     getPeers: () => Promise<Peer[]>;
     sendLocalAudio: (localAudio: LocalAudio) => Promise<void>;
     sendLocalVideo: (localVideo: LocalVideo) => Promise<void>;
@@ -28,29 +26,50 @@ export interface RemoteRoom {
 
 export interface Avatar {
     remove: Listener<void>;
-    setConfiguration: (configuration: PeerConfiguration) => void;
     moveTo: Listener<PeerPosition>;
     showVideo: (remoteVideo: RemoteVideo) => void;
     showAudio: (remoteAudio: RemoteAudio) => void;
 }
 
 export interface VirtualWorld {
-    onPositionUpdate: MyEventEmitter<PeerPosition>;
-    createAvatar: () => Avatar;
+    onPositionUpdate: MyEventEmitter<LocalPosition>;
+    createAvatar: (peerId: string) => Avatar;
     start: () => Promise<void>;
 }
 
 export type LocalAudio = {};
 export type LocalVideo = {};
-export type RemoteAudio = {};
-export type RemoteVideo = {};
-export type PeerPosition = {};
-export type LocalPosition = {};
+export interface RemoteAudio {
+    stream: MediaStream;
+}
+export type RemoteVideo = {
+    stream: MediaStream;
+};
 
-export interface LocalConfiguration {
-    name: string;
+export interface PeerPosition {
+    absoluteRotation: {
+        x: number;
+        y: number;
+        z: number;
+        w: number;
+    };
+    globalPosition: {
+        x: number;
+        y: number;
+        z: number;
+    };
 }
 
-export interface PeerConfiguration {
-    name: string;
+export interface LocalPosition {
+    absoluteRotation: {
+        x: number;
+        y: number;
+        z: number;
+        w: number;
+    };
+    globalPosition: {
+        x: number;
+        y: number;
+        z: number;
+    };
 }

@@ -12,8 +12,6 @@ export class RoomController {
         const localVideo = await this.local.getLocalWebcamVideo();
         await this.local.showLocalWebcamVideo();
         await this.remoteRoom.join();
-        const localConfiguration = await this.local.getLocalConfiguration();
-        await this.remoteRoom.setLocalConfiguration(localConfiguration);
         const localAudio = await this.local.getLocalWebcamAudio();
         await this.remoteRoom.sendLocalAudio(localAudio);
         await this.remoteRoom.sendLocalVideo(localVideo);
@@ -30,8 +28,7 @@ export class RoomController {
     }
 
     private createPeer: Listener<Peer> = async (peer) => {
-        const avatar = this.virtualWord.createAvatar();
-        avatar.setConfiguration(await peer.getConfiguration());
+        const avatar = this.virtualWord.createAvatar(peer.id);
         peer.onPositionUpdate.subscribe(avatar.moveTo);
         avatar.showVideo(await peer.getVideo());
         avatar.showAudio(await peer.getAudio());
