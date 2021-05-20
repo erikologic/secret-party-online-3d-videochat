@@ -1,4 +1,4 @@
-import { Avatar, LocalPosition, VirtualWorld } from "../domain/types";
+import { Avatar, MyPosition, VirtualWorld } from "../domain/types";
 import { MyEventEmitter } from "../shared/myEventEmitter";
 import { Camera, Engine, Scene } from "@babylonjs/core";
 import { createScene } from "./scene";
@@ -12,7 +12,7 @@ export class VirtualWorldBabylonJs implements VirtualWorld {
         return new AvatarBabylonJs(peerId, this.scene);
     }
 
-    onPositionUpdate = new MyEventEmitter<LocalPosition>();
+    onPositionUpdate = new MyEventEmitter<MyPosition>();
 
     start = async (): Promise<void> => {
         const canvas = document.getElementById(

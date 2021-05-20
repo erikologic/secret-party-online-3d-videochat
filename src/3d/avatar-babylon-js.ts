@@ -1,9 +1,4 @@
-import {
-    Avatar,
-    PeerPosition,
-    RemoteAudio,
-    RemoteVideo,
-} from "../domain/types";
+import { Avatar, MyPosition, RemoteAudio, RemoteVideo } from "../domain/types";
 import { Listener } from "../shared/myEventEmitter";
 import {
     Color3,
@@ -33,7 +28,7 @@ export class AvatarBabylonJs implements Avatar {
         this.mesh = this.createAvatarMesh(scene);
     }
 
-    moveTo: Listener<PeerPosition> = async ({
+    moveTo: Listener<MyPosition> = async ({
         absoluteRotation,
         globalPosition,
     }) => {

@@ -4,10 +4,9 @@ import {
     Avatar,
     Local,
     LocalAudio,
-    LocalPosition,
     LocalVideo,
     Peer,
-    PeerPosition,
+    MyPosition,
     RemoteAudio,
     RemoteRoom,
     RemoteVideo,
@@ -23,7 +22,7 @@ describe("when entering a room", () => {
     const remoteVideo: RemoteVideo = {
         stream: {} as MediaStream,
     };
-    const localPosition: LocalPosition = {
+    const position: MyPosition = {
         absoluteRotation: {
             x: 0,
             y: 1,
@@ -34,19 +33,6 @@ describe("when entering a room", () => {
             x: 4,
             y: 5,
             z: 6,
-        },
-    };
-    const position: PeerPosition = {
-        absoluteRotation: {
-            x: 6,
-            y: 5,
-            z: 4,
-            w: 3,
-        },
-        globalPosition: {
-            x: 2,
-            y: 1,
-            z: 0,
         },
     };
 
@@ -176,9 +162,9 @@ describe("when entering a room", () => {
     test.todo("syncs users known with users in the room");
 
     test("local movements will be broadcast", async () => {
-        await virtualWord.onPositionUpdate.emit(localPosition);
+        await virtualWord.onPositionUpdate.emit(position);
         expect(remoteRoom.broadcastLocalPosition).toHaveBeenCalledWith(
-            localPosition
+            position
         );
     });
 

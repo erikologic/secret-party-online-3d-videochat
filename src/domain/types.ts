@@ -12,11 +12,11 @@ export interface Peer {
     onAudioStream: MyEventEmitter<RemoteAudio>;
     onDisconnect: MyEventEmitter<void>;
     id: string;
-    onPositionUpdate: MyEventEmitter<PeerPosition>;
+    onPositionUpdate: MyEventEmitter<MyPosition>;
 }
 
 export interface RemoteRoom {
-    broadcastLocalPosition: Listener<LocalPosition>;
+    broadcastLocalPosition: Listener<MyPosition>;
     getPeers: () => Promise<Peer[]>;
     sendLocalAudio: (localAudio: LocalAudio) => Promise<void>;
     sendLocalVideo: (localVideo: LocalVideo) => Promise<void>;
@@ -26,13 +26,13 @@ export interface RemoteRoom {
 
 export interface Avatar {
     remove: Listener<void>;
-    moveTo: Listener<PeerPosition>;
+    moveTo: Listener<MyPosition>;
     showVideo: Listener<RemoteVideo>;
     showAudio: Listener<RemoteAudio>;
 }
 
 export interface VirtualWorld {
-    onPositionUpdate: MyEventEmitter<LocalPosition>;
+    onPositionUpdate: MyEventEmitter<MyPosition>;
     createAvatar: (peerId: string) => Avatar;
     start: () => Promise<void>;
 }
@@ -46,21 +46,7 @@ export type RemoteVideo = {
     stream: MediaStream;
 };
 
-export interface PeerPosition {
-    absoluteRotation: {
-        x: number;
-        y: number;
-        z: number;
-        w: number;
-    };
-    globalPosition: {
-        x: number;
-        y: number;
-        z: number;
-    };
-}
-
-export interface LocalPosition {
+export interface MyPosition {
     absoluteRotation: {
         x: number;
         y: number;
