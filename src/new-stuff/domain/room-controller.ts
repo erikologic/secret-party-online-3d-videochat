@@ -13,7 +13,7 @@ export class RoomController {
         await this.local.showLocalVideo();
         await this.remoteRoom.join();
         await this.remoteRoom.sendLocalStream(localStream);
-        this.remoteRoom.onNewPeer.subscribe((peer) => this.createPeer(peer));
+        this.remoteRoom.onNewPeer.subscribe((peer) => this.createAvatar(peer));
 
         await this.virtualWord.start();
         this.virtualWord.onPositionUpdate.subscribe((pos) =>
@@ -23,11 +23,11 @@ export class RoomController {
         await this.remoteRoom
             .getPeers()
             .then((peers) =>
-                Promise.allSettled(peers.map((peer) => this.createPeer(peer)))
+                Promise.allSettled(peers.map((peer) => this.createAvatar(peer)))
             );
     }
 
-    private createPeer: Listener<Peer> = async (peer) => {
+    private createAvatar: Listener<Peer> = async (peer) => {
         const avatar = this.virtualWord.createAvatar(peer.id);
         peer.onPositionUpdate.subscribe((pos) => avatar.moveTo(pos));
         peer.onStream.subscribe((stream) => avatar.showVideo(stream));
