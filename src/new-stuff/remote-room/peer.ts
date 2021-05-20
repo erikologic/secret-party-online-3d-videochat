@@ -16,7 +16,7 @@ export class PeerSwarmSimplePeer implements Peer {
             this.onStream.emit({ stream });
         });
 
-        peer.on("data", (data: Buffer) => {
+        peer.on("data", (data: any) => {
             const position = deserializer(data);
             this.onPositionUpdate.emit(position);
         });

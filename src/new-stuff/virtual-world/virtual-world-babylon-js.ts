@@ -1,7 +1,7 @@
 import { Avatar, MyPosition, VirtualWorld } from "../domain/types";
 import { MyEventEmitter } from "../shared/myEventEmitter";
 import { Camera, Engine, Scene } from "@babylonjs/core";
-import { createScene } from "./scene";
+import { createScene } from "../../legacy/3d/scene";
 import { AvatarBabylonJs } from "./avatar-babylon-js";
 
 export class VirtualWorldBabylonJs implements VirtualWorld {

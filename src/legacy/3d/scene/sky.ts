@@ -1,5 +1,5 @@
-import {Mesh, Scene} from "@babylonjs/core";
-import {SkyMaterial} from "@babylonjs/materials/sky";
+import { Mesh, Scene } from "@babylonjs/core";
+import { SkyMaterial } from "@babylonjs/materials/sky";
 
 export function createSky(scene: Scene) {
     const skyMaterial = new SkyMaterial("skyMaterial", scene);

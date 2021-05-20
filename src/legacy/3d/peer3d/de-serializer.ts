@@ -17,14 +17,14 @@ export const deserializer = (buffer: any): Payload => {
             x: dataArray[0],
             y: dataArray[1],
             z: dataArray[2],
-            w: dataArray[3]
+            w: dataArray[3],
         },
         globalPosition: {
             x: dataArray[4],
             y: dataArray[5],
-            z: dataArray[6]
-        }
-    }
+            z: dataArray[6],
+        },
+    };
 };
 
 export interface Payload {

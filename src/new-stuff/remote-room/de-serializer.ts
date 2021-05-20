@@ -15,7 +15,7 @@ export const serializer = ({
     return dataArray.buffer;
 };
 
-export const deserializer = (buffer: Buffer): MyPosition => {
+export const deserializer = (buffer: any): MyPosition => {
     const dataArray = new Float64Array(buffer.buffer);
     return {
         absoluteRotation: {

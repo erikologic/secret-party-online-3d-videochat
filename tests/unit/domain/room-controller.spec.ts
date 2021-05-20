@@ -1,5 +1,5 @@
-import { RoomController } from "../../../src/domain/room-controller";
-import { MyEventEmitter } from "../../../src/shared/myEventEmitter";
+import { RoomController } from "../../../src/new-stuff/domain/room-controller";
+import { MyEventEmitter } from "../../../src/new-stuff/shared/myEventEmitter";
 import {
     Avatar,
     Local,
@@ -8,7 +8,7 @@ import {
     RemoteRoom,
     MyStream,
     VirtualWorld,
-} from "../../../src/domain/types";
+} from "../../../src/new-stuff/domain/types";
 
 describe("when entering a room", () => {
     const myStream: MyStream = {
