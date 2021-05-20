@@ -1,4 +1,4 @@
-import { Avatar, MyPosition, RemoteAudio, RemoteVideo } from "../domain/types";
+import { Avatar, MyPosition, MyStream } from "../domain/types";
 import { Listener } from "../shared/myEventEmitter";
 import {
     Color3,
@@ -47,7 +47,7 @@ export class AvatarBabylonJs implements Avatar {
         this.mesh.dispose();
     };
 
-    async showAudio({ stream }: RemoteAudio): Promise<void> {
+    async showAudio({ stream }: MyStream): Promise<void> {
         const audio = new Audio();
         audio.muted = true;
         audio.srcObject = stream;
@@ -71,7 +71,7 @@ export class AvatarBabylonJs implements Avatar {
         remoteSound.setLocalDirectionToMesh(new Vector3(0, 0, 1));
     }
 
-    async showVideo({ stream }: RemoteVideo): Promise<void> {
+    async showVideo({ stream }: MyStream): Promise<void> {
         const videoPanel = this.getVideoPanel();
         const videoTexture = await this.createTextureFromStreamAsync(
             stream,

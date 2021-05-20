@@ -3,23 +3,15 @@ import { MyEventEmitter } from "../../../src/shared/myEventEmitter";
 import {
     Avatar,
     Local,
-    LocalAudio,
-    LocalVideo,
     Peer,
     MyPosition,
-    RemoteAudio,
     RemoteRoom,
-    RemoteVideo,
+    MyStream,
     VirtualWorld,
 } from "../../../src/domain/types";
 
 describe("when entering a room", () => {
-    const localAudio: LocalAudio = {};
-    const localVideo: LocalVideo = {};
-    const remoteAudio: RemoteAudio = {
-        stream: {} as MediaStream,
-    };
-    const remoteVideo: RemoteVideo = {
+    const myStream: MyStream = {
         stream: {} as MediaStream,
     };
     const position: MyPosition = {
@@ -51,14 +43,12 @@ describe("when entering a room", () => {
             id: "aPeer",
             onPositionUpdate: new MyEventEmitter(),
             onDisconnect: new MyEventEmitter(),
-            onVideoStream: new MyEventEmitter(),
-            onAudioStream: new MyEventEmitter(),
+            onStream: new MyEventEmitter(),
         };
 
         remoteRoom = {
             getPeers: jest.fn().mockResolvedValue([peer]),
-            sendLocalAudio: jest.fn().mockResolvedValue(undefined),
-            sendLocalVideo: jest.fn().mockResolvedValue(undefined),
+            sendLocalStream: jest.fn().mockResolvedValue(undefined),
             join: jest.fn().mockResolvedValue(undefined),
             broadcastLocalPosition: jest.fn(),
             onNewPeer: new MyEventEmitter(),
@@ -66,8 +56,7 @@ describe("when entering a room", () => {
 
         local = {
             showLocalWebcamVideo: jest.fn(),
-            getLocalWebcamVideo: jest.fn().mockResolvedValue(localVideo),
-            getLocalWebcamAudio: jest.fn().mockResolvedValue(localAudio),
+            getLocalWebcamStream: jest.fn().mockResolvedValue(myStream),
         };
 
         avatar = {
@@ -101,12 +90,8 @@ describe("when entering a room", () => {
             expect(local.showLocalWebcamVideo).toHaveBeenCalled();
         });
 
-        it("send local video to the other peers", () => {
-            expect(remoteRoom.sendLocalVideo).toHaveBeenCalledWith(localVideo);
-        });
-
-        it("send local audio to the other peers", () => {
-            expect(remoteRoom.sendLocalAudio).toHaveBeenCalledWith(localAudio);
+        it("send local webcam AV to the other peers", () => {
+            expect(remoteRoom.sendLocalStream).toHaveBeenCalledWith(myStream);
         });
 
         it("spin up the virtual world", () => {
@@ -139,17 +124,12 @@ describe("when entering a room", () => {
             "sets the avatar configuration to the peer configuration when configuration is emitted"
         );
 
-        test("when peer video is found will attach it to its avatar", async () => {
-            await peer.onVideoStream.emit(remoteVideo);
-            expect(avatar.showVideo).toHaveBeenCalledWith(remoteVideo);
+        test("when peer stream is found will attach it to its avatar", async () => {
+            await peer.onStream.emit(myStream);
+            expect(avatar.showVideo).toHaveBeenCalledWith(myStream);
+            expect(avatar.showAudio).toHaveBeenCalledWith(myStream);
         });
-        test.todo("when fails attaching peer video");
-
-        test("when peer audio is found will attach it to its avatar", async () => {
-            await peer.onAudioStream.emit(remoteAudio);
-            expect(avatar.showAudio).toHaveBeenCalledWith(remoteAudio);
-        });
-        test.todo("when fails attaching peer audio");
+        test.todo("when fails attaching peer stream");
 
         test("when the peer moves, its avatar will move in the virtual world", () => {
             peer.onPositionUpdate.emit(position);
@@ -186,9 +166,14 @@ describe("when entering a room", () => {
             expect(avatar.remove).toHaveBeenCalledTimes(1);
         });
 
-        it("stops listening to peer events", async () => {
+        it("stops listening to peer position updates", async () => {
             await peer.onPositionUpdate.emit(position);
             expect(avatar.moveTo).not.toHaveBeenCalled();
+        });
+
+        it("stops listening to peer stream updates", async () => {
+            await peer.onStream.emit(myStream);
+            expect(avatar.showVideo).not.toHaveBeenCalled();
         });
     });
 });

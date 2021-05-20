@@ -9,12 +9,10 @@ export class RoomController {
     ) {}
 
     async join(): Promise<void> {
-        const localVideo = await this.local.getLocalWebcamVideo();
+        const localStream = await this.local.getLocalWebcamStream();
         await this.local.showLocalWebcamVideo();
         await this.remoteRoom.join();
-        const localAudio = await this.local.getLocalWebcamAudio();
-        await this.remoteRoom.sendLocalAudio(localAudio);
-        await this.remoteRoom.sendLocalVideo(localVideo);
+        await this.remoteRoom.sendLocalStream(localStream);
         this.remoteRoom.onNewPeer.subscribe(this.createPeer);
 
         await this.virtualWord.start();
@@ -30,12 +28,13 @@ export class RoomController {
     private createPeer: Listener<Peer> = async (peer) => {
         const avatar = this.virtualWord.createAvatar(peer.id);
         peer.onPositionUpdate.subscribe(avatar.moveTo);
-        peer.onVideoStream.subscribe(avatar.showVideo);
-        peer.onAudioStream.subscribe(avatar.showAudio);
+        peer.onStream.subscribe(avatar.showVideo);
+        peer.onStream.subscribe(avatar.showAudio);
 
         peer.onDisconnect.subscribe(async () => {
             await avatar.remove();
             peer.onPositionUpdate.unsubscribeAll();
+            peer.onStream.unsubscribeAll();
         });
     };
 }

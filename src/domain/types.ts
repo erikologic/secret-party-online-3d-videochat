@@ -2,14 +2,12 @@ import { Listener, MyEventEmitter } from "../shared/myEventEmitter";
 
 export interface Local {
     showLocalWebcamVideo: () => void;
-    getLocalWebcamVideo: () => Promise<LocalVideo>;
-    getLocalWebcamAudio: () => Promise<LocalAudio>;
+    getLocalWebcamStream: () => Promise<MyStream>;
     // getLocalConfiguration: () => LocalConfiguration;
 }
 
 export interface Peer {
-    onVideoStream: MyEventEmitter<RemoteVideo>;
-    onAudioStream: MyEventEmitter<RemoteAudio>;
+    onStream: MyEventEmitter<MyStream>;
     onDisconnect: MyEventEmitter<void>;
     id: string;
     onPositionUpdate: MyEventEmitter<MyPosition>;
@@ -18,8 +16,7 @@ export interface Peer {
 export interface RemoteRoom {
     broadcastLocalPosition: Listener<MyPosition>;
     getPeers: () => Promise<Peer[]>;
-    sendLocalAudio: (localAudio: LocalAudio) => Promise<void>;
-    sendLocalVideo: (localVideo: LocalVideo) => Promise<void>;
+    sendLocalStream: (localStream: MyStream) => Promise<void>;
     join: () => Promise<void>;
     onNewPeer: MyEventEmitter<Peer>;
 }
@@ -27,8 +24,8 @@ export interface RemoteRoom {
 export interface Avatar {
     remove: Listener<void>;
     moveTo: Listener<MyPosition>;
-    showVideo: Listener<RemoteVideo>;
-    showAudio: Listener<RemoteAudio>;
+    showVideo: Listener<MyStream>;
+    showAudio: Listener<MyStream>;
 }
 
 export interface VirtualWorld {
@@ -37,12 +34,7 @@ export interface VirtualWorld {
     start: () => Promise<void>;
 }
 
-export type LocalAudio = {};
-export type LocalVideo = {};
-export interface RemoteAudio {
-    stream: MediaStream;
-}
-export type RemoteVideo = {
+export type MyStream = {
     stream: MediaStream;
 };
 
