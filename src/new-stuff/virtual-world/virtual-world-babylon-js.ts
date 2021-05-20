@@ -45,12 +45,13 @@ export class VirtualWorldBabylonJs implements VirtualWorld {
     private setOnPositionUpdate(camera: Camera): void {
         const millisFor30Fps = 1000 / 30;
         let delta = 0;
-        const { globalPosition, absoluteRotation } = camera;
         camera.onViewMatrixChangedObservable.add((camera) => {
             delta += camera.getScene().getEngine().getDeltaTime();
+            const { globalPosition, absoluteRotation } = camera;
 
             if (delta > millisFor30Fps) {
                 delta = 0;
+
                 this.onPositionUpdate.emit({
                     globalPosition,
                     absoluteRotation,
@@ -59,6 +60,7 @@ export class VirtualWorldBabylonJs implements VirtualWorld {
         });
 
         setInterval(() => {
+            const { globalPosition, absoluteRotation } = camera;
             this.onPositionUpdate.emit({ globalPosition, absoluteRotation });
         }, 1000);
     }
