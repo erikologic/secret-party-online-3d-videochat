@@ -13,23 +13,25 @@ export class RoomController {
         await this.local.showLocalVideo();
         await this.remoteRoom.join();
         await this.remoteRoom.sendLocalStream(localStream);
-        this.remoteRoom.onNewPeer.subscribe(this.createPeer);
+        this.remoteRoom.onNewPeer.subscribe((peer) => this.createPeer(peer));
 
         await this.virtualWord.start();
-        this.virtualWord.onPositionUpdate.subscribe(
-            this.remoteRoom.broadcastLocalPosition
+        this.virtualWord.onPositionUpdate.subscribe((pos) =>
+            this.remoteRoom.broadcastLocalPosition(pos)
         );
 
         await this.remoteRoom
             .getPeers()
-            .then((peers) => Promise.allSettled(peers.map(this.createPeer)));
+            .then((peers) =>
+                Promise.allSettled(peers.map((peer) => this.createPeer(peer)))
+            );
     }
 
     private createPeer: Listener<Peer> = async (peer) => {
         const avatar = this.virtualWord.createAvatar(peer.id);
-        peer.onPositionUpdate.subscribe(avatar.moveTo);
-        peer.onStream.subscribe(avatar.showVideo);
-        peer.onStream.subscribe(avatar.showAudio);
+        peer.onPositionUpdate.subscribe((pos) => avatar.moveTo(pos));
+        peer.onStream.subscribe((stream) => avatar.showVideo(stream));
+        peer.onStream.subscribe((stream) => avatar.showAudio(stream));
 
         peer.onDisconnect.subscribe(async () => {
             await avatar.remove();
