@@ -81,6 +81,8 @@ export class AvatarBabylonJs implements Avatar {
             videoTexture,
             this.scene
         );
+        videoPanel.position.x = this.mesh.position.x;
+        videoPanel.position.y = this.mesh.position.y;
         this.mesh.addChild(videoPanel);
         videoPanel.receiveShadows = true;
     }

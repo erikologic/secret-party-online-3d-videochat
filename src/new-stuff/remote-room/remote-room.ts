@@ -10,6 +10,7 @@ import SimplePeer from "simple-peer";
 export class RemoteRoomSwarmSignalHub implements RemoteRoom {
     private myPeers: PeerSwarmSimplePeer[] = [];
     onNewPeer = new MyEventEmitter<Peer>();
+    private stream: MyStream | undefined;
 
     async join(): Promise<void> {
         const hub = signalhub("lets-party", [process.env.HUB_URL]);
@@ -35,6 +36,7 @@ export class RemoteRoomSwarmSignalHub implements RemoteRoom {
             const myPeer = new PeerSwarmSimplePeer(peer, id);
             this.myPeers.push(myPeer);
             this.onNewPeer.emit(myPeer);
+            if (this.stream) myPeer.sendLocalStream(this.stream);
         });
 
         sw.on("disconnect", (peer: any, id: string) => {
@@ -62,6 +64,7 @@ export class RemoteRoomSwarmSignalHub implements RemoteRoom {
     }
 
     async sendLocalStream(stream: MyStream): Promise<void> {
+        this.stream = stream;
         await Promise.all(
             this.myPeers.map((myPeer) => myPeer.sendLocalStream(stream))
         );
