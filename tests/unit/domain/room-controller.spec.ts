@@ -55,8 +55,8 @@ describe("when entering a room", () => {
         };
 
         local = {
-            showLocalWebcamVideo: jest.fn(),
-            getLocalWebcamStream: jest.fn().mockResolvedValue(myStream),
+            showLocalVideo: jest.fn(),
+            getLocalStream: jest.fn().mockResolvedValue(myStream),
         };
 
         avatar = {
@@ -87,7 +87,7 @@ describe("when entering a room", () => {
         test.todo("cannot access remote room");
 
         it("show the local webcam video to the local user", async () => {
-            expect(local.showLocalWebcamVideo).toHaveBeenCalled();
+            expect(local.showLocalVideo).toHaveBeenCalled();
         });
 
         it("send local webcam AV to the other peers", () => {

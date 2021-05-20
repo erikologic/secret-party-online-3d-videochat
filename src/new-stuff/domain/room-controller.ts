@@ -9,8 +9,8 @@ export class RoomController {
     ) {}
 
     async join(): Promise<void> {
-        const localStream = await this.local.getLocalWebcamStream();
-        await this.local.showLocalWebcamVideo();
+        const localStream = await this.local.getLocalStream();
+        await this.local.showLocalVideo();
         await this.remoteRoom.join();
         await this.remoteRoom.sendLocalStream(localStream);
         this.remoteRoom.onNewPeer.subscribe(this.createPeer);

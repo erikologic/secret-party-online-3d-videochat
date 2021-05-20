@@ -1,8 +1,8 @@
 import { Listener, MyEventEmitter } from "../shared/myEventEmitter";
 
 export interface Local {
-    showLocalWebcamVideo: () => void;
-    getLocalWebcamStream: () => Promise<MyStream>;
+    showLocalVideo: () => void;
+    getLocalStream: () => Promise<MyStream>;
 }
 
 export interface Peer {
