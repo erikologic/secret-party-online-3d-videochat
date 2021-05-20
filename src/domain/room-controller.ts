@@ -8,7 +8,7 @@ export class RoomController {
         private virtualWord: VirtualWorld
     ) {}
 
-    async join(_room: string): Promise<void> {
+    async join(): Promise<void> {
         const localVideo = await this.local.getLocalWebcamVideo();
         await this.local.showLocalWebcamVideo();
         await this.remoteRoom.join();
@@ -30,8 +30,8 @@ export class RoomController {
     private createPeer: Listener<Peer> = async (peer) => {
         const avatar = this.virtualWord.createAvatar(peer.id);
         peer.onPositionUpdate.subscribe(avatar.moveTo);
-        avatar.showVideo(await peer.getVideo());
-        avatar.showAudio(await peer.getAudio());
+        peer.onVideoStream.subscribe(avatar.showVideo);
+        peer.onAudioStream.subscribe(avatar.showAudio);
 
         peer.onDisconnect.subscribe(async () => {
             await avatar.remove();

@@ -63,10 +63,10 @@ describe("when entering a room", () => {
     beforeEach(async () => {
         peer = {
             id: "aPeer",
-            getAudio: () => Promise.resolve(remoteAudio),
-            getVideo: () => Promise.resolve(remoteVideo),
             onPositionUpdate: new MyEventEmitter(),
             onDisconnect: new MyEventEmitter(),
+            onVideoStream: new MyEventEmitter(),
+            onAudioStream: new MyEventEmitter(),
         };
 
         remoteRoom = {
@@ -98,7 +98,7 @@ describe("when entering a room", () => {
         };
 
         const room = new RoomController(local, remoteRoom, virtualWord);
-        await room.join("aRoom");
+        await room.join();
     });
 
     describe("initialisation", () => {
@@ -144,7 +144,7 @@ describe("when entering a room", () => {
             getPeersMock.mockResolvedValue(fivePeers);
 
             const room = new RoomController(local, remoteRoom, virtualWord);
-            await room.join("aRoom");
+            await room.join();
 
             expect(virtualWord.createAvatar).toHaveBeenCalledTimes(5);
         });
@@ -153,12 +153,14 @@ describe("when entering a room", () => {
             "sets the avatar configuration to the peer configuration when configuration is emitted"
         );
 
-        test("when peer video is found will attach it to its avatar", () => {
+        test("when peer video is found will attach it to its avatar", async () => {
+            await peer.onVideoStream.emit(remoteVideo);
             expect(avatar.showVideo).toHaveBeenCalledWith(remoteVideo);
         });
         test.todo("when fails attaching peer video");
 
-        test("when peer audio is found will attach it to its avatar", () => {
+        test("when peer audio is found will attach it to its avatar", async () => {
+            await peer.onAudioStream.emit(remoteAudio);
             expect(avatar.showAudio).toHaveBeenCalledWith(remoteAudio);
         });
         test.todo("when fails attaching peer audio");
