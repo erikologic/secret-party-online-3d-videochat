@@ -52,7 +52,7 @@ export class AvatarBabylonJs implements Avatar {
         this.mesh.dispose();
     };
 
-    showAudio({ stream }: RemoteAudio): void {
+    async showAudio({ stream }: RemoteAudio): Promise<void> {
         const audio = new Audio();
         audio.muted = true;
         audio.srcObject = stream;
