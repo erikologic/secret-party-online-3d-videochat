@@ -55,6 +55,7 @@
         "bundle:pre": "npm install",
         "bundle": "npx webpack --config webpack.prod.js",
         "lint": "npx eslint . --ext .ts,.tsx",
+        "lint:fix": "npx eslint . --ext .ts,.tsx --fix",
         "local:start": "npx webpack-dev-server --config webpack.dev.js",
         "local:pre": "npm run bundle:pre && npm run lint && npm run local:start",
         "server:pre": "npm --prefix server install",
@@ -63,7 +64,7 @@
         "start": "npm run server:start",
         "build:start": "npm run build && npm start",
         "test": "jest",
-        "type:check":  "tsc --noEmit"
+        "type:check": "tsc --noEmit"
     },
     "repository": {
         "type": "git",
