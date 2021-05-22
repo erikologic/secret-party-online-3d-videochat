@@ -1,5 +1,5 @@
 import { Avatar, MyPosition, MyStream } from "../domain/types";
-import { Listener } from "../shared/myEventEmitter";
+import { Listener } from "../shared/my-event-emitter";
 import {
     Color3,
     Mesh,

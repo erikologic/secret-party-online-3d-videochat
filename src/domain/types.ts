@@ -1,4 +1,4 @@
-import { Listener, MyEventEmitter } from "../shared/myEventEmitter";
+import { Listener, MyEventEmitter } from "../shared/my-event-emitter";
 
 export interface Local {
     showLocalVideo: () => void;

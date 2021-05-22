@@ -1,5 +1,5 @@
 import { RoomController } from "../../../src/domain/room-controller";
-import { MyEventEmitter } from "../../../src/shared/myEventEmitter";
+import { MyEventEmitter } from "../../../src/shared/my-event-emitter";
 import {
     Avatar,
     Local,

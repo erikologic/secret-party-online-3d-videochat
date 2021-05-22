@@ -1,5 +1,5 @@
 import { MyPosition, Peer, RemoteRoom, MyStream } from "../../domain/types";
-import { MyEventEmitter } from "../../shared/myEventEmitter";
+import { MyEventEmitter } from "../../shared/my-event-emitter";
 import swarm from "./webrtc-swarm";
 
 /// <reference path="signalhub.d.ts"/>

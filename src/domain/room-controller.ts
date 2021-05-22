@@ -1,5 +1,5 @@
 import { Local, Peer, RemoteRoom, VirtualWorld } from "./types";
-import { Listener } from "../shared/myEventEmitter";
+import { Listener } from "../shared/my-event-emitter";
 
 export class RoomController {
     constructor(
