@@ -1,5 +1,5 @@
-import { Peer, MyStream, MyPosition } from "../domain/types";
-import { MyEventEmitter } from "../shared/myEventEmitter";
+import { Peer, MyStream, MyPosition } from "../../domain/types";
+import { MyEventEmitter } from "../../shared/myEventEmitter";
 import { deserializer, serializer } from "./de-serializer";
 
 export class PeerSwarmSimplePeer implements Peer {

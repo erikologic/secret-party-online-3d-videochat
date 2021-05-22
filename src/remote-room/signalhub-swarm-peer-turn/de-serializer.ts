@@ -1,4 +1,4 @@
-import { MyPosition } from "../domain/types";
+import { MyPosition } from "../../domain/types";
 
 export const serializer = ({
     absoluteRotation,

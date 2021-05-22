@@ -1,5 +1,5 @@
 import { RoomController } from "./domain/room-controller";
-import { RemoteRoomSwarmSignalHub } from "./remote-room/remote-room";
+import { RemoteRoomSwarmSignalHub } from "./remote-room/signalhub-swarm-peer-turn/remote-room";
 import { VirtualWorldBabylonJs } from "./virtual-world/virtual-world-babylon-js";
 import { LocalBrowser } from "./local/local";
 
