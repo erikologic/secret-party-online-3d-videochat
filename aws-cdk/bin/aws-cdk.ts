@@ -3,8 +3,9 @@ import "source-map-support/register";
 import * as cdk from "@aws-cdk/core";
 import { AppConfigProps, VideochatApp } from "../lib/videochat-app";
 import { getEnvVar } from "../lib/get-env-var";
+import { config } from "dotenv";
 
-require("dotenv").config();
+config();
 
 const domain = getEnvVar(
     "DUCKDNS_DOMAIN",

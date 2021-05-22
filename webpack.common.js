@@ -37,5 +37,5 @@ module.exports = {
             systemvars: true, // load all the predefined 'process.env' variables which will trump anything local per dotenv specs.,
             defaults: true // load '.env.defaults' as the default values if empty.
         })
-    ]
+    ],
 }
