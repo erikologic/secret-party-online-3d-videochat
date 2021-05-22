@@ -72,7 +72,7 @@ export class AvatarBabylonJs implements Avatar {
     }
 
     async showVideo({ stream }: MyStream): Promise<void> {
-        const videoPanel = this.getVideoPanel();
+        const videoPanel = AvatarBabylonJs.getVideoPanel();
         const videoTexture = await this.createTextureFromStreamAsync(
             stream,
             this.scene
@@ -81,9 +81,7 @@ export class AvatarBabylonJs implements Avatar {
             videoTexture,
             this.scene
         );
-        videoPanel.position.x = this.mesh.position.x;
-        videoPanel.position.y = this.mesh.position.y;
-        this.mesh.addChild(videoPanel);
+        videoPanel.parent = this.mesh;
         videoPanel.receiveShadows = true;
     }
 
@@ -93,7 +91,6 @@ export class AvatarBabylonJs implements Avatar {
         mesh.material = this.getMaterial(scene);
         mesh.receiveShadows = true;
         mesh.position.y = 1.6;
-        scene.addMesh(mesh);
         return mesh;
     }
 
@@ -116,17 +113,16 @@ export class AvatarBabylonJs implements Avatar {
         return mat;
     }
 
-    private getVideoPanel(): Mesh {
+    private static getVideoPanel(): Mesh {
         const videoPanel = MeshBuilder.CreatePlane(
             "VideoPanel",
             VIDEO_DIMENSIONS
         );
-        if (this.mesh)
-            videoPanel.position = new Vector3(
-                0,
-                0,
-                VIDEO_DIMENSIONS.depth / 2 + 0.001
-            );
+        videoPanel.position = new Vector3(
+            0,
+            0,
+            VIDEO_DIMENSIONS.depth / 2 + 0.001
+        );
         videoPanel.toLeftHanded();
         return videoPanel;
     }

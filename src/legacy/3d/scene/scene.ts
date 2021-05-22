@@ -2,13 +2,7 @@
 // import "@babylonjs/core/Debug/debugLayer";
 // import "@babylonjs/inspector";
 
-import {
-    Color4,
-    Engine,
-    Scene,
-    ShadowGenerator,
-    Vector3,
-} from "@babylonjs/core";
+import { Color4, Engine, Scene, Vector3 } from "@babylonjs/core";
 
 import * as lights from "./lights";
 import { createCamera } from "./camera";

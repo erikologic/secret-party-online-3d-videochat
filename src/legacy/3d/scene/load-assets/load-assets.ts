@@ -1,4 +1,4 @@
-import { Scene, ShadowGenerator } from "@babylonjs/core";
+import { Scene } from "@babylonjs/core";
 import { importMesh } from "./mesh-importer";
 
 const assetList = [
