@@ -1,42 +1,23 @@
-import {ThreeD} from "./3d";
-import {Network} from "./network";
-import {
-    addASuperCrappyMuteAndDisableVideoShortcut,
-    getStream,
-    showLocalVideoStream
-} from "./local-stream";
+import { RoomController } from "./domain/room-controller";
+import { RemoteRoomSwarmSignalHub } from "./remote-room/remote-room";
+import { VirtualWorldBabylonJs } from "./virtual-world/virtual-world-babylon-js";
+import { LocalBrowser } from "./local/local";
 
-console.log('config', {
+console.log("config", {
     HUB_URL: process.env.HUB_URL,
     TURN_IP: process.env.TURN_IP,
-})
+});
 
 function init(): void {
-    const overlay = document.getElementById('overlay');
+    const overlay = document.getElementById("overlay");
     overlay?.remove();
 
-    const myThreeD = new ThreeD();
-    myThreeD.startEngine();
-
-    getStream()
-        .then(localStream => {
-            addASuperCrappyMuteAndDisableVideoShortcut(localStream);
-            
-            showLocalVideoStream(localStream);
-
-            const networkLayer = new Network();
-            networkLayer.onPeerConnect = (peer: any, id: string): void => {
-                myThreeD.addPeer(peer, id);
-                peer.addStream(localStream);
-            };
-            networkLayer.onPeerDisconnect = (peer: any, id: string): void => {
-                myThreeD.removePeer(id);
-            };
-            networkLayer.connect();
-            
-        })
-        .catch(console.log);
+    const local = new LocalBrowser();
+    const remoteRoom = new RemoteRoomSwarmSignalHub();
+    const virtualWorld = new VirtualWorldBabylonJs();
+    const roomController = new RoomController(local, remoteRoom, virtualWorld);
+    roomController.join();
 }
 
-const startButton = document.getElementById('startButton');
-startButton?.addEventListener('click', init);
+const startButton = document.getElementById("startButton");
+startButton?.addEventListener("click", init);

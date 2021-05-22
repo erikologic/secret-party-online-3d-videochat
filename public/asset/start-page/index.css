@@ -9,7 +9,7 @@ html, body {
 body {
     background-color: #000;
     color: #fff;
-    font-family: Monospace;
+    font-family: Monospace, monospace;
     overscroll-behavior: none;
 }
 
@@ -36,6 +36,8 @@ body {
 
 #localVideo {
     width: 100%;
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
 }
 
 #controlsOverlay {
@@ -198,7 +200,7 @@ body {
     background: transparent;
     color: #ffffff;
     outline: 1px solid #ffffff;
-    border: 0px;
+    border: 0;
     cursor: pointer;
     text-transform: uppercase;
 }

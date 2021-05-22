@@ -16,10 +16,11 @@
         "allowJs": true,
       "lib": [
         "dom",
-        "es5",
+        "es6",
         "scripthost",
-        "es2015.promise"
+        "es2020.promise"
       ]
     },
-    "exclude": ["aws-cdk"]
+    "exclude": ["aws-cdk"],
+    "include": ["src"]
 }
