@@ -43,7 +43,7 @@ const addWASD = (camera: FreeCamera): void => {
     camera.keysRight.push(68);
 };
 
-const addJump = (camera: FreeCamera, scene: Scene) => {
+const addJump = (camera: FreeCamera, scene: Scene): void => {
     camera.animations = [];
     const animation = new Animation(
         "a",

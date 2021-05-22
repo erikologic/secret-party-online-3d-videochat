@@ -1,6 +1,6 @@
 import { MyPosition, Peer, RemoteRoom, MyStream } from "../domain/types";
 import { MyEventEmitter } from "../shared/myEventEmitter";
-import swarm from "../../legacy/network/webrtc-swarm";
+import swarm from "./webrtc-swarm";
 
 /// <reference path="signalhub.d.ts"/>
 import signalhub from "signalhub";

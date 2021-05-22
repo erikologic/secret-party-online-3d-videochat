@@ -28,7 +28,7 @@ export class MyEventEmitter<T> {
         );
     };
 
-    unsubscribeAll = () => {
+    unsubscribeAll = (): void => {
         this.listeners = [];
     };
 }

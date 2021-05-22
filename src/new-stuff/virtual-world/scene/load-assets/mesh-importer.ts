@@ -1,5 +1,5 @@
 import "@babylonjs/loaders/glTF";
-import { Scene, SceneLoader, ShadowGenerator } from "@babylonjs/core";
+import { Scene, SceneLoader } from "@babylonjs/core";
 
 export function importMesh(scene: Scene, filename: string): void {
     SceneLoader.ImportMesh(
@@ -13,7 +13,7 @@ export function importMesh(scene: Scene, filename: string): void {
                 obj.checkCollisions = true;
             });
         },
-        (event) => {
+        (_event) => {
             // console.log(event);
         },
         (scene, error) => {
