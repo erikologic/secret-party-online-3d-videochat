@@ -9,7 +9,7 @@ const Dotenv = require('dotenv-webpack');
 const appDirectory = fs.realpathSync(process.cwd());
 
 module.exports = {
-    entry: path.resolve(appDirectory, "src/new-stuff"),
+    entry: path.resolve(appDirectory, "src"),
     output: {
         filename: 'index.js',
         path: path.resolve(__dirname, 'public/dist')
