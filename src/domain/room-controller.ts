@@ -31,13 +31,27 @@ export class RoomController {
     private createAvatar: Listener<Peer> = async (peer) => {
         const avatar = this.virtualWord.createAvatar(peer.id);
         peer.onPositionUpdate.subscribe((pos) => avatar.moveTo(pos));
-        peer.onStream.subscribe((stream) => avatar.showVideo(stream));
-        peer.onStream.subscribe((stream) => avatar.showAudio(stream));
+
+        const showVideo = async () => {
+            const closeByDistance = 10;
+            const distance = avatar.calcDistance();
+            if (distance < closeByDistance) {
+                const stream = await peer.getStream();
+                await avatar.showVideo(stream);
+                await avatar.showAudio(stream);
+            } else {
+                avatar.stopVideo();
+                avatar.stopAudio();
+            }
+        };
+
+        await showVideo();
+        const disableShowVideo = setInterval(() => showVideo(), 1000);
 
         peer.onDisconnect.subscribe(async () => {
             await avatar.remove();
             peer.onPositionUpdate.unsubscribeAll();
-            peer.onStream.unsubscribeAll();
+            clearInterval(disableShowVideo);
         });
     };
 }
