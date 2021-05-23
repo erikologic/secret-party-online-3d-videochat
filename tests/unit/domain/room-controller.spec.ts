@@ -55,6 +55,7 @@ describe("when entering a room", () => {
         };
 
         local = {
+            init: jest.fn(),
             showLocalVideo: jest.fn(),
             getLocalStream: jest.fn().mockResolvedValue(myStream),
         };
@@ -77,7 +78,9 @@ describe("when entering a room", () => {
     });
 
     describe("initialisation", () => {
-        test.todo("is using the right browser");
+        test("initialise the local env", () => {
+            expect(local.init).toHaveBeenCalled();
+        });
         test.todo("can get access to webcam");
 
         it("join remote room", async () => {

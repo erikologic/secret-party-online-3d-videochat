@@ -106,4 +106,15 @@ export class LocalBrowser implements Local {
             }
         };
     }
+
+    init(): void {
+        if (!navigator.userAgent.match(/Chrome|Firefox/))
+            window.alert(
+                "Your browser is not supported" +
+                    "\nPlease use the latest Chrome, or Firefox alternatively" +
+                    "\nYou may continue but expect the app to not work properly"
+            );
+        const overlay = document.getElementById("overlay");
+        overlay?.remove();
+    }
 }

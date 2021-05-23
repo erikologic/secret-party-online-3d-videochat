@@ -9,6 +9,7 @@ export class RoomController {
     ) {}
 
     async join(): Promise<void> {
+        this.local.init();
         const localStream = await this.local.getLocalStream();
         await this.local.showLocalVideo();
         await this.remoteRoom.join();

@@ -9,9 +9,6 @@ console.log("config", {
 });
 
 function init(): void {
-    const overlay = document.getElementById("overlay");
-    overlay?.remove();
-
     const local = new LocalBrowser();
     const remoteRoom = new RemoteRoomSwarmSignalHub();
     const virtualWorld = new VirtualWorldBabylonJs();

@@ -1,6 +1,7 @@
 import { Listener, MyEventEmitter } from "../shared/my-event-emitter";
 
 export interface Local {
+    init: () => void;
     showLocalVideo: () => void;
     getLocalStream: () => Promise<MyStream>;
 }
