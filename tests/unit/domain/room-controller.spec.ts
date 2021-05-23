@@ -43,8 +43,13 @@ describe("when entering a room", () => {
     let virtualWord: VirtualWorld;
 
     beforeEach(async () => {
+        jest.clearAllMocks();
         peer = {
-            getStream: jest.fn().mockResolvedValue(myStream),
+            fetchStream: jest
+                .fn()
+                .mockImplementation(() => peer.onStream.emit(myStream)),
+            onStream: new MyEventEmitter(),
+            stopFetchingStream: jest.fn(),
             id: "aPeer",
             onPositionUpdate: new MyEventEmitter(),
             onDisconnect: new MyEventEmitter(),
@@ -175,6 +180,7 @@ describe("when entering a room", () => {
 
                     expect(avatar.stopVideo).toHaveBeenCalled();
                     expect(avatar.stopAudio).toHaveBeenCalled();
+                    expect(peer.stopFetchingStream).toHaveBeenCalled();
                 });
             });
 

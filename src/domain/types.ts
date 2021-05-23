@@ -7,11 +7,12 @@ export interface Local {
 }
 
 export interface Peer {
-    // onStream: MyEventEmitter<MyStream>;
+    onStream: MyEventEmitter<MyStream>;
     onDisconnect: MyEventEmitter<void>;
     id: string;
     onPositionUpdate: MyEventEmitter<MyPosition>;
-    getStream: () => Promise<MyStream>;
+    fetchStream: () => Promise<void>;
+    stopFetchingStream: () => Promise<void>;
 }
 
 export interface RemoteRoom {
