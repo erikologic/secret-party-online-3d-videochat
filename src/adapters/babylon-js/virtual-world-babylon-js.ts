@@ -1,5 +1,5 @@
-import { Avatar, MyPosition, VirtualWorld } from "../domain/types";
-import { MyEventEmitter } from "../shared/my-event-emitter";
+import { Avatar, MyPosition, VirtualWorld } from "../../domain/types";
+import { MyEventEmitter } from "../../shared/my-event-emitter";
 import { Camera, Engine, Scene } from "@babylonjs/core";
 import { createScene } from "./scene";
 import { AvatarBabylonJs } from "./avatar-babylon-js";

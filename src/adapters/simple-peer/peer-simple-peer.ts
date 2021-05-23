@@ -2,7 +2,7 @@ import { Peer, MyStream, MyPosition } from "../../domain/types";
 import { MyEventEmitter } from "../../shared/my-event-emitter";
 import { deserializer, serializer } from "./de-serializer";
 
-export class PeerSwarmSimplePeer implements Peer {
+export class PeerSimplePeer implements Peer {
     onDisconnect = new MyEventEmitter<void>();
     onPositionUpdate = new MyEventEmitter<MyPosition>();
     onStream = new MyEventEmitter<MyStream>();

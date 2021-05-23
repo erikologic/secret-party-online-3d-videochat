@@ -1,4 +1,4 @@
-import { Local, MyStream } from "../domain/types";
+import { Local, MyStream } from "../../domain/types";
 
 const userMediaConstraints = {
     audio: true,

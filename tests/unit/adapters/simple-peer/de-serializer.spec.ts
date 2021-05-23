@@ -1,4 +1,7 @@
-import { serializer, deserializer } from "./de-serializer";
+import {
+    deserializer,
+    serializer,
+} from "../../../../src/adapters/simple-peer/de-serializer";
 
 const payload = {
     absoluteRotation: {
