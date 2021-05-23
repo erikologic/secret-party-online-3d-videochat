@@ -81,7 +81,6 @@ describe("when entering a room", () => {
         test("initialise the local env", () => {
             expect(local.init).toHaveBeenCalled();
         });
-        test.todo("can get access to webcam");
 
         it("join remote room", async () => {
             expect(remoteRoom.join).toHaveBeenCalled();

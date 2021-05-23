@@ -34,11 +34,25 @@ const displayMediaConstraints = {
 
 export class LocalBrowser implements Local {
     private myStream: MyStream | undefined;
+    private overlay: HTMLElement | null;
+
+    constructor() {
+        this.overlay = document.getElementById("overlay");
+    }
 
     async getLocalStream(): Promise<MyStream> {
-        const stream = await (LocalBrowser.shouldShowDisplay()
-            ? LocalBrowser.getDisplayStream()
-            : LocalBrowser.getWebCamStream());
+        let stream;
+        try {
+            stream = await (LocalBrowser.shouldShowDisplay()
+                ? LocalBrowser.getDisplayStream()
+                : LocalBrowser.getWebCamStream());
+        } catch (e) {
+            window.alert(
+                "You need to give access to the webcam + audio to start the app"
+            );
+            this.overlay?.style.setProperty("display", "block");
+            throw e;
+        }
         this.myStream = { stream };
         this.addASuperCrappyMuteAndDisableVideoShortcut(stream);
         return this.myStream;
@@ -114,7 +128,6 @@ export class LocalBrowser implements Local {
                     "\nPlease use the latest Chrome, or Firefox alternatively" +
                     "\nYou may continue but expect the app to not work properly"
             );
-        const overlay = document.getElementById("overlay");
-        overlay?.remove();
+        this.overlay?.style.setProperty("display", "none");
     }
 }

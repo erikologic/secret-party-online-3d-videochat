@@ -37,4 +37,21 @@ describe("a browser local environment", () => {
             });
         });
     });
+
+    test("failing to get access to a webcam/device stream will throw", async () => {
+        (navigator as any).mediaDevices = {
+            getUserMedia: jest
+                .fn()
+                .mockRejectedValue(new Error("error getting user media")),
+        };
+        const alertSpy = jest.spyOn(window, "alert").mockReturnValue();
+        const localBrowser = new LocalBrowser();
+        const promise = localBrowser.getLocalStream();
+        await expect(promise).rejects.toThrow("error getting user media");
+        expect(alertSpy).toHaveBeenCalledWith(
+            expect.stringContaining(
+                "You need to give access to the webcam + audio to start the app"
+            )
+        );
+    });
 });
