@@ -47,16 +47,13 @@ describe("connecting 2 peers via PeerSimplePeer", () => {
         peer2.destroy();
     });
 
-    test("can disconnect", (done) => {
-        myPeer1.onDisconnect.subscribe(async () => {
-            try {
-                done();
-            } catch (e) {
-                done(e);
-            }
-        });
+    test("can disconnect", async () => {
+        const mock = jest.fn();
+        myPeer1.onDisconnect.subscribe(mock);
 
         peer2.destroy();
+        await asyncTimeout(300);
+        expect(mock).toBeCalled();
     });
 
     test("can send position", async () => {
