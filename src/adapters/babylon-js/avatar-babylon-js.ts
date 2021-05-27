@@ -28,6 +28,10 @@ export class AvatarBabylonJs implements Avatar {
         this.mesh = this.createAvatarMesh(scene);
     }
 
+    // TODO fix this - feels a bit hackish
+    calcDistance = () =>
+        Vector3.Distance(this.scene.cameras[0].position, this.mesh.position);
+
     moveTo: Listener<MyPosition> = async ({
         absoluteRotation,
         globalPosition,
