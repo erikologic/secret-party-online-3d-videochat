@@ -45,11 +45,11 @@ describe("when entering a room", () => {
     beforeEach(async () => {
         jest.clearAllMocks();
         peer = {
-            fetchStream: jest
+            showStream: jest
                 .fn()
                 .mockImplementation(() => peer.onStream.emit(myStream)),
             onStream: new MyEventEmitter(),
-            stopFetchingStream: jest.fn(),
+            stopShowingStream: jest.fn(),
             id: "aPeer",
             onPositionUpdate: new MyEventEmitter(),
             onDisconnect: new MyEventEmitter(),
@@ -70,8 +70,6 @@ describe("when entering a room", () => {
         };
 
         avatar = {
-            stopAudio: jest.fn(),
-            stopVideo: jest.fn(),
             calcDistance: jest.fn(),
             remove: jest.fn(),
             showVideo: jest.fn(),
@@ -178,9 +176,7 @@ describe("when entering a room", () => {
                     jest.advanceTimersByTime(1200);
                     await flushPromises();
 
-                    expect(avatar.stopVideo).toHaveBeenCalled();
-                    expect(avatar.stopAudio).toHaveBeenCalled();
-                    expect(peer.stopFetchingStream).toHaveBeenCalled();
+                    expect(peer.stopShowingStream).toHaveBeenCalled();
                 });
             });
 

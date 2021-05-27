@@ -35,11 +35,11 @@ export class PeerSimplePeer implements Peer {
         this.peer.addStream(stream);
     }
 
-    fetchStream(): Promise<void> {
+    showStream(): Promise<void> {
         throw new Error("not implemented");
     }
 
-    stopFetchingStream(): Promise<void> {
+    stopShowingStream(): Promise<void> {
         throw new Error("not implemented");
     }
 }

@@ -14,13 +14,13 @@ export class RoomController {
         await this.local.showLocalVideo();
         await this.remoteRoom.join();
         await this.remoteRoom.sendLocalStream(localStream);
-        this.remoteRoom.onNewPeer.subscribe((peer) => this.createAvatar(peer));
 
         await this.virtualWord.start();
         this.virtualWord.onPositionUpdate.subscribe((pos) =>
             this.remoteRoom.broadcastLocalPosition(pos)
         );
 
+        this.remoteRoom.onNewPeer.subscribe((peer) => this.createAvatar(peer));
         await this.remoteRoom
             .getPeers()
             .then((peers) =>
@@ -35,15 +35,13 @@ export class RoomController {
         const showVideo = async () => {
             const closeByDistance = 10;
             const distance = avatar.calcDistance();
+            peer.onStream.subscribe((stream) => avatar.showVideo(stream));
+            peer.onStream.subscribe((stream) => avatar.showAudio(stream));
+
             if (distance < closeByDistance) {
-                peer.onStream.subscribe((stream) => avatar.showVideo(stream));
-                peer.onStream.subscribe((stream) => avatar.showAudio(stream));
-                await peer.fetchStream();
+                await peer.showStream();
             } else {
-                peer.onStream.unsubscribeAll();
-                await peer.stopFetchingStream();
-                avatar.stopVideo();
-                avatar.stopAudio();
+                await peer.stopShowingStream();
             }
         };
 

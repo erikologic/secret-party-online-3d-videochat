@@ -11,8 +11,8 @@ export interface Peer {
     onDisconnect: MyEventEmitter<void>;
     id: string;
     onPositionUpdate: MyEventEmitter<MyPosition>;
-    fetchStream: () => Promise<void>;
-    stopFetchingStream: () => Promise<void>;
+    showStream: () => Promise<void>;
+    stopShowingStream: () => Promise<void>;
 }
 
 export interface RemoteRoom {
@@ -24,8 +24,6 @@ export interface RemoteRoom {
 }
 
 export interface Avatar {
-    stopAudio: () => void;
-    stopVideo: () => void;
     calcDistance: () => number;
     remove: Listener<void>;
     moveTo: Listener<MyPosition>;
