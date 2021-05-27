@@ -74,57 +74,47 @@ describe("connecting 2 peers via PeerSimplePeer", () => {
         expect(mock.mock.calls[0][0]).toEqual(position);
     });
 
-    test("does not send the stream if not commanded to", async () => {
-        const { stream, stopStream } = getStream();
+    describe("for streams", () => {
+        let stopStream: () => void, myStream: MyStream, mock: jest.Mock;
 
-        const myStream: MyStream = {
-            stream,
-        };
+        beforeEach(async () => {
+            const mediaStreamHandles = getStream();
+            stopStream = mediaStreamHandles.stopStream;
 
-        const mock = jest.fn();
-        await myPeer2.sendLocalStream(myStream);
+            myStream = {
+                stream: mediaStreamHandles.stream,
+            };
 
-        await asyncTimeout(2000);
-        expect(mock).not.toBeCalled();
-        stopStream();
-    });
+            mock = jest.fn();
+            myPeer1.onStream.subscribe(mock);
+            await myPeer2.sendLocalStream(myStream);
+        });
 
-    test("send the stream", async () => {
-        const { stream, stopStream } = getStream();
+        afterEach(() => {
+            stopStream();
+        });
 
-        const myStream: MyStream = {
-            stream,
-        };
+        test("does not send the stream if not commanded to", async () => {
+            await asyncTimeout(2000);
+            expect(mock).not.toBeCalled();
+        });
 
-        const mock = jest.fn();
-        myPeer1.onStream.subscribe(mock);
+        test("send the stream", async () => {
+            await myPeer2.showStream();
 
-        await myPeer2.sendLocalStream(myStream);
-        await myPeer2.showStream();
+            await asyncTimeout(2000);
+            expect(mock.mock.calls[0][0].stream).toEqual(myStream.stream);
+            expect(mock.mock.calls[0][0].stream.getTracks()).toHaveLength(1);
+        });
 
-        await asyncTimeout(2000);
-        expect(mock.mock.calls[0][0].stream).toEqual(myStream.stream);
-        expect(mock.mock.calls[0][0].stream.getTracks()).toHaveLength(1);
-        stopStream();
-    });
+        test("stop sending the stream when commanded to", async () => {
+            await myPeer2.showStream();
 
-    test("stop sending the stream when commanded to", async () => {
-        const { stream, stopStream } = getStream();
+            await asyncTimeout(500);
+            await myPeer2.stopShowingStream();
 
-        const myStream: MyStream = {
-            stream,
-        };
-
-        const mock = jest.fn();
-        myPeer1.onStream.subscribe(mock);
-        await myPeer2.sendLocalStream(myStream);
-        await myPeer2.showStream();
-
-        await asyncTimeout(1000);
-        await myPeer2.stopShowingStream();
-
-        await asyncTimeout(2000);
-        expect(mock.mock.calls[0][0].stream.getTracks()).toHaveLength(0);
-        stopStream();
+            await asyncTimeout(2000);
+            expect(mock.mock.calls[0][0].stream.getTracks()).toHaveLength(0);
+        });
     });
 });
