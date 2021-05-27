@@ -7,6 +7,7 @@ export class PeerSimplePeer implements Peer {
     onDisconnect = new MyEventEmitter<void>();
     onPositionUpdate = new MyEventEmitter<MyPosition>();
     onStream = new MyEventEmitter<MyStream>();
+    private myStream: MyStream | undefined;
 
     constructor(
         private readonly peer: SimplePeer.Instance,
@@ -16,7 +17,7 @@ export class PeerSimplePeer implements Peer {
             await this.onStream.emit({ stream });
         });
 
-        peer.on("data", async (data: any) => {
+        peer.on("data", async (data: unknown) => {
             const position = deserializer(data);
             await this.onPositionUpdate.emit(position);
         });
@@ -31,15 +32,17 @@ export class PeerSimplePeer implements Peer {
         this.peer.send(data);
     }
 
-    async sendLocalStream({ stream }: MyStream): Promise<void> {
-        this.peer.addStream(stream);
+    async sendLocalStream(myStream: MyStream): Promise<void> {
+        this.myStream = myStream;
     }
 
-    showStream(): Promise<void> {
-        throw new Error("not implemented");
+    async showStream(): Promise<void> {
+        if (!this.myStream) throw new Error("no stream available to send");
+        this.peer.addStream(this.myStream.stream);
     }
 
-    stopShowingStream(): Promise<void> {
-        throw new Error("not implemented");
+    async stopShowingStream(): Promise<void> {
+        if (!this.myStream) throw new Error("no stream available to send");
+        this.peer.removeStream(this.myStream.stream);
     }
 }
