@@ -45,9 +45,9 @@ export class RoomController {
 
             const audioCloseByDistance = 25;
             if (distance < audioCloseByDistance) {
-                await peer.showVideoStream();
+                await peer.showAudioStream();
             } else {
-                await peer.stopShowingVideoStream();
+                await peer.stopShowingAudioStream();
             }
         };
 

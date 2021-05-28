@@ -36,8 +36,12 @@ export class PeerSimplePeer implements Peer {
     async sendLocalStream(myStream: MyStream): Promise<void> {
         this.myStream = myStream;
         this.clonedStream = myStream.stream.clone();
+
+        // @ts-ignore
+        window.clonedStream = this.clonedStream;
         this.peer.addStream(this.clonedStream);
         this.clonedStream.getVideoTracks()[0].enabled = false;
+        this.clonedStream.getAudioTracks()[0].enabled = false;
     }
 
     async showVideoStream(): Promise<void> {
@@ -49,5 +53,16 @@ export class PeerSimplePeer implements Peer {
         if (!this.clonedStream)
             throw new Error("no stream available to stop sending");
         this.clonedStream.getVideoTracks()[0].enabled = false;
+    }
+
+    async showAudioStream(): Promise<void> {
+        if (!this.clonedStream) throw new Error("no stream available to send");
+        this.clonedStream.getAudioTracks()[0].enabled = true;
+    }
+
+    async stopShowingAudioStream(): Promise<void> {
+        if (!this.clonedStream)
+            throw new Error("no stream available to stop sending");
+        this.clonedStream.getAudioTracks()[0].enabled = false;
     }
 }
