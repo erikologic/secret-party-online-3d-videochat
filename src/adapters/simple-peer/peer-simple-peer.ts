@@ -8,6 +8,7 @@ export class PeerSimplePeer implements Peer {
     onPositionUpdate = new MyEventEmitter<MyPosition>();
     onStream = new MyEventEmitter<MyStream>();
     private myStream: MyStream | undefined;
+    private clonedStream: MediaStream | undefined;
 
     constructor(
         private readonly peer: SimplePeer.Instance,
@@ -34,15 +35,19 @@ export class PeerSimplePeer implements Peer {
 
     async sendLocalStream(myStream: MyStream): Promise<void> {
         this.myStream = myStream;
+        this.clonedStream = myStream.stream.clone();
+        this.peer.addStream(this.clonedStream);
+        this.clonedStream.getVideoTracks()[0].enabled = false;
     }
 
     async showStream(): Promise<void> {
-        if (!this.myStream) throw new Error("no stream available to send");
-        this.peer.addStream(this.myStream.stream);
+        if (!this.clonedStream) throw new Error("no stream available to send");
+        this.clonedStream.getVideoTracks()[0].enabled = true;
     }
 
     async stopShowingStream(): Promise<void> {
-        if (!this.myStream) throw new Error("no stream available to send");
-        this.peer.removeStream(this.myStream.stream);
+        if (!this.clonedStream)
+            throw new Error("no stream available to stop sending");
+        this.clonedStream.getVideoTracks()[0].enabled = false;
     }
 }
