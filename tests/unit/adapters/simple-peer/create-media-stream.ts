@@ -4,7 +4,7 @@ import { hsv } from "color-space";
 
 // @ts-ignore
 import * as wrtc from "wrtc";
-const { RTCVideoSource, rgbaToI420 } = wrtc.nonstandard;
+const { RTCVideoSource, rgbaToI420 } = (wrtc as any).nonstandard;
 
 const width = 640;
 const height = 480;
