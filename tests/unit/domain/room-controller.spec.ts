@@ -45,12 +45,12 @@ describe("when entering a room", () => {
     beforeEach(async () => {
         jest.clearAllMocks();
         peer = {
-            showVideoStream: jest.fn(),
-            onStream: new MyEventEmitter(),
-            stopShowingVideoStream: jest.fn(),
             id: "aPeer",
-            onPositionUpdate: new MyEventEmitter(),
             onDisconnect: new MyEventEmitter(),
+            onPositionUpdate: new MyEventEmitter(),
+            onStream: new MyEventEmitter(),
+            showVideoStream: jest.fn(),
+            stopShowingVideoStream: jest.fn(),
             showAudioStream: jest.fn(),
             stopShowingAudioStream: jest.fn(),
         };
@@ -85,6 +85,8 @@ describe("when entering a room", () => {
 
         const room = new RoomController(local, remoteRoom, virtualWord);
         await room.join();
+
+        await flushPromises();
     });
 
     describe("initialisation", () => {
@@ -193,23 +195,27 @@ describe("when entering a room", () => {
                     expect(peer.showVideoStream).toHaveBeenCalledTimes(2);
                 });
             });
+
             describe("for audio streams", () => {
                 const audioCutOffDistance = 25;
 
                 test("shows the peer audio stream when is close by", async () => {
                     jest.advanceTimersByTime(1000);
+                    await flushPromises();
+
                     expect(peer.showAudioStream).toHaveBeenCalledTimes(1);
                 });
 
                 test("stops showing the audio stream when the peer goes away", async () => {
                     jest.advanceTimersByTime(1000);
+                    await flushPromises();
                     expect(peer.showAudioStream).toHaveBeenCalledTimes(1);
 
                     (avatar.calcDistance as jest.Mock).mockReturnValue(
                         audioCutOffDistance + 5
                     );
                     jest.advanceTimersByTime(1000);
-
+                    await flushPromises();
                     expect(peer.stopShowingAudioStream).toHaveBeenCalledTimes(
                         1
                     );
@@ -217,18 +223,22 @@ describe("when entering a room", () => {
 
                 test("shows the audio stream when the peer gets close by again", async () => {
                     jest.advanceTimersByTime(1000);
+                    await flushPromises();
+
                     expect(peer.showAudioStream).toHaveBeenCalledTimes(1);
 
                     (avatar.calcDistance as jest.Mock).mockReturnValue(
                         audioCutOffDistance + 5
                     );
                     jest.advanceTimersByTime(1000);
+                    await flushPromises();
                     expect(peer.stopShowingAudioStream).toHaveBeenCalled();
 
                     (avatar.calcDistance as jest.Mock).mockReturnValue(
                         audioCutOffDistance - 5
                     );
                     jest.advanceTimersByTime(1000);
+                    await flushPromises();
                     expect(peer.showAudioStream).toHaveBeenCalledTimes(2);
                 });
             });
