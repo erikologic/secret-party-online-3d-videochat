@@ -34,23 +34,30 @@ export class RoomController {
         peer.onStream.subscribe((stream) => avatar.showVideo(stream));
         peer.onStream.subscribe((stream) => avatar.showAudio(stream));
 
-        const showVideo = async () => {
-            const closeByDistance = 10;
+        const showAudioVideo = async () => {
             const distance = avatar.calcDistance();
-            if (distance < closeByDistance) {
+            const videoCloseByDistance = 10;
+            if (distance < videoCloseByDistance) {
+                await peer.showVideoStream();
+            } else {
+                await peer.stopShowingVideoStream();
+            }
+
+            const audioCloseByDistance = 25;
+            if (distance < audioCloseByDistance) {
                 await peer.showVideoStream();
             } else {
                 await peer.stopShowingVideoStream();
             }
         };
 
-        const disableShowVideo = setInterval(() => showVideo(), 1000);
+        const disableShowAudioVideo = setInterval(() => showAudioVideo(), 1000);
 
         peer.onDisconnect.subscribe(async () => {
             await avatar.remove();
             peer.onPositionUpdate.unsubscribeAll();
             peer.onStream.unsubscribeAll();
-            clearInterval(disableShowVideo);
+            clearInterval(disableShowAudioVideo);
         });
     };
 }

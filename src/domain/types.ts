@@ -7,6 +7,8 @@ export interface Local {
 }
 
 export interface Peer {
+    showAudioStream: () => Promise<void>;
+    stopShowingAudioStream: () => Promise<void>;
     onStream: MyEventEmitter<MyStream>;
     onDisconnect: MyEventEmitter<void>;
     id: string;
