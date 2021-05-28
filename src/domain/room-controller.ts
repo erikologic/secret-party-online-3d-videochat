@@ -36,8 +36,10 @@ export class RoomController {
 
         const showAudioVideo = async () => {
             const distance = avatar.calcDistance();
+            const angle = avatar.calcAngle();
             const videoCloseByDistance = 10;
-            if (distance < videoCloseByDistance) {
+            const videoCutOffAngle = 90;
+            if (distance < videoCloseByDistance && angle < videoCutOffAngle) {
                 await peer.showVideoStream();
             } else {
                 await peer.stopShowingVideoStream();

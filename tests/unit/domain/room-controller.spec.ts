@@ -70,6 +70,7 @@ describe("when entering a room", () => {
         };
 
         avatar = {
+            calcAngle: jest.fn().mockReturnValue(5),
             calcDistance: jest.fn().mockReturnValue(1),
             remove: jest.fn(),
             showVideo: jest.fn(),
@@ -158,8 +159,9 @@ describe("when entering a room", () => {
 
             describe("for video streams", () => {
                 const videoCutOffDistance = 10;
+                const angleCutOff = 90;
 
-                test("shows the peer video stream when is close by", async () => {
+                test("shows the peer video stream when is front of me", async () => {
                     jest.advanceTimersByTime(1000);
                     expect(peer.showVideoStream).toHaveBeenCalledTimes(1);
                 });
@@ -178,7 +180,21 @@ describe("when entering a room", () => {
                     );
                 });
 
-                test("shows the video stream when the peer gets close by again", async () => {
+                test("stops showing the video stream when the peer goes too much on the side", async () => {
+                    jest.advanceTimersByTime(1000);
+                    expect(peer.showVideoStream).toHaveBeenCalledTimes(1);
+
+                    (avatar.calcAngle as jest.Mock).mockReturnValue(
+                        angleCutOff + 5
+                    );
+                    jest.advanceTimersByTime(1000);
+
+                    expect(peer.stopShowingVideoStream).toHaveBeenCalledTimes(
+                        1
+                    );
+                });
+
+                test("shows the video stream when the peer gets in front of me again", async () => {
                     jest.advanceTimersByTime(1000);
                     expect(peer.showVideoStream).toHaveBeenCalledTimes(1);
 

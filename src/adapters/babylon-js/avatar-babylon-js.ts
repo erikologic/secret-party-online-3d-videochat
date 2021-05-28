@@ -1,6 +1,7 @@
 import { Avatar, MyPosition, MyStream } from "../../domain/types";
 import { Listener } from "../../shared/my-event-emitter";
 import {
+    Axis,
     Color3,
     Mesh,
     MeshBuilder,
@@ -8,6 +9,7 @@ import {
     Scene,
     Sound,
     StandardMaterial,
+    Tools,
     Vector3,
     VideoTexture,
 } from "@babylonjs/core";
@@ -28,7 +30,27 @@ export class AvatarBabylonJs implements Avatar {
         this.mesh = this.createAvatarMesh(scene);
     }
 
-    // TODO fix this - feels a bit hackish
+    calcAngle = () => {
+        const camera = this.scene.cameras[0];
+        const v0 = camera.getDirection(Axis.Z);
+        v0.y = 0; //horizontal components only
+        v0.normalize();
+
+        //direction from camera to cube
+        const v1 = this.mesh.position.subtract(camera.position);
+        v1.y = 0; //horizontal components only]
+        v1.normalize();
+
+        let angle = Math.acos(Vector3.Dot(v0, v1));
+
+        //find whether rotation is clockwise or anti-clockwise
+        const direction = Vector3.Cross(v0, v1).y;
+        if (direction < 0) {
+            angle *= -1;
+        }
+        return Tools.ToDegrees(angle);
+    };
+
     calcDistance = () =>
         Vector3.Distance(this.scene.cameras[0].position, this.mesh.position);
 

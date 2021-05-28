@@ -26,6 +26,7 @@ export interface RemoteRoom {
 }
 
 export interface Avatar {
+    calcAngle: () => number;
     calcDistance: () => number;
     remove: Listener<void>;
     moveTo: Listener<MyPosition>;
