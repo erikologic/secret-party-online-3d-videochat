@@ -103,7 +103,7 @@ describe("connecting 2 peers via PeerSimplePeer", () => {
         });
 
         test("send the stream", async () => {
-            await myPeer2.showStream();
+            await myPeer2.showVideoStream();
 
             await asyncTimeout(2_000);
             expect(mock.mock.calls[0][0].stream).toEqual(myStream.stream);
@@ -117,10 +117,10 @@ describe("connecting 2 peers via PeerSimplePeer", () => {
 
         test.skip("stop sending the stream when commanded to", async () => {
             // TODO this works in the browser _shrug_
-            await myPeer2.showStream();
+            await myPeer2.showVideoStream();
 
             await asyncTimeout(500);
-            await myPeer2.stopShowingStream();
+            await myPeer2.stopShowingVideoStream();
 
             await asyncTimeout(2_000);
             expect(

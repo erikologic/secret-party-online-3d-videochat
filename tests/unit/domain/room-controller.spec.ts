@@ -45,11 +45,11 @@ describe("when entering a room", () => {
     beforeEach(async () => {
         jest.clearAllMocks();
         peer = {
-            showStream: jest
+            showVideoStream: jest
                 .fn()
                 .mockImplementation(() => peer.onStream.emit(myStream)),
             onStream: new MyEventEmitter(),
-            stopShowingStream: jest.fn(),
+            stopShowingVideoStream: jest.fn(),
             id: "aPeer",
             onPositionUpdate: new MyEventEmitter(),
             onDisconnect: new MyEventEmitter(),
@@ -70,7 +70,7 @@ describe("when entering a room", () => {
         };
 
         avatar = {
-            calcDistance: jest.fn(),
+            calcDistance: jest.fn().mockReturnValue(1),
             remove: jest.fn(),
             showVideo: jest.fn(),
             showAudio: jest.fn(),
@@ -137,83 +137,56 @@ describe("when entering a room", () => {
         );
 
         describe("connecting to the stream", () => {
-            const closeByDistance = 10;
+            test.todo("when fails attaching peer stream");
 
             test("will regularly check the avatar position", () => {
+                jest.advanceTimersByTime(1000);
                 expect(avatar.calcDistance).toHaveBeenCalledTimes(1);
-                (avatar.calcDistance as jest.Mock).mockReturnValue(5);
                 jest.advanceTimersByTime(1000);
                 expect(avatar.calcDistance).toHaveBeenCalledTimes(2);
                 jest.advanceTimersByTime(1000);
                 expect(avatar.calcDistance).toHaveBeenCalledTimes(3);
             });
 
-            describe("when peer is close by", () => {
-                beforeEach(async () => {
-                    jest.clearAllMocks();
+            describe("for video streams", () => {
+                const videoCutOffDistance = 10;
 
-                    (avatar.calcDistance as jest.Mock).mockReturnValue(
-                        closeByDistance - 5
-                    );
-
-                    const room = new RoomController(
-                        local,
-                        remoteRoom,
-                        virtualWord
-                    );
-                    await room.join();
+                test("shows the peer video stream when is close by", async () => {
+                    jest.advanceTimersByTime(1000);
+                    expect(peer.showVideoStream).toHaveBeenCalledTimes(1);
                 });
 
-                test("shows the peer stream when is close by", async () => {
-                    expect(avatar.showVideo).toHaveBeenCalledWith(myStream);
-                    expect(avatar.showAudio).toHaveBeenCalledWith(myStream);
+                test("stops showing the video stream when the peer goes away", async () => {
+                    jest.advanceTimersByTime(1000);
+                    expect(peer.showVideoStream).toHaveBeenCalledTimes(1);
+
+                    (avatar.calcDistance as jest.Mock).mockReturnValue(
+                        videoCutOffDistance + 5
+                    );
+                    jest.advanceTimersByTime(1000);
+
+                    expect(peer.stopShowingVideoStream).toHaveBeenCalledTimes(
+                        1
+                    );
                 });
 
-                test("stops showing the stream when the peer goes away", async () => {
-                    (avatar.calcDistance as jest.Mock).mockReturnValue(
-                        closeByDistance + 5
-                    );
-                    jest.advanceTimersByTime(1200);
-                    await flushPromises();
+                test("shows the video stream when the peer gets close by again", async () => {
+                    jest.advanceTimersByTime(1000);
+                    expect(peer.showVideoStream).toHaveBeenCalledTimes(1);
 
-                    expect(peer.stopShowingStream).toHaveBeenCalled();
+                    (avatar.calcDistance as jest.Mock).mockReturnValue(
+                        videoCutOffDistance + 5
+                    );
+                    jest.advanceTimersByTime(1000);
+                    expect(peer.stopShowingVideoStream).toHaveBeenCalled();
+
+                    (avatar.calcDistance as jest.Mock).mockReturnValue(
+                        videoCutOffDistance - 5
+                    );
+                    jest.advanceTimersByTime(1000);
+                    expect(peer.showVideoStream).toHaveBeenCalledTimes(2);
                 });
             });
-
-            describe("when peer is not close by", () => {
-                beforeEach(async () => {
-                    jest.clearAllMocks();
-
-                    (avatar.calcDistance as jest.Mock).mockReturnValue(
-                        closeByDistance + 5
-                    );
-
-                    const room = new RoomController(
-                        local,
-                        remoteRoom,
-                        virtualWord
-                    );
-                    await room.join();
-                });
-
-                test("do not shows the peer stream when is not close by", async () => {
-                    expect(avatar.showVideo).not.toBeCalled();
-                    expect(avatar.showAudio).not.toBeCalled();
-                });
-
-                test("starts showing the stream when the peer gets close by", async () => {
-                    (avatar.calcDistance as jest.Mock).mockReturnValue(
-                        closeByDistance - 5
-                    );
-                    jest.advanceTimersByTime(1200);
-                    await flushPromises();
-
-                    expect(avatar.showVideo).toHaveBeenCalledWith(myStream);
-                    expect(avatar.showAudio).toHaveBeenCalledWith(myStream);
-                });
-            });
-
-            test.todo("when fails attaching peer stream");
         });
 
         test("when the peer moves, its avatar will move in the virtual world", () => {

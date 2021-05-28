@@ -11,8 +11,8 @@ export interface Peer {
     onDisconnect: MyEventEmitter<void>;
     id: string;
     onPositionUpdate: MyEventEmitter<MyPosition>;
-    showStream: () => Promise<void>;
-    stopShowingStream: () => Promise<void>;
+    showVideoStream: () => Promise<void>;
+    stopShowingVideoStream: () => Promise<void>;
 }
 
 export interface RemoteRoom {

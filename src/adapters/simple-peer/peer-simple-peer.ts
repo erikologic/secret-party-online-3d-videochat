@@ -40,12 +40,12 @@ export class PeerSimplePeer implements Peer {
         this.clonedStream.getVideoTracks()[0].enabled = false;
     }
 
-    async showStream(): Promise<void> {
+    async showVideoStream(): Promise<void> {
         if (!this.clonedStream) throw new Error("no stream available to send");
         this.clonedStream.getVideoTracks()[0].enabled = true;
     }
 
-    async stopShowingStream(): Promise<void> {
+    async stopShowingVideoStream(): Promise<void> {
         if (!this.clonedStream)
             throw new Error("no stream available to stop sending");
         this.clonedStream.getVideoTracks()[0].enabled = false;
