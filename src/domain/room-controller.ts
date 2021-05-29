@@ -33,6 +33,11 @@ export class RoomController {
         peer.onPositionUpdate.subscribe((pos) => avatar.moveTo(pos));
         peer.onStream.subscribe((stream) => avatar.showVideo(stream));
         peer.onStream.subscribe((stream) => avatar.showAudio(stream));
+        peer.onConfig.subscribe(async (config) => {
+            avatar.setColor(config.color);
+            avatar.setName(config.name);
+        });
+        await peer.sendConfig(this.local.getConfig());
 
         const showAudioVideo = async () => {
             const distance = avatar.calcDistance();

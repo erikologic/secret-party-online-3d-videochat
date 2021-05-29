@@ -23,6 +23,7 @@ const VIDEO_DIMENSIONS = {
     sideOrientation: Mesh.FRONTSIDE,
 };
 
+// TODO add user name https://playground.babylonjs.com/#ZI9AK7#1354
 export class AvatarBabylonJs implements Avatar {
     private readonly mesh: Mesh;
 

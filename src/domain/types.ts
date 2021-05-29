@@ -4,9 +4,12 @@ export interface Local {
     init: () => void;
     showLocalVideo: () => void;
     getLocalStream: () => Promise<MyStream>;
+    getConfig: () => PeerConfig;
 }
 
 export interface Peer {
+    sendConfig: (config: PeerConfig) => Promise<void>;
+    onConfig: MyEventEmitter<PeerConfig>;
     showAudioStream: () => Promise<void>;
     stopShowingAudioStream: () => Promise<void>;
     onStream: MyEventEmitter<MyStream>;
@@ -26,6 +29,8 @@ export interface RemoteRoom {
 }
 
 export interface Avatar {
+    setName: (name: string) => void;
+    setColor: (color: string) => void;
     calcAngle: () => number;
     calcDistance: () => number;
     remove: Listener<void>;
@@ -56,4 +61,9 @@ export interface MyPosition {
         y: number;
         z: number;
     };
+}
+
+export interface PeerConfig {
+    color: string;
+    name: string;
 }

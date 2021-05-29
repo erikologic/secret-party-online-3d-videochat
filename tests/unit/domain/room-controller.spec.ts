@@ -8,6 +8,7 @@ import {
     RemoteRoom,
     MyStream,
     VirtualWorld,
+    PeerConfig,
 } from "../../../src/domain/types";
 
 jest.useFakeTimers();
@@ -31,6 +32,10 @@ describe("when entering a room", () => {
             z: 6,
         },
     };
+    const myConfig: PeerConfig = {
+        color: "ff11bb",
+        name: "myP33r",
+    };
 
     let peer: Peer;
 
@@ -46,6 +51,8 @@ describe("when entering a room", () => {
         jest.clearAllMocks();
         peer = {
             id: "aPeer",
+            onConfig: new MyEventEmitter(),
+            sendConfig: jest.fn(),
             onDisconnect: new MyEventEmitter(),
             onPositionUpdate: new MyEventEmitter(),
             onStream: new MyEventEmitter(),
@@ -67,9 +74,12 @@ describe("when entering a room", () => {
             init: jest.fn(),
             showLocalVideo: jest.fn(),
             getLocalStream: jest.fn().mockResolvedValue(myStream),
+            getConfig: jest.fn().mockReturnValue(myConfig),
         };
 
         avatar = {
+            setColor: jest.fn(),
+            setName: jest.fn(),
             calcAngle: jest.fn().mockReturnValue(5),
             calcDistance: jest.fn().mockReturnValue(1),
             remove: jest.fn(),
@@ -135,9 +145,27 @@ describe("when entering a room", () => {
             expect(virtualWord.createAvatar).toHaveBeenCalledTimes(5);
         });
 
-        test.todo(
-            "sets the avatar configuration to the peer configuration when configuration is emitted"
-        );
+        describe("when peer provides a configuration", () => {
+            beforeEach(() => {
+                peer.onConfig.emit({
+                    color: "e66465",
+                    name: "l0rdP33r",
+                });
+            });
+
+            test("sets the avatar color", () => {
+                expect(avatar.setColor).toHaveBeenCalledWith("e66465");
+            });
+
+            test("sets the avatar name", () => {
+                expect(avatar.setName).toHaveBeenCalledWith("l0rdP33r");
+            });
+
+            test("send my configuration", async () => {
+                await flushPromises();
+                expect(peer.sendConfig).toHaveBeenCalledWith(myConfig);
+            });
+        });
 
         describe("connecting to the stream", () => {
             test.todo("when fails attaching peer stream");
