@@ -12,4 +12,5 @@ module.exports = {
             isolatedModules: true,
         },
     },
+    testEnvironment: "./custom-test-env.js",
 };

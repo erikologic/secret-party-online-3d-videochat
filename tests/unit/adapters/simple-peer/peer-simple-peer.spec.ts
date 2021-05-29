@@ -3,7 +3,7 @@ import SimplePeer from "simple-peer";
 // @ts-ignore
 import wrtc from "wrtc";
 import { PeerSimplePeer } from "../../../../src/adapters/simple-peer/peer-simple-peer";
-import { MyPosition, MyStream } from "../../../../src/domain/types";
+import { MyPosition, MyStream, PeerConfig } from "../../../../src/domain/types";
 import { getStream } from "./create-media-stream";
 
 const getSimplePeers = (): Promise<
@@ -71,7 +71,23 @@ describe("connecting 2 peers via PeerSimplePeer", () => {
         expect(mock.mock.calls[0][0]).toEqual(position);
     });
 
-    describe("for streams", () => {
+    test("can send configuration", async () => {
+        const config: PeerConfig = {
+            color: "33ff55",
+            name: "l0rdP3eer",
+        };
+
+        const mock = jest.fn();
+        myPeer1.onConfig.subscribe(mock);
+
+        await myPeer2.sendConfig(config);
+
+        await asyncTimeout(2_000);
+        expect(mock).toHaveBeenCalled();
+        expect(mock.mock.calls[0][0]).toEqual(config);
+    });
+
+    xdescribe("for streams", () => {
         let stopStream: () => void, myStream: MyStream, mock: jest.Mock;
 
         beforeEach(async () => {
