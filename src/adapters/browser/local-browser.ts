@@ -1,4 +1,4 @@
-import { Local, MyStream } from "../../domain/types";
+import { Local, MyStream, PeerConfig } from "../../domain/types";
 
 const userMediaConstraints = {
     audio: true,
@@ -38,6 +38,16 @@ export class LocalBrowser implements Local {
 
     constructor() {
         this.overlay = document.getElementById("overlay");
+    }
+
+    getConfig(): PeerConfig {
+        const nameEl = document.getElementById("name") as HTMLInputElement;
+        const name = nameEl.value;
+
+        const colorEl = document.getElementById("color") as HTMLInputElement;
+        const color = colorEl.value;
+
+        return { color, name };
     }
 
     async getLocalStream(): Promise<MyStream> {
@@ -128,6 +138,15 @@ export class LocalBrowser implements Local {
                     "\nPlease use the latest Chrome, or Firefox alternatively" +
                     "\nYou may continue but expect the app to not work properly"
             );
+
+        const nameEl = document.getElementById(
+            "name"
+        ) as HTMLInputElement | null;
+        if (!nameEl?.value) {
+            window.alert("You need to provide a name");
+            throw new Error("Cannot start");
+        }
+
         this.overlay?.style.setProperty("display", "none");
     }
 }
