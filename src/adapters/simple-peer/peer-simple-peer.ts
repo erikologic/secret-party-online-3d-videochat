@@ -16,6 +16,8 @@ export class PeerSimplePeer implements Peer {
 
     private myStream: MyStream | undefined;
     private clonedStream: MediaStream | undefined;
+    private userDisabledVideo = false;
+    private userDisabledAudio = false;
 
     constructor(
         private readonly peer: SimplePeer.Instance,
@@ -38,6 +40,23 @@ export class PeerSimplePeer implements Peer {
         peer.on("close", async () => {
             await this.onDisconnect.emit();
         });
+
+        // TODO this is superbad and MUST BE REMOVED!!!
+        // cloning a stream prevent if from being enabled/disabled from its origin stream
+        window.addEventListener("keydown", (event) => {
+            const { code } = event as KeyboardEvent;
+            if (code === "KeyM") {
+                this.userDisabledAudio = !this.userDisabledAudio;
+                const audioStream = this.clonedStream?.getAudioTracks()[0];
+                if (audioStream) audioStream.enabled = !this.userDisabledAudio;
+            }
+
+            if (code === "KeyV") {
+                this.userDisabledVideo = !this.userDisabledVideo;
+                const videoStream = this.clonedStream?.getVideoTracks()[0];
+                if (videoStream) videoStream.enabled = !this.userDisabledVideo;
+            }
+        });
     }
 
     async sendLocalPosition(localPosition: MyPosition): Promise<void> {
@@ -55,6 +74,8 @@ export class PeerSimplePeer implements Peer {
     }
 
     async showVideoStream(): Promise<void> {
+        if (this.userDisabledVideo) return;
+
         if (!this.clonedStream) throw new Error("no stream available to send");
         this.clonedStream.getVideoTracks()[0].enabled = true;
     }
@@ -66,6 +87,8 @@ export class PeerSimplePeer implements Peer {
     }
 
     async showAudioStream(): Promise<void> {
+        if (this.userDisabledAudio) return;
+
         if (!this.clonedStream) throw new Error("no stream available to send");
         this.clonedStream.getAudioTracks()[0].enabled = true;
     }

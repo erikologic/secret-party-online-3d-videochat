@@ -101,7 +101,8 @@ export class LocalBrowser implements Local {
     private addASuperCrappyMuteAndDisableVideoShortcut(
         stream: MediaStream
     ): void {
-        window.onkeydown = ({ code }: KeyboardEvent): void => {
+        window.addEventListener("keydown", (event) => {
+            const { code } = event as KeyboardEvent;
             if (code === "KeyM") {
                 const audioStream = stream.getAudioTracks()[0];
                 audioStream.enabled = !audioStream.enabled;
@@ -128,7 +129,7 @@ export class LocalBrowser implements Local {
                 videoStream.enabled = !videoStream.enabled;
                 console.log("Is my video enabled? " + videoStream.enabled);
             }
-        };
+        });
     }
 
     init(): void {
