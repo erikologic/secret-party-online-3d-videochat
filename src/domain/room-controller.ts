@@ -37,7 +37,10 @@ export class RoomController {
             avatar.setColor(config.color);
             avatar.setName(config.name);
         });
-        await peer.sendConfig(this.local.getConfig());
+
+        setTimeout(() => {
+            peer.sendConfig(this.local.getConfig());
+        }, 2_000);
 
         const showAudioVideo = async () => {
             const distance = avatar.calcDistance();

@@ -77,6 +77,7 @@ export class PeerSimplePeer implements Peer {
     }
 
     async sendConfig(config: PeerConfig): Promise<void> {
+        console.log({ config });
         const data: ArrayBuffer = configSerializer(config);
         this.peer.send(data);
     }

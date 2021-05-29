@@ -3,8 +3,10 @@ import { Listener } from "../../shared/my-event-emitter";
 import {
     Axis,
     Color3,
+    Material,
     Mesh,
     MeshBuilder,
+    PBRMaterial,
     Quaternion,
     Scene,
     Sound,
@@ -13,6 +15,7 @@ import {
     Vector3,
     VideoTexture,
 } from "@babylonjs/core";
+import { AdvancedDynamicTexture, TextBlock } from "@babylonjs/gui";
 
 const VIDEO_RATIO = 4 / 3;
 const VIDEO_HEIGHT = 0.9;
@@ -29,6 +32,29 @@ export class AvatarBabylonJs implements Avatar {
 
     constructor(private id: string, private scene: Scene) {
         this.mesh = this.createAvatarMesh(scene);
+    }
+
+    setName(name: string): void {
+        const plane = Mesh.CreatePlane("namePlane", 2, this.scene);
+        plane.parent = this.mesh;
+        plane.position.x = 0;
+        plane.position.y = -0.35;
+        plane.position.z = 0.06;
+        plane.rotation.y = Math.PI;
+        const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane);
+
+        const text2 = new TextBlock("name", name);
+        text2.width = "450px";
+        text2.height = "550px";
+        text2.color = "white";
+        text2.fontSize = "80px";
+        text2.resizeToFit = true;
+        advancedTexture.addControl(text2);
+    }
+
+    setColor(color: string): void {
+        (this.mesh.material as PBRMaterial).albedoColor =
+            Color3.FromHexString(color);
     }
 
     calcAngle = () => {
@@ -133,10 +159,11 @@ export class AvatarBabylonJs implements Avatar {
         return box;
     }
 
-    private getMaterial(scene: Scene): StandardMaterial {
-        const mat = new StandardMaterial(`VideoBoxMaterial_${this.id}`, scene);
-        mat.diffuseColor = new Color3(0, 0, 0);
-        mat.specularPower = Number.MAX_VALUE;
+    private getMaterial(scene: Scene): Material {
+        // TODO remove the usage of PBRMaterial everywhere to improve performance...?
+        const mat = new PBRMaterial(`VideoBoxMaterial_${this.id}`, scene);
+        mat.albedoColor = new Color3(0, 0, 0);
+        mat.metallic = 0.01;
         return mat;
     }
 

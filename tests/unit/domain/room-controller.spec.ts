@@ -162,7 +162,7 @@ describe("when entering a room", () => {
             });
 
             test("send my configuration", async () => {
-                await flushPromises();
+                jest.advanceTimersByTime(2000);
                 expect(peer.sendConfig).toHaveBeenCalledWith(myConfig);
             });
         });
