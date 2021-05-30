@@ -1,15 +1,24 @@
-import { Listener, MyEventEmitter } from "../shared/myEventEmitter";
+import { Listener, MyEventEmitter } from "../shared/my-event-emitter";
 
 export interface Local {
+    init: () => void;
     showLocalVideo: () => void;
     getLocalStream: () => Promise<MyStream>;
+    getDesktopStream: () => Promise<MyStream>;
+    getConfig: () => PeerConfig;
 }
 
 export interface Peer {
+    sendConfig: (config: PeerConfig) => Promise<void>;
+    onConfig: MyEventEmitter<PeerConfig>;
+    showAudioStream: () => Promise<void>;
+    stopShowingAudioStream: () => Promise<void>;
     onStream: MyEventEmitter<MyStream>;
     onDisconnect: MyEventEmitter<void>;
     id: string;
     onPositionUpdate: MyEventEmitter<MyPosition>;
+    showVideoStream: () => Promise<void>;
+    stopShowingVideoStream: () => Promise<void>;
 }
 
 export interface RemoteRoom {
@@ -21,6 +30,11 @@ export interface RemoteRoom {
 }
 
 export interface Avatar {
+    setType: (type: PeerType) => void;
+    setName: (name: string) => void;
+    setColor: (color: string) => void;
+    calcAngle: () => number;
+    calcDistance: () => number;
     remove: Listener<void>;
     moveTo: Listener<MyPosition>;
     showVideo: Listener<MyStream>;
@@ -28,6 +42,7 @@ export interface Avatar {
 }
 
 export interface VirtualWorld {
+    setType: (type: PeerType) => void;
     onPositionUpdate: MyEventEmitter<MyPosition>;
     createAvatar: (peerId: string) => Avatar;
     start: () => Promise<void>;
@@ -49,4 +64,12 @@ export interface MyPosition {
         y: number;
         z: number;
     };
+}
+
+export type PeerType = "peer" | "tv";
+
+export interface PeerConfig {
+    type: PeerType;
+    color: string;
+    name: string;
 }

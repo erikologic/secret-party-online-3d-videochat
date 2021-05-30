@@ -189,6 +189,21 @@ body {
     line-height: 0.5rem;
 }
 
+#inputs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+#inputs > div {
+    padding: 0 10px 0 10px;
+}
+
+#inputs > div > label {
+    font-size: 1.3rem;
+}
+
 #startButtonContainer {
     display: flex;
     align-items: center;

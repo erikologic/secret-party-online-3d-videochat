@@ -22,5 +22,5 @@
       ]
     },
     "exclude": ["aws-cdk"],
-    "include": ["src"]
+    "include": ["src", "tests"]
 }

@@ -1,16 +1,21 @@
-import { Avatar, MyPosition, MyStream } from "../domain/types";
-import { Listener } from "../shared/myEventEmitter";
+import { Avatar, MyPosition, MyStream, PeerType } from "../../domain/types";
+import { Listener } from "../../shared/my-event-emitter";
 import {
+    Axis,
     Color3,
+    Material,
     Mesh,
     MeshBuilder,
+    PBRMaterial,
     Quaternion,
     Scene,
     Sound,
     StandardMaterial,
+    Tools,
     Vector3,
     VideoTexture,
 } from "@babylonjs/core";
+import { AdvancedDynamicTexture, TextBlock } from "@babylonjs/gui";
 
 const VIDEO_RATIO = 4 / 3;
 const VIDEO_HEIGHT = 0.9;
@@ -22,11 +27,61 @@ const VIDEO_DIMENSIONS = {
 };
 
 export class AvatarBabylonJs implements Avatar {
+    private videoPanel: Mesh | undefined;
     private readonly mesh: Mesh;
+    private text: TextBlock | undefined;
 
     constructor(private id: string, private scene: Scene) {
         this.mesh = this.createAvatarMesh(scene);
     }
+
+    setName(name: string): void {
+        const plane = Mesh.CreatePlane("namePlane", 2, this.scene);
+        plane.parent = this.mesh;
+        plane.position.x = 0;
+        plane.position.y = -0.4;
+        plane.position.z = 0.06;
+        plane.rotation.y = Math.PI;
+        const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane);
+
+        const text = new TextBlock("name", name);
+        text.width = "450px";
+        text.height = "550px";
+        text.color = "white";
+        text.fontSize = "80px";
+        text.resizeToFit = true;
+        advancedTexture.addControl(text);
+        this.text = text;
+    }
+
+    setColor(color: string): void {
+        (this.mesh.material as PBRMaterial).albedoColor =
+            Color3.FromHexString(color);
+    }
+
+    calcAngle = () => {
+        const camera = this.scene.cameras[0];
+        const v0 = camera.getDirection(Axis.Z);
+        v0.y = 0; //horizontal components only
+        v0.normalize();
+
+        //direction from camera to cube
+        const v1 = this.mesh.position.subtract(camera.position);
+        v1.y = 0; //horizontal components only]
+        v1.normalize();
+
+        let angle = Math.acos(Vector3.Dot(v0, v1));
+
+        //find whether rotation is clockwise or anti-clockwise
+        const direction = Vector3.Cross(v0, v1).y;
+        if (direction < 0) {
+            angle *= -1;
+        }
+        return Tools.ToDegrees(angle);
+    };
+
+    calcDistance = () =>
+        Vector3.Distance(this.scene.cameras[0].position, this.mesh.position);
 
     moveTo: Listener<MyPosition> = async ({
         absoluteRotation,
@@ -83,6 +138,18 @@ export class AvatarBabylonJs implements Avatar {
         );
         videoPanel.parent = this.mesh;
         videoPanel.receiveShadows = true;
+        this.videoPanel = videoPanel;
+    }
+
+    setType(type: PeerType): void {
+        if (type === "tv") {
+            this.mesh.scaling.x = 4 * 1.333;
+            this.mesh.scaling.y = 4;
+
+            this.videoPanel!.material!.backFaceCulling = false;
+            this.videoPanel!.rotation.y = Math.PI;
+            this.text!.fontSize = "40px";
+        }
     }
 
     //  -------------------- PRIVATE --------------------
@@ -106,10 +173,11 @@ export class AvatarBabylonJs implements Avatar {
         return box;
     }
 
-    private getMaterial(scene: Scene): StandardMaterial {
-        const mat = new StandardMaterial(`VideoBoxMaterial_${this.id}`, scene);
-        mat.diffuseColor = new Color3(0, 0, 0);
-        mat.specularPower = Number.MAX_VALUE;
+    private getMaterial(scene: Scene): Material {
+        // TODO remove the usage of PBRMaterial everywhere to improve performance...?
+        const mat = new PBRMaterial(`VideoBoxMaterial_${this.id}`, scene);
+        mat.albedoColor = new Color3(0, 0, 0);
+        mat.metallic = 0.01;
         return mat;
     }
 

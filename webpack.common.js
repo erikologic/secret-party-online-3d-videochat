@@ -9,7 +9,7 @@ const Dotenv = require('dotenv-webpack');
 const appDirectory = fs.realpathSync(process.cwd());
 
 module.exports = {
-    entry: path.resolve(appDirectory, "src"),
+    entry: path.resolve(appDirectory, "src/controllers"),
     output: {
         filename: 'index.js',
         path: path.resolve(__dirname, 'public/dist')
@@ -37,5 +37,5 @@ module.exports = {
             systemvars: true, // load all the predefined 'process.env' variables which will trump anything local per dotenv specs.,
             defaults: true // load '.env.defaults' as the default values if empty.
         })
-    ]
+    ],
 }

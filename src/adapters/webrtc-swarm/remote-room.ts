@@ -1,14 +1,14 @@
-import { MyPosition, Peer, RemoteRoom, MyStream } from "../domain/types";
-import { MyEventEmitter } from "../shared/myEventEmitter";
+import { MyPosition, Peer, RemoteRoom, MyStream } from "../../domain/types";
+import { MyEventEmitter } from "../../shared/my-event-emitter";
 import swarm from "./webrtc-swarm";
 
 /// <reference path="signalhub.d.ts"/>
 import signalhub from "signalhub";
-import { PeerSwarmSimplePeer } from "./peer";
+import { PeerSimplePeer } from "../simple-peer/peer-simple-peer";
 import SimplePeer from "simple-peer";
 
 export class RemoteRoomSwarmSignalHub implements RemoteRoom {
-    private myPeers: PeerSwarmSimplePeer[] = [];
+    private myPeers: PeerSimplePeer[] = [];
     onNewPeer = new MyEventEmitter<Peer>();
     private stream: MyStream | undefined;
 
@@ -33,7 +33,7 @@ export class RemoteRoomSwarmSignalHub implements RemoteRoom {
         sw.on("connect", (peer: SimplePeer.Instance, id: string) => {
             console.log("connected to a new peer:", peer, id);
             console.log("total peers:", sw.peers.length);
-            const myPeer = new PeerSwarmSimplePeer(peer, id);
+            const myPeer = new PeerSimplePeer(peer, id);
             this.myPeers.push(myPeer);
             this.onNewPeer.emit(myPeer);
             if (this.stream) myPeer.sendLocalStream(this.stream);

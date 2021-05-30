@@ -1,7 +1,7 @@
-import { RoomController } from "./domain/room-controller";
-import { RemoteRoomSwarmSignalHub } from "./remote-room/remote-room";
-import { VirtualWorldBabylonJs } from "./virtual-world/virtual-world-babylon-js";
-import { LocalBrowser } from "./local/local";
+import { RoomController } from "../domain/room-controller";
+import { RemoteRoomSwarmSignalHub } from "../adapters/webrtc-swarm/remote-room";
+import { VirtualWorldBabylonJs } from "../adapters/babylon-js/virtual-world-babylon-js";
+import { LocalBrowser } from "../adapters/browser/local-browser";
 
 console.log("config", {
     HUB_URL: process.env.HUB_URL,
@@ -9,9 +9,6 @@ console.log("config", {
 });
 
 function init(): void {
-    const overlay = document.getElementById("overlay");
-    overlay?.remove();
-
     const local = new LocalBrowser();
     const remoteRoom = new RemoteRoomSwarmSignalHub();
     const virtualWorld = new VirtualWorldBabylonJs();

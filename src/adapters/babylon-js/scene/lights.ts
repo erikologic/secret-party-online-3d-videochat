@@ -1,7 +1,12 @@
-import { HemisphericLight, PointLight, Scene, Vector3 } from "@babylonjs/core";
-import { ShadowLight } from "@babylonjs/core/Lights/shadowLight";
+import {
+    HemisphericLight,
+    Light,
+    PointLight,
+    Scene,
+    Vector3,
+} from "@babylonjs/core";
 
-export function addTo(scene: Scene): ShadowLight {
+export function addTo(scene: Scene): Light {
     const ambientLight = new HemisphericLight(
         "hemisphericLight",
         new Vector3(0, 1, 0),

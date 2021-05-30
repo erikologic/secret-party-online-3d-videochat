@@ -44,28 +44,31 @@ const addWASD = (camera: FreeCamera): void => {
 };
 
 const addJump = (camera: FreeCamera, scene: Scene): void => {
-    camera.animations = [];
-    const animation = new Animation(
-        "a",
-        "position.y",
-        20,
-        Animation.ANIMATIONTYPE_FLOAT,
-        Animation.ANIMATIONLOOPMODE_CYCLE
-    );
-    const keys = [];
-    keys.push({ frame: 0, value: camera.position.y });
-    keys.push({ frame: 10, value: camera.position.y + 2 });
-    keys.push({ frame: 20, value: camera.position.y });
-    animation.setKeys(keys);
-    const easingFunction = new CircleEase();
-    easingFunction.setEasingMode(EasingFunction.EASINGMODE_EASEINOUT);
-    animation.setEasingFunction(easingFunction);
-    camera.animations.push(animation);
+    function jump() {
+        camera.animations = [];
+        const animation = new Animation(
+            "a",
+            "position.y",
+            20,
+            Animation.ANIMATIONTYPE_FLOAT,
+            Animation.ANIMATIONLOOPMODE_CYCLE
+        );
+        const keys = [];
+        keys.push({ frame: 0, value: camera.position.y });
+        keys.push({ frame: 10, value: camera.position.y + 2 });
+        keys.push({ frame: 20, value: camera.position.y });
+        animation.setKeys(keys);
+        const easingFunction = new CircleEase();
+        easingFunction.setEasingMode(EasingFunction.EASINGMODE_EASEINOUT);
+        animation.setEasingFunction(easingFunction);
+        camera.animations.push(animation);
+        scene.beginAnimation(camera, 0, 60, false);
+    }
 
     window.addEventListener("keydown", (event) => {
         switch (event.keyCode) {
             case 32:
-                scene.beginAnimation(camera, 0, 60, false);
+                jump();
                 break;
         }
     });
@@ -91,6 +94,17 @@ const createDesktopCamera = (
     return camera;
 };
 
+function setCameraPosition(camera: Camera) {
+    const randomiseInitPos = (max: number, min: number) =>
+        Math.abs(max - min) * Math.random() + Math.min(max, min);
+
+    const xDimensions = [-36, 8] as const;
+    const zDimensions = [-19, 11] as const;
+    camera.position.x = randomiseInitPos(...xDimensions);
+    camera.position.z = randomiseInitPos(...zDimensions);
+    camera.position.y = 10;
+}
+
 export function createCamera(scene: Scene, canvas: HTMLCanvasElement): void {
     const initialPosition = new Vector3(0, 2, 0);
     console.log({ isMobile });
@@ -109,4 +123,6 @@ export function createCamera(scene: Scene, canvas: HTMLCanvasElement): void {
     //Then apply collisions and gravity to the active camera
     camera.checkCollisions = true;
     camera.applyGravity = true;
+    setCameraPosition(camera);
+    camera.setTarget(new Vector3(0, 0, 0));
 }
