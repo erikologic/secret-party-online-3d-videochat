@@ -26,8 +26,8 @@ const VIDEO_DIMENSIONS = {
     sideOrientation: Mesh.FRONTSIDE,
 };
 
-// TODO add user name https://playground.babylonjs.com/#ZI9AK7#1354
 export class AvatarBabylonJs implements Avatar {
+    private videoPanel: Mesh | undefined;
     private readonly mesh: Mesh;
 
     constructor(private id: string, private scene: Scene) {
@@ -136,12 +136,16 @@ export class AvatarBabylonJs implements Avatar {
         );
         videoPanel.parent = this.mesh;
         videoPanel.receiveShadows = true;
+        this.videoPanel = videoPanel;
     }
 
     setType(type: PeerType): void {
         if (type === "tv") {
             this.mesh.scaling.x = 4 * 1.333;
             this.mesh.scaling.y = 4;
+
+            this.videoPanel!.material!.backFaceCulling = false;
+            this.videoPanel!.rotation.y = Math.PI;
         }
     }
 
