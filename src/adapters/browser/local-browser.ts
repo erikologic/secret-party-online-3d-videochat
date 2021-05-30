@@ -70,7 +70,7 @@ export class LocalBrowser implements Local {
     async getLocalStream(): Promise<MyStream> {
         let stream;
         try {
-            stream = await LocalBrowser.getDisplayStream();
+            stream = await LocalBrowser.getWebCamStream();
         } catch (e) {
             window.alert(
                 "You need to give access to the webcam + audio to start the app"
@@ -86,7 +86,7 @@ export class LocalBrowser implements Local {
     async getDesktopStream(): Promise<MyStream> {
         let stream;
         try {
-            stream = await LocalBrowser.getWebCamStream();
+            stream = await LocalBrowser.getDisplayStream();
         } catch (e) {
             window.alert(
                 "You need to select something to stream to start the app"
