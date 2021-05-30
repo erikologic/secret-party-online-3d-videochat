@@ -161,12 +161,13 @@ describe("when entering a room", () => {
             });
 
             describe("when peer provides a configuration", () => {
-                beforeEach(() => {
-                    peer.onConfig.emit({
+                beforeEach(async () => {
+                    await peer.onConfig.emit({
                         color: "e66465",
                         name: "l0rdP33r",
                         type: "peer",
                     });
+                    await flushPromises();
                 });
 
                 test("sets the avatar color", () => {
@@ -181,132 +182,155 @@ describe("when entering a room", () => {
                     jest.advanceTimersByTime(2000);
                     expect(peer.sendConfig).toHaveBeenCalledWith(myConfig);
                 });
-            });
 
-            describe("connecting to the stream", () => {
-                test.todo("when fails attaching peer stream");
+                describe("connecting to the stream", () => {
+                    test.todo("when fails attaching peer stream");
 
-                test("will regularly check the avatar position", () => {
-                    jest.advanceTimersByTime(1000);
-                    expect(avatar.calcDistance).toHaveBeenCalledTimes(1);
-                    jest.advanceTimersByTime(1000);
-                    expect(avatar.calcDistance).toHaveBeenCalledTimes(2);
-                    jest.advanceTimersByTime(1000);
-                    expect(avatar.calcDistance).toHaveBeenCalledTimes(3);
+                    test("will regularly check the avatar position", async () => {
+                        jest.advanceTimersByTime(1000);
+                        await flushPromises();
+                        expect(avatar.calcDistance).toHaveBeenCalledTimes(1);
+                        jest.advanceTimersByTime(1000);
+                        expect(avatar.calcDistance).toHaveBeenCalledTimes(2);
+                        jest.advanceTimersByTime(1000);
+                        expect(avatar.calcDistance).toHaveBeenCalledTimes(3);
+                    });
+
+                    test("when remote streams is available will be showed on the avatar", () => {
+                        peer.onStream.emit(myStream);
+                        expect(avatar.showVideo).toHaveBeenCalledWith(myStream);
+                        expect(avatar.showAudio).toHaveBeenCalledWith(myStream);
+                    });
+
+                    describe("for video streams", () => {
+                        const videoCutOffDistance = 10;
+                        const angleCutOff = 90;
+
+                        test("shows the peer video stream when is front of me", async () => {
+                            jest.advanceTimersByTime(1000);
+                            expect(peer.showVideoStream).toHaveBeenCalledTimes(
+                                1
+                            );
+                        });
+
+                        test("stops showing the video stream when the peer goes away", async () => {
+                            jest.advanceTimersByTime(1000);
+                            expect(peer.showVideoStream).toHaveBeenCalledTimes(
+                                1
+                            );
+
+                            asMock(avatar.calcDistance).mockReturnValue(
+                                videoCutOffDistance + 5
+                            );
+                            jest.advanceTimersByTime(1000);
+
+                            expect(
+                                peer.stopShowingVideoStream
+                            ).toHaveBeenCalledTimes(1);
+                        });
+
+                        test("stops showing the video stream when the peer goes too much on the side", async () => {
+                            jest.advanceTimersByTime(1000);
+                            expect(peer.showVideoStream).toHaveBeenCalledTimes(
+                                1
+                            );
+
+                            asMock(avatar.calcAngle).mockReturnValue(
+                                angleCutOff + 5
+                            );
+                            jest.advanceTimersByTime(1000);
+
+                            expect(
+                                peer.stopShowingVideoStream
+                            ).toHaveBeenCalledTimes(1);
+                        });
+
+                        test("shows the video stream when the peer gets in front of me again", async () => {
+                            jest.advanceTimersByTime(1000);
+                            expect(peer.showVideoStream).toHaveBeenCalledTimes(
+                                1
+                            );
+
+                            asMock(avatar.calcDistance).mockReturnValue(
+                                videoCutOffDistance + 5
+                            );
+                            jest.advanceTimersByTime(1000);
+                            expect(
+                                peer.stopShowingVideoStream
+                            ).toHaveBeenCalled();
+
+                            asMock(avatar.calcDistance).mockReturnValue(
+                                videoCutOffDistance - 5
+                            );
+                            jest.advanceTimersByTime(1000);
+                            expect(peer.showVideoStream).toHaveBeenCalledTimes(
+                                2
+                            );
+                        });
+                    });
+
+                    describe("for audio streams", () => {
+                        const audioCutOffDistance = 25;
+
+                        test("shows the peer audio stream when is close by", async () => {
+                            jest.advanceTimersByTime(1000);
+                            await flushPromises();
+
+                            expect(peer.showAudioStream).toHaveBeenCalledTimes(
+                                1
+                            );
+                        });
+
+                        test("stops showing the audio stream when the peer goes away", async () => {
+                            jest.advanceTimersByTime(1000);
+                            await flushPromises();
+                            expect(peer.showAudioStream).toHaveBeenCalledTimes(
+                                1
+                            );
+
+                            asMock(avatar.calcDistance).mockReturnValue(
+                                audioCutOffDistance + 5
+                            );
+                            jest.advanceTimersByTime(1000);
+                            await flushPromises();
+                            expect(
+                                peer.stopShowingAudioStream
+                            ).toHaveBeenCalledTimes(1);
+                        });
+
+                        test("shows the audio stream when the peer gets close by again", async () => {
+                            jest.advanceTimersByTime(1000);
+                            await flushPromises();
+
+                            expect(peer.showAudioStream).toHaveBeenCalledTimes(
+                                1
+                            );
+
+                            asMock(avatar.calcDistance).mockReturnValue(
+                                audioCutOffDistance + 5
+                            );
+                            jest.advanceTimersByTime(1000);
+                            await flushPromises();
+                            expect(
+                                peer.stopShowingAudioStream
+                            ).toHaveBeenCalled();
+
+                            asMock(avatar.calcDistance).mockReturnValue(
+                                audioCutOffDistance - 5
+                            );
+                            jest.advanceTimersByTime(1000);
+                            await flushPromises();
+                            expect(peer.showAudioStream).toHaveBeenCalledTimes(
+                                2
+                            );
+                        });
+                    });
                 });
 
-                test("when remote streams is available will be showed on the avatar", () => {
-                    peer.onStream.emit(myStream);
-                    expect(avatar.showVideo).toHaveBeenCalledWith(myStream);
-                    expect(avatar.showAudio).toHaveBeenCalledWith(myStream);
+                test("when the peer moves, its avatar will move in the virtual world", () => {
+                    peer.onPositionUpdate.emit(position);
+                    expect(avatar.moveTo).toHaveBeenCalledWith(position);
                 });
-
-                describe("for video streams", () => {
-                    const videoCutOffDistance = 10;
-                    const angleCutOff = 90;
-
-                    test("shows the peer video stream when is front of me", async () => {
-                        jest.advanceTimersByTime(1000);
-                        expect(peer.showVideoStream).toHaveBeenCalledTimes(1);
-                    });
-
-                    test("stops showing the video stream when the peer goes away", async () => {
-                        jest.advanceTimersByTime(1000);
-                        expect(peer.showVideoStream).toHaveBeenCalledTimes(1);
-
-                        asMock(avatar.calcDistance).mockReturnValue(
-                            videoCutOffDistance + 5
-                        );
-                        jest.advanceTimersByTime(1000);
-
-                        expect(
-                            peer.stopShowingVideoStream
-                        ).toHaveBeenCalledTimes(1);
-                    });
-
-                    test("stops showing the video stream when the peer goes too much on the side", async () => {
-                        jest.advanceTimersByTime(1000);
-                        expect(peer.showVideoStream).toHaveBeenCalledTimes(1);
-
-                        asMock(avatar.calcAngle).mockReturnValue(
-                            angleCutOff + 5
-                        );
-                        jest.advanceTimersByTime(1000);
-
-                        expect(
-                            peer.stopShowingVideoStream
-                        ).toHaveBeenCalledTimes(1);
-                    });
-
-                    test("shows the video stream when the peer gets in front of me again", async () => {
-                        jest.advanceTimersByTime(1000);
-                        expect(peer.showVideoStream).toHaveBeenCalledTimes(1);
-
-                        asMock(avatar.calcDistance).mockReturnValue(
-                            videoCutOffDistance + 5
-                        );
-                        jest.advanceTimersByTime(1000);
-                        expect(peer.stopShowingVideoStream).toHaveBeenCalled();
-
-                        asMock(avatar.calcDistance).mockReturnValue(
-                            videoCutOffDistance - 5
-                        );
-                        jest.advanceTimersByTime(1000);
-                        expect(peer.showVideoStream).toHaveBeenCalledTimes(2);
-                    });
-                });
-
-                describe("for audio streams", () => {
-                    const audioCutOffDistance = 25;
-
-                    test("shows the peer audio stream when is close by", async () => {
-                        jest.advanceTimersByTime(1000);
-                        await flushPromises();
-
-                        expect(peer.showAudioStream).toHaveBeenCalledTimes(1);
-                    });
-
-                    test("stops showing the audio stream when the peer goes away", async () => {
-                        jest.advanceTimersByTime(1000);
-                        await flushPromises();
-                        expect(peer.showAudioStream).toHaveBeenCalledTimes(1);
-
-                        asMock(avatar.calcDistance).mockReturnValue(
-                            audioCutOffDistance + 5
-                        );
-                        jest.advanceTimersByTime(1000);
-                        await flushPromises();
-                        expect(
-                            peer.stopShowingAudioStream
-                        ).toHaveBeenCalledTimes(1);
-                    });
-
-                    test("shows the audio stream when the peer gets close by again", async () => {
-                        jest.advanceTimersByTime(1000);
-                        await flushPromises();
-
-                        expect(peer.showAudioStream).toHaveBeenCalledTimes(1);
-
-                        asMock(avatar.calcDistance).mockReturnValue(
-                            audioCutOffDistance + 5
-                        );
-                        jest.advanceTimersByTime(1000);
-                        await flushPromises();
-                        expect(peer.stopShowingAudioStream).toHaveBeenCalled();
-
-                        asMock(avatar.calcDistance).mockReturnValue(
-                            audioCutOffDistance - 5
-                        );
-                        jest.advanceTimersByTime(1000);
-                        await flushPromises();
-                        expect(peer.showAudioStream).toHaveBeenCalledTimes(2);
-                    });
-                });
-            });
-
-            test("when the peer moves, its avatar will move in the virtual world", () => {
-                peer.onPositionUpdate.emit(position);
-                expect(avatar.moveTo).toHaveBeenCalledWith(position);
             });
         });
 
@@ -360,6 +384,7 @@ describe("when entering a room", () => {
             const room = new RoomController(local, remoteRoom, virtualWorld);
             await room.join();
 
+            await peer.onConfig.emit(myConfig);
             await flushPromises();
         });
 
@@ -419,16 +444,28 @@ describe("when entering a room", () => {
             const room = new RoomController(local, remoteRoom, virtualWorld);
             await room.join();
 
-            await flushPromises();
-
             await peer.onConfig.emit({
                 ...myConfig,
                 type: "tv",
             });
+
+            jest.advanceTimersByTime(1000);
+            await flushPromises();
         });
 
         test("shows it on a huge TV!", () => {
             expect(avatar.setType).toHaveBeenCalledWith("tv");
+        });
+
+        test("never send audio or video", async () => {
+            expect(peer.showVideoStream).not.toHaveBeenCalled();
+            expect(peer.showAudioStream).not.toHaveBeenCalled();
+
+            asMock(avatar.calcDistance).mockReturnValue(999999);
+            jest.advanceTimersByTime(1000);
+            await flushPromises();
+            expect(peer.showVideoStream).not.toHaveBeenCalled();
+            expect(peer.showAudioStream).not.toHaveBeenCalled();
         });
     });
 });

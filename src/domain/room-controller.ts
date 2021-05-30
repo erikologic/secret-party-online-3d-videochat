@@ -56,10 +56,13 @@ export class RoomController {
         peer.onPositionUpdate.subscribe((pos) => avatar.moveTo(pos));
         peer.onStream.subscribe((stream) => avatar.showVideo(stream));
         peer.onStream.subscribe((stream) => avatar.showAudio(stream));
+
+        let peerConfig: PeerConfig | undefined; // TODO  not nice - prob this fn needs a class
         peer.onConfig.subscribe(async (config) => {
             avatar.setColor(config.color);
             avatar.setName(config.name);
             avatar.setType(config.type);
+            peerConfig = config;
         });
 
         setTimeout(() => {
@@ -67,6 +70,8 @@ export class RoomController {
         }, 2_000);
 
         const showAudioVideo = async () => {
+            if (peerConfig?.type !== "peer") return;
+
             const distance = avatar.calcDistance();
             const angle = Math.abs(avatar.calcAngle());
             const videoCutOffAngle = 90;
