@@ -44,7 +44,7 @@ export class RoomController {
 
         const showAudioVideo = async () => {
             const distance = avatar.calcDistance();
-            const angle = avatar.calcAngle();
+            const angle = Math.abs(avatar.calcAngle());
             const videoCloseByDistance = 10;
             const videoCutOffAngle = 90;
             if (distance < videoCloseByDistance && angle < videoCutOffAngle) {
