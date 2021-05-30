@@ -32,11 +32,11 @@ const displayMediaConstraints = {
     },
     video: {
         ...userMediaConstraints.video,
-        width: {
+        height: {
             ideal: 720,
             max: 1080,
         },
-        height: {
+        width: {
             ideal: 1280,
             max: 1920,
         },
@@ -44,7 +44,7 @@ const displayMediaConstraints = {
             ideal: 25,
             max: 30,
         },
-        facingMode: "environment",
+        aspectRatio: 1.777777778,
     },
 };
 
