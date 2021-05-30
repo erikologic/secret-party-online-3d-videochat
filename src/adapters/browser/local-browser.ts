@@ -63,7 +63,7 @@ export class LocalBrowser implements Local {
         const colorEl = document.getElementById("color") as HTMLInputElement;
         const color = colorEl.value;
 
-        const type = LocalBrowser.isTv() ? "tv" : "peer";
+        const type = name.match(/tv/i) ? "tv" : "peer";
         return { color, name, type };
     }
 
@@ -105,11 +105,6 @@ export class LocalBrowser implements Local {
         if (this.myStream) {
             (localVideo as HTMLVideoElement).srcObject = this.myStream.stream;
         }
-    }
-
-    private static isTv(): boolean {
-        // @ts-ignore
-        return new URL(location).searchParams.get("showDisplay");
     }
 
     private static getWebCamStream(): Promise<MediaStream> {
