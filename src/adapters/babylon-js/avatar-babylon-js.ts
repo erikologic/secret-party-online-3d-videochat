@@ -1,4 +1,4 @@
-import { Avatar, MyPosition, MyStream } from "../../domain/types";
+import { Avatar, MyPosition, MyStream, PeerType } from "../../domain/types";
 import { Listener } from "../../shared/my-event-emitter";
 import {
     Axis,
@@ -136,6 +136,13 @@ export class AvatarBabylonJs implements Avatar {
         );
         videoPanel.parent = this.mesh;
         videoPanel.receiveShadows = true;
+    }
+
+    setType(type: PeerType): void {
+        if (type === "tv") {
+            this.mesh.scaling.x = 4 * 1.333;
+            this.mesh.scaling.y = 4;
+        }
     }
 
     //  -------------------- PRIVATE --------------------

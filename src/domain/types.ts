@@ -66,7 +66,7 @@ export interface MyPosition {
     };
 }
 
-type PeerType = "peer" | "tv";
+export type PeerType = "peer" | "tv";
 
 export interface PeerConfig {
     type: PeerType;

@@ -1,11 +1,12 @@
-import { Avatar, MyPosition, VirtualWorld } from "../../domain/types";
+import { Avatar, MyPosition, PeerType, VirtualWorld } from "../../domain/types";
 import { MyEventEmitter } from "../../shared/my-event-emitter";
-import { Camera, Engine, Scene } from "@babylonjs/core";
+import { Camera, Engine, FreeCamera, Scene, Vector3 } from "@babylonjs/core";
 import { createScene } from "./scene";
 import { AvatarBabylonJs } from "./avatar-babylon-js";
 
 export class VirtualWorldBabylonJs implements VirtualWorld {
     private scene: Scene | undefined;
+    private camera: Camera | undefined;
 
     createAvatar(peerId: string): Avatar {
         if (!this.scene) throw new Error("scene not defined yet");
@@ -27,8 +28,8 @@ export class VirtualWorldBabylonJs implements VirtualWorld {
 
         // @ts-ignore
         window.scene = this.scene; // TODO remove me
-        const camera = this.scene.cameras[0];
-        this.setOnPositionUpdate(camera);
+        this.camera = this.scene.cameras[0];
+        this.setOnPositionUpdate(this.camera);
 
         // Resize
         window.addEventListener("resize", () => {
@@ -63,5 +64,11 @@ export class VirtualWorldBabylonJs implements VirtualWorld {
             const { globalPosition, absoluteRotation } = camera;
             this.onPositionUpdate.emit({ globalPosition, absoluteRotation });
         }, 1000);
+    }
+
+    setType(type: PeerType): void {
+        if (type === "tv") {
+            (this.camera! as FreeCamera).ellipsoid.y = 1;
+        }
     }
 }
