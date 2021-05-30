@@ -75,6 +75,7 @@ describe("connecting 2 peers via PeerSimplePeer", () => {
         const config: PeerConfig = {
             color: "33ff55",
             name: "l0rdP3eer",
+            type: "peer",
         };
 
         const mock = jest.fn();
