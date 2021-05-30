@@ -44,28 +44,31 @@ const addWASD = (camera: FreeCamera): void => {
 };
 
 const addJump = (camera: FreeCamera, scene: Scene): void => {
-    camera.animations = [];
-    const animation = new Animation(
-        "a",
-        "position.y",
-        20,
-        Animation.ANIMATIONTYPE_FLOAT,
-        Animation.ANIMATIONLOOPMODE_CYCLE
-    );
-    const keys = [];
-    keys.push({ frame: 0, value: camera.position.y });
-    keys.push({ frame: 10, value: camera.position.y + 2 });
-    keys.push({ frame: 20, value: camera.position.y });
-    animation.setKeys(keys);
-    const easingFunction = new CircleEase();
-    easingFunction.setEasingMode(EasingFunction.EASINGMODE_EASEINOUT);
-    animation.setEasingFunction(easingFunction);
-    camera.animations.push(animation);
+    function jump() {
+        camera.animations = [];
+        const animation = new Animation(
+            "a",
+            "position.y",
+            20,
+            Animation.ANIMATIONTYPE_FLOAT,
+            Animation.ANIMATIONLOOPMODE_CYCLE
+        );
+        const keys = [];
+        keys.push({ frame: 0, value: camera.position.y });
+        keys.push({ frame: 10, value: camera.position.y + 2 });
+        keys.push({ frame: 20, value: camera.position.y });
+        animation.setKeys(keys);
+        const easingFunction = new CircleEase();
+        easingFunction.setEasingMode(EasingFunction.EASINGMODE_EASEINOUT);
+        animation.setEasingFunction(easingFunction);
+        camera.animations.push(animation);
+        scene.beginAnimation(camera, 0, 60, false);
+    }
 
     window.addEventListener("keydown", (event) => {
         switch (event.keyCode) {
             case 32:
-                scene.beginAnimation(camera, 0, 60, false);
+                jump();
                 break;
         }
     });
