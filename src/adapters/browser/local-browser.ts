@@ -30,6 +30,22 @@ const displayMediaConstraints = {
         sampleSize: 16,
         volume: 1.0,
     },
+    video: {
+        ...userMediaConstraints.video,
+        width: {
+            ideal: 720,
+            max: 1080,
+        },
+        height: {
+            ideal: 1280,
+            max: 1920,
+        },
+        frameRate: {
+            ideal: 25,
+            max: 30,
+        },
+        facingMode: "environment",
+    },
 };
 
 export class LocalBrowser implements Local {
@@ -47,18 +63,33 @@ export class LocalBrowser implements Local {
         const colorEl = document.getElementById("color") as HTMLInputElement;
         const color = colorEl.value;
 
-        return { color, name };
+        const type = LocalBrowser.isTv() ? "tv" : "peer";
+        return { color, name, type };
     }
 
     async getLocalStream(): Promise<MyStream> {
         let stream;
         try {
-            stream = await (LocalBrowser.shouldShowDisplay()
-                ? LocalBrowser.getDisplayStream()
-                : LocalBrowser.getWebCamStream());
+            stream = await LocalBrowser.getDisplayStream();
         } catch (e) {
             window.alert(
                 "You need to give access to the webcam + audio to start the app"
+            );
+            this.overlay?.style.setProperty("display", "block");
+            throw e;
+        }
+        this.myStream = { stream };
+        this.addASuperCrappyMuteAndDisableVideoShortcut(stream);
+        return this.myStream;
+    }
+
+    async getDesktopStream(): Promise<MyStream> {
+        let stream;
+        try {
+            stream = await LocalBrowser.getWebCamStream();
+        } catch (e) {
+            window.alert(
+                "You need to select something to stream to start the app"
             );
             this.overlay?.style.setProperty("display", "block");
             throw e;
@@ -76,7 +107,7 @@ export class LocalBrowser implements Local {
         }
     }
 
-    private static shouldShowDisplay(): boolean {
+    private static isTv(): boolean {
         // @ts-ignore
         return new URL(location).searchParams.get("showDisplay");
     }
