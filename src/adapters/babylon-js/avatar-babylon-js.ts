@@ -29,6 +29,7 @@ const VIDEO_DIMENSIONS = {
 export class AvatarBabylonJs implements Avatar {
     private videoPanel: Mesh | undefined;
     private readonly mesh: Mesh;
+    private text: TextBlock | undefined;
 
     constructor(private id: string, private scene: Scene) {
         this.mesh = this.createAvatarMesh(scene);
@@ -38,18 +39,19 @@ export class AvatarBabylonJs implements Avatar {
         const plane = Mesh.CreatePlane("namePlane", 2, this.scene);
         plane.parent = this.mesh;
         plane.position.x = 0;
-        plane.position.y = -0.35;
+        plane.position.y = -0.4;
         plane.position.z = 0.06;
         plane.rotation.y = Math.PI;
         const advancedTexture = AdvancedDynamicTexture.CreateForMesh(plane);
 
-        const text2 = new TextBlock("name", name);
-        text2.width = "450px";
-        text2.height = "550px";
-        text2.color = "white";
-        text2.fontSize = "80px";
-        text2.resizeToFit = true;
-        advancedTexture.addControl(text2);
+        const text = new TextBlock("name", name);
+        text.width = "450px";
+        text.height = "550px";
+        text.color = "white";
+        text.fontSize = "80px";
+        text.resizeToFit = true;
+        advancedTexture.addControl(text);
+        this.text = text;
     }
 
     setColor(color: string): void {
@@ -146,6 +148,7 @@ export class AvatarBabylonJs implements Avatar {
 
             this.videoPanel!.material!.backFaceCulling = false;
             this.videoPanel!.rotation.y = Math.PI;
+            this.text!.fontSize = "40px";
         }
     }
 
