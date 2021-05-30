@@ -4,6 +4,7 @@ export interface Local {
     init: () => void;
     showLocalVideo: () => void;
     getLocalStream: () => Promise<MyStream>;
+    getDesktopStream: () => Promise<MyStream>;
     getConfig: () => PeerConfig;
 }
 
@@ -29,6 +30,7 @@ export interface RemoteRoom {
 }
 
 export interface Avatar {
+    setType: (type: PeerType) => void;
     setName: (name: string) => void;
     setColor: (color: string) => void;
     calcAngle: () => number;
@@ -40,6 +42,7 @@ export interface Avatar {
 }
 
 export interface VirtualWorld {
+    setType: (type: PeerType) => void;
     onPositionUpdate: MyEventEmitter<MyPosition>;
     createAvatar: (peerId: string) => Avatar;
     start: () => Promise<void>;
@@ -63,7 +66,10 @@ export interface MyPosition {
     };
 }
 
+type PeerType = "peer" | "tv";
+
 export interface PeerConfig {
+    type: PeerType;
     color: string;
     name: string;
 }
