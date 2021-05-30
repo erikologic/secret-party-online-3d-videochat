@@ -91,6 +91,17 @@ const createDesktopCamera = (
     return camera;
 };
 
+function setCameraPosition(camera: Camera) {
+    const randomiseInitPos = (max: number, min: number) =>
+        Math.abs(max - min) * Math.random() + Math.min(max, min);
+
+    const xDimensions = [-36, 8] as const;
+    const zDimensions = [-19, 11] as const;
+    camera.position.x = randomiseInitPos(...xDimensions);
+    camera.position.z = randomiseInitPos(...zDimensions);
+    camera.position.y = 10;
+}
+
 export function createCamera(scene: Scene, canvas: HTMLCanvasElement): void {
     const initialPosition = new Vector3(0, 2, 0);
     console.log({ isMobile });
@@ -109,4 +120,5 @@ export function createCamera(scene: Scene, canvas: HTMLCanvasElement): void {
     //Then apply collisions and gravity to the active camera
     camera.checkCollisions = true;
     camera.applyGravity = true;
+    setCameraPosition(camera);
 }
