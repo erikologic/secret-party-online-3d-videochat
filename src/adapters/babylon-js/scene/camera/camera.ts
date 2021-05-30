@@ -124,4 +124,5 @@ export function createCamera(scene: Scene, canvas: HTMLCanvasElement): void {
     camera.checkCollisions = true;
     camera.applyGravity = true;
     setCameraPosition(camera);
+    camera.setTarget(new Vector3(0, 0, 0));
 }
