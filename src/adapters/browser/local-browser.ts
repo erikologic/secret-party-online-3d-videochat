@@ -33,12 +33,12 @@ const displayMediaConstraints = {
     video: {
         ...userMediaConstraints.video,
         height: {
-            ideal: 720,
-            max: 1080,
+            ideal: 480,
+            max: 720,
         },
         width: {
-            ideal: 1280,
-            max: 1920,
+            ideal: 848,
+            max: 1280,
         },
         frameRate: {
             ideal: 25,
