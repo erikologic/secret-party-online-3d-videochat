@@ -127,6 +127,7 @@ export class AvatarBabylonJs implements Avatar {
     }
 
     async showVideo({ stream }: MyStream): Promise<void> {
+        console.log(`STREAM ${stream.id} --> showVideo`);
         const videoPanel = AvatarBabylonJs.getVideoPanel();
         const videoTexture = await this.createTextureFromStreamAsync(
             stream,

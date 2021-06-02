@@ -54,11 +54,13 @@ export class RoomController {
     private createAvatar: Listener<Peer> = async (peer) => {
         const avatar = this.virtualWord.createAvatar(peer.id);
         peer.onPositionUpdate.subscribe((pos) => avatar.moveTo(pos));
+        console.log(`PEER ID ${peer.id} --> Subscribing avatar to streams`);
         peer.onStream.subscribe((stream) => avatar.showVideo(stream));
         peer.onStream.subscribe((stream) => avatar.showAudio(stream));
 
         let peerConfig: PeerConfig | undefined; // TODO  not nice - prob this fn needs a class
         peer.onConfig.subscribe(async (config) => {
+            console.log(`PEER ID ${peer.id} --> Got config: ${config.name}`);
             avatar.setColor(config.color);
             avatar.setName(config.name);
             avatar.setType(config.type);
@@ -70,7 +72,13 @@ export class RoomController {
         }, 2_000);
 
         const showAudioVideo = async () => {
-            if (peerConfig?.type !== "peer") return;
+            if (!(peerConfig?.type === "peer")) {
+                console.log(
+                    `PEER ID ${peer.id} --> do not showAudioVideo`,
+                    peerConfig
+                );
+                return;
+            }
 
             const distance = avatar.calcDistance();
             const angle = Math.abs(avatar.calcAngle());
