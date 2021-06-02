@@ -4,7 +4,6 @@ import SimplePeer from "simple-peer";
 import wrtc from "wrtc";
 import { PeerSimplePeer } from "../../../../src/adapters/simple-peer/peer-simple-peer";
 import { MyPosition, MyStream, PeerConfig } from "../../../../src/domain/types";
-import { getStream } from "./create-media-stream";
 
 const getSimplePeers = (): Promise<
     [SimplePeer.Instance, SimplePeer.Instance]
@@ -86,63 +85,5 @@ describe("connecting 2 peers via PeerSimplePeer", () => {
         await asyncTimeout(2_000);
         expect(mock).toHaveBeenCalled();
         expect(mock.mock.calls[0][0]).toEqual(config);
-    });
-
-    xdescribe("for streams", () => {
-        let stopStream: () => void, myStream: MyStream, mock: jest.Mock;
-
-        beforeEach(async () => {
-            const mediaStreamHandles = getStream();
-            stopStream = mediaStreamHandles.stopStream;
-
-            myStream = {
-                stream: mediaStreamHandles.stream,
-            };
-
-            mock = jest.fn();
-            myPeer1.onStream.subscribe(mock);
-            await myPeer2.sendLocalStream(myStream);
-        });
-
-        afterEach(() => {
-            stopStream();
-        });
-
-        test.skip("does not send the stream if not commanded to", async () => {
-            // TODO this works in the browser _shrug_
-            await asyncTimeout(2_000);
-            expect(mock.mock.calls[0][0].stream.getVideoTracks()).toHaveLength(
-                1
-            );
-            expect(
-                mock.mock.calls[0][0].stream.getVideoTracks()[0].enabled
-            ).toBeFalsy();
-        });
-
-        test("send the stream", async () => {
-            await myPeer2.showVideoStream();
-
-            await asyncTimeout(2_000);
-            expect(mock.mock.calls[0][0].stream).toEqual(myStream.stream);
-            expect(mock.mock.calls[0][0].stream.getVideoTracks()).toHaveLength(
-                1
-            );
-            expect(
-                mock.mock.calls[0][0].stream.getVideoTracks()[0].enabled
-            ).toBeTruthy();
-        });
-
-        test.skip("stop sending the stream when commanded to", async () => {
-            // TODO this works in the browser _shrug_
-            await myPeer2.showVideoStream();
-
-            await asyncTimeout(500);
-            await myPeer2.stopShowingVideoStream();
-
-            await asyncTimeout(2_000);
-            expect(
-                mock.mock.calls[0][0].stream.getVideoTracks()[0].enabled
-            ).toBeFalsy();
-        });
     });
 });
