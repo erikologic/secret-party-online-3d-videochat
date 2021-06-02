@@ -38,10 +38,15 @@ export class RemoteRoomSwarmSignalHub implements RemoteRoom {
             const myPeer = new PeerSimplePeer(peer, id);
             this.myPeers.push(myPeer);
             await this.onNewPeer.emit(myPeer);
-            console.log(`PEER ID ${id} --> sending localStream`, this.stream);
-            if (this.stream) {
-                myPeer.sendLocalStream(this.stream);
-            }
+            setTimeout(() => {
+                console.log(
+                    `PEER ID ${id} --> sending localStream`,
+                    this.stream
+                );
+                if (this.stream) {
+                    myPeer.sendLocalStream(this.stream);
+                }
+            }, 2_000);
         });
 
         sw.on("disconnect", (peer: any, id: string) => {
