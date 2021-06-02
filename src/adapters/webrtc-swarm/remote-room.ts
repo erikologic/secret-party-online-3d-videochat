@@ -38,6 +38,10 @@ export class RemoteRoomSwarmSignalHub implements RemoteRoom {
             const myPeer = new PeerSimplePeer(peer, id);
             this.myPeers.push(myPeer);
             await this.onNewPeer.emit(myPeer);
+
+            // This is bad...
+            // There is a race condition where the other peer might not be ready to receive a stream in time
+            // TODO implementing some messaging protocol to manage these race conditions
             setTimeout(() => {
                 console.log(
                     `PEER ID ${id} --> sending localStream`,
@@ -46,7 +50,7 @@ export class RemoteRoomSwarmSignalHub implements RemoteRoom {
                 if (this.stream) {
                     myPeer.sendLocalStream(this.stream);
                 }
-            }, 2_000);
+            }, 1_000);
         });
 
         sw.on("disconnect", (peer: any, id: string) => {
