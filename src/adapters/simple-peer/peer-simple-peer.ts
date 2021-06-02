@@ -24,6 +24,7 @@ export class PeerSimplePeer implements Peer {
         public readonly id: string
     ) {
         peer.on("stream", async (stream: MediaStream) => {
+            console.log(`PEER ID ${id} --> Got STREAM ID`, stream.id);
             await this.onStream.emit({ stream });
         });
 
@@ -38,6 +39,7 @@ export class PeerSimplePeer implements Peer {
         });
 
         peer.on("close", async () => {
+            console.log(`PEER ID ${id} --> Got close`);
             await this.onDisconnect.emit();
         });
 

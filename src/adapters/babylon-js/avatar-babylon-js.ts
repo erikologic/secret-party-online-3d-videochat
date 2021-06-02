@@ -127,6 +127,7 @@ export class AvatarBabylonJs implements Avatar {
     }
 
     async showVideo({ stream }: MyStream): Promise<void> {
+        console.log(`STREAM ${stream.id} --> showVideo`);
         const videoPanel = AvatarBabylonJs.getVideoPanel();
         const videoTexture = await this.createTextureFromStreamAsync(
             stream,
@@ -143,12 +144,20 @@ export class AvatarBabylonJs implements Avatar {
 
     setType(type: PeerType): void {
         if (type === "tv") {
+            console.log("setting to TV");
             this.mesh.scaling.x = 4 * 1.333;
             this.mesh.scaling.y = 4;
 
-            this.videoPanel!.material!.backFaceCulling = false;
-            this.videoPanel!.rotation.y = Math.PI;
-            this.text!.fontSize = "40px";
+            // This is so bad...
+            // So I had to delay the sending of a stream because of the signaling protocol
+            // But sometimes the code can reach here before there is a stream available
+            // And will fail silently
+            // TODO this has to be managed via messaging properly
+            setTimeout(() => {
+                this.videoPanel!.material!.backFaceCulling = false;
+                this.videoPanel!.rotation.y = Math.PI;
+                this.text!.fontSize = "40px";
+            }, 1500);
         }
     }
 

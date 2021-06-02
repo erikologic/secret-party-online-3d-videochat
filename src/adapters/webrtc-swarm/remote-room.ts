@@ -13,6 +13,8 @@ export class RemoteRoomSwarmSignalHub implements RemoteRoom {
     private stream: MyStream | undefined;
 
     async join(): Promise<void> {
+        // @ts-ignore
+        window.myPeers = this.myPeers;
         const hub = signalhub("lets-party", [process.env.HUB_URL]);
         console.log(hub);
         const turnServer = process.env.TURN_IP;
@@ -30,17 +32,29 @@ export class RemoteRoomSwarmSignalHub implements RemoteRoom {
             },
         }) as any;
 
-        sw.on("connect", (peer: SimplePeer.Instance, id: string) => {
-            console.log("connected to a new peer:", peer, id);
+        sw.on("connect", async (peer: SimplePeer.Instance, id: string) => {
+            console.log(`PEER ID ${id} --> Connected to new peer:`, peer);
             console.log("total peers:", sw.peers.length);
             const myPeer = new PeerSimplePeer(peer, id);
             this.myPeers.push(myPeer);
-            this.onNewPeer.emit(myPeer);
-            if (this.stream) myPeer.sendLocalStream(this.stream);
+            await this.onNewPeer.emit(myPeer);
+
+            // This is bad...
+            // There is a race condition where the other peer might not be ready to receive a stream in time
+            // TODO implementing some messaging protocol to manage these race conditions
+            setTimeout(() => {
+                console.log(
+                    `PEER ID ${id} --> sending localStream`,
+                    this.stream
+                );
+                if (this.stream) {
+                    myPeer.sendLocalStream(this.stream);
+                }
+            }, 1_000);
         });
 
         sw.on("disconnect", (peer: any, id: string) => {
-            console.log("disconnected from a peer:", id);
+            console.log(`PEER ID ${id} --> Disconnected`);
             console.log("total peers:", sw.peers.length);
             const myPeer = this.findPeer(id);
             myPeer?.onDisconnect.emit();
