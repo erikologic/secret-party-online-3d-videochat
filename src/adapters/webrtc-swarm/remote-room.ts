@@ -32,12 +32,12 @@ export class RemoteRoomSwarmSignalHub implements RemoteRoom {
             },
         }) as any;
 
-        sw.on("connect", (peer: SimplePeer.Instance, id: string) => {
+        sw.on("connect", async (peer: SimplePeer.Instance, id: string) => {
             console.log(`PEER ID ${id} --> Connected to new peer:`, peer);
             console.log("total peers:", sw.peers.length);
             const myPeer = new PeerSimplePeer(peer, id);
             this.myPeers.push(myPeer);
-            this.onNewPeer.emit(myPeer);
+            await this.onNewPeer.emit(myPeer);
             console.log(`PEER ID ${id} --> sending localStream`, this.stream);
             if (this.stream) {
                 myPeer.sendLocalStream(this.stream);
