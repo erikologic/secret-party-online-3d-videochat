@@ -157,7 +157,7 @@ export class AvatarBabylonJs implements Avatar {
                 this.videoPanel!.material!.backFaceCulling = false;
                 this.videoPanel!.rotation.y = Math.PI;
                 this.text!.fontSize = "40px";
-            }, 1500);
+            }, 2500);
         }
     }
 
