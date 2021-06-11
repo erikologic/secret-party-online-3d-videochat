@@ -47,8 +47,6 @@ _[Contact me](#contacts) if you need help with that._
 ![BTC Logo](docs/asset/btc-logo.png) **Bitcoin**  👉  _35bbXFXNwqHzyePGnZrcbJDNJaX6kv2Hzd_  
 ![ETH Logo](docs/asset/eth-logo.png) **Ethereum** 👉 _0xBA42dC3DDbf8bedEFe7C82395C30617AbE08EF35_  
 
-Traditional 🦄? [Sponsor me on GitHub! ❤️](https://github.com/sponsors/mrenrich84)
-
 
 ## License
 📝 [LICENSE.md](docs/LICENSE.md)
