@@ -80,19 +80,20 @@ export class RoomController {
                 return;
             }
 
+            const amIaTv = this.config.type === "tv";
             const distance = avatar.calcDistance();
             const angle = Math.abs(avatar.calcAngle());
             const videoCutOffAngle = 90;
             if (
-                distance < closeByDistance.video[this.config.type] &&
-                angle < videoCutOffAngle
+                angle < videoCutOffAngle &&
+                (distance < closeByDistance.video[this.config.type] || amIaTv)
             ) {
                 await peer.showVideoStream();
             } else {
                 await peer.stopShowingVideoStream();
             }
 
-            if (distance < closeByDistance.audio[this.config.type]) {
+            if (distance < closeByDistance.audio[this.config.type] || amIaTv) {
                 await peer.showAudioStream();
             } else {
                 await peer.stopShowingAudioStream();
