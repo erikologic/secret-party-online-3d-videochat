@@ -70,11 +70,11 @@ export class VirtualWorldBabylonJs implements VirtualWorld {
         if (type === "tv") {
             const camera = this.camera! as FreeCamera;
             camera.ellipsoid.y = 1;
-            camera.position.x = -37.26;
-            camera.position.y = 10.538;
-            camera.position.z = -3.645;
-            camera.rotation.x = 0.216043561320024;
-            camera.rotation.y = 1.5917210241062403;
+            camera.position.x = 5.86;
+            camera.position.y = 2.01;
+            camera.position.z = 11.07;
+            camera.rotation.x = 0.024903221225019596;
+            camera.rotation.y = 3.8299576939433617;
         }
     }
 }

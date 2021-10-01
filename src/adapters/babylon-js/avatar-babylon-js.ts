@@ -145,9 +145,8 @@ export class AvatarBabylonJs implements Avatar {
     setType(type: PeerType): void {
         if (type === "tv") {
             console.log("setting to TV");
-            const scaling = 10;
-            this.mesh.scaling.x = scaling * 1.333;
-            this.mesh.scaling.y = scaling;
+            this.mesh.scaling.x = 4 * 1.333;
+            this.mesh.scaling.y = 4;
 
             // This is so bad...
             // So I had to delay the sending of a stream because of the signaling protocol
