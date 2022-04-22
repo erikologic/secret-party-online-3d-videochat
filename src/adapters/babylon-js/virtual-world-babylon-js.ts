@@ -24,7 +24,7 @@ export class VirtualWorldBabylonJs implements VirtualWorld {
             stencil: true,
         });
         if (!engine) throw "engine should not be null.";
-        this.scene = createScene(engine, canvas);
+        this.scene = await createScene(engine, canvas);
 
         // @ts-ignore
         window.scene = this.scene; // TODO remove me

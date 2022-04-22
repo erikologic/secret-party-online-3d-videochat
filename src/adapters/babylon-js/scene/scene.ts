@@ -9,6 +9,8 @@ import {
     Mesh,
     PBRMaterial,
     Scene,
+    SceneLoader,
+    StandardMaterial,
     Vector3,
 } from "@babylonjs/core";
 
@@ -17,8 +19,7 @@ import { createCamera } from "./camera";
 import { createSky } from "./sky";
 import { loadAssets } from "./load-assets";
 
-function setupScene(engine: Engine): Scene {
-    const scene = new Scene(engine);
+function setupScene(scene: Scene): Scene {
     scene.clearColor = new Color4(80 / 256, 166 / 256, 255 / 256, 1);
 
     //Set gravity for the scene (G force like, on Y-axis)
@@ -50,9 +51,47 @@ function addGround(scene: Scene) {
     seaGround.position.y = -25;
 }
 
-export function createScene(engine: Engine, canvas: HTMLCanvasElement): Scene {
-    const scene = setupScene(engine);
-    lights.addTo(scene);
+function loadScene(engine: Engine, rootUrl: string, sceneFilename: string) {
+    SceneLoader.ForceFullSceneLoadingForIncremental = true;
+    engine.resize();
+    return new Promise<Scene>((res, rej) => {
+        SceneLoader.Load(
+            rootUrl,
+            sceneFilename,
+            engine,
+            (scene) => res(scene),
+            () => undefined,
+            (_scene, message, _exception) => rej(message)
+        );
+    });
+}
+
+async function createHillValleyScene(
+    engine: Engine,
+    canvas: HTMLCanvasElement
+): Promise<Scene> {
+    const rootUrl = "/asset/3d-app/hillvalley/";
+    const sceneFilename = "HillValley.babylon";
+    const scene = await loadScene(engine, rootUrl, sceneFilename);
+    scene.cameras[0].dispose();
+    scene.meshes.forEach((m) => (m.checkCollisions = true));
+    StandardMaterial.BumpTextureEnabled = true;
+    scene.materials.forEach((m) => (m.checkReadyOnEveryCall = true));
+    scene.collisionsEnabled = true;
+    setupScene(scene);
+    lights.addTo(scene, { sun: false });
+    createCamera(scene, canvas);
+    // scene.debugLayer.show()
+    return scene;
+}
+
+async function createOldScene(
+    engine: Engine,
+    canvas: HTMLCanvasElement
+): Promise<Scene> {
+    const scene = new Scene(engine);
+    setupScene(scene);
+    lights.addTo(scene, {});
     createSky(scene);
     createCamera(scene, canvas);
     loadAssets(scene);
@@ -60,3 +99,5 @@ export function createScene(engine: Engine, canvas: HTMLCanvasElement): Scene {
     // scene.debugLayer.show()
     return scene;
 }
+
+export const createScene = createHillValleyScene;
