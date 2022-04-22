@@ -1,6 +1,6 @@
 // TODO disable inspector in production!!!
-import "@babylonjs/core/Debug/debugLayer";
-import "@babylonjs/inspector";
+// import "@babylonjs/core/Debug/debugLayer";
+// import "@babylonjs/inspector";
 
 import {
     Color3,
@@ -10,6 +10,7 @@ import {
     PBRMaterial,
     Scene,
     SceneLoader,
+    StandardMaterial,
     Vector3,
 } from "@babylonjs/core";
 
@@ -69,24 +70,18 @@ async function createHillValleyScene(
     engine: Engine,
     canvas: HTMLCanvasElement
 ): Promise<Scene> {
-    // const scene = new Scene(engine);
-    // loadAssets(scene);
     const rootUrl = "/asset/3d-app/hillvalley/";
     const sceneFilename = "HillValley.babylon";
     const scene = await loadScene(engine, rootUrl, sceneFilename);
     scene.cameras[0].dispose();
     scene.meshes.forEach((m) => (m.checkCollisions = true));
+    StandardMaterial.BumpTextureEnabled = true;
+    scene.materials.forEach((m) => (m.checkReadyOnEveryCall = true));
     scene.collisionsEnabled = true;
     setupScene(scene);
-    lights.addTo(scene);
-    // createSky(scene);
-    // createCamera(scene, canvas);
-    // StandardMaterial.BumpTextureEnabled = true;
-    // for (let matIndex = 0; matIndex < scene.materials.length; matIndex++) {
-    //     scene.materials[matIndex].checkReadyOnEveryCall = false;
-    // }
-    // addGround(scene);
-    // scene.debugLayer.show();
+    lights.addTo(scene, { sun: false });
+    createCamera(scene, canvas);
+    // scene.debugLayer.show()
     return scene;
 }
 
@@ -96,7 +91,7 @@ async function createOldScene(
 ): Promise<Scene> {
     const scene = new Scene(engine);
     setupScene(scene);
-    lights.addTo(scene);
+    lights.addTo(scene, {});
     createSky(scene);
     createCamera(scene, canvas);
     loadAssets(scene);
@@ -105,4 +100,4 @@ async function createOldScene(
     return scene;
 }
 
-export const createScene = createOldScene;
+export const createScene = createHillValleyScene;
