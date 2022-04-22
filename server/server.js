@@ -46,13 +46,13 @@ module.exports = function (opts) {
           );
           res.end();
       }
-    if (
+    if (req.method === 'GET' && (
         req.url === '/' ||
         req.url.startsWith('/index.htm') ||
         req.url.startsWith('/dist') ||
         req.url.startsWith('/asset') ||
         req.url.startsWith("/?")
-    ) {
+    )) {
       fileServer.serve(req, res);
       return;
     }
