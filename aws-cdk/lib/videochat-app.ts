@@ -40,7 +40,19 @@ export class VideochatApp extends cdk.Stack {
             InstanceClass.T3,
             InstanceSize.MEDIUM
         );
-        const vpc = Vpc.fromLookup(this, "DefaultVPC", { isDefault: true });
+        // const vpc = Vpc.fromLookup(this, "DefaultVPC", { isDefault: true });
+        const vpc = new Vpc(this, id + "Vpc", {
+            cidr: "10.0.0.0/16",
+            natGateways: 1,
+            maxAzs: 3,
+            subnetConfiguration: [
+                {
+                    name: "public-subnet-1",
+                    subnetType: SubnetType.PUBLIC,
+                    cidrMask: 24,
+                },
+            ],
+        });
         const vpcSubnets = vpc.selectSubnets({ subnetType: SubnetType.PUBLIC });
         const machineImage = MachineImage.latestAmazonLinux({
             generation: AmazonLinuxGeneration.AMAZON_LINUX_2,

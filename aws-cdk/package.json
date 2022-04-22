@@ -2,8 +2,8 @@
   "name": "aws-cdk",
   "version": "0.1.0",
   "engines": {
-    "node": "~12",
-    "npm": ">=7.6"
+    "node": "~16",
+    "npm": "~7"
   },
   "bin": {
     "aws-cdk": "bin/aws-cdk.js"
