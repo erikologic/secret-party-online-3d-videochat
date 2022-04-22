@@ -6,7 +6,7 @@ import {
     Vector3,
 } from "@babylonjs/core";
 
-export function addTo(scene: Scene): Light {
+export function addTo(scene: Scene) {
     const ambientLight = new HemisphericLight(
         "hemisphericLight",
         new Vector3(0, 1, 0),
@@ -19,5 +19,4 @@ export function addTo(scene: Scene): Light {
         scene
     );
     sunLight.intensity = 2999999;
-    return sunLight;
 }
