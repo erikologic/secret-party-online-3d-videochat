@@ -174,6 +174,13 @@ export class LocalBrowser implements Local {
             throw new Error("Cannot start");
         }
 
+        if (
+            !nameEl.value.match(/tv/i) &&
+            !window.confirm("Are you wearing headphones?")
+        ) {
+            window.alert("Please put your headphones on!");
+            throw new Error("Cannot start");
+        }
         this.overlay?.style.setProperty("display", "none");
     }
 }

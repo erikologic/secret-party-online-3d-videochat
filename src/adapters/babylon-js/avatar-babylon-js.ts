@@ -100,6 +100,25 @@ export class AvatarBabylonJs implements Avatar {
 
     remove: Listener<void> = async () => {
         this.mesh.dispose();
+        const disconnected = new Sound(
+            "Disconnected",
+            "/asset/3d-app/hillvalley/Great_Scott_Sound_Effect.mp3",
+            this.scene,
+            () => {
+                disconnected.play();
+            },
+            {
+                loop: false,
+                autoplay: false,
+                spatialSound: true,
+                distanceModel: "exponential",
+                maxDistance: 100,
+                rolloffFactor: 1.3,
+            }
+        );
+        disconnected.attachToMesh(this.mesh);
+        disconnected.setDirectionalCone(90, 180, 0.3);
+        disconnected.setLocalDirectionToMesh(new Vector3(0, 0, 1));
     };
 
     async showAudio({ stream }: MyStream): Promise<void> {
@@ -124,6 +143,26 @@ export class AvatarBabylonJs implements Avatar {
         remoteSound.attachToMesh(this.mesh);
         remoteSound.setDirectionalCone(90, 180, 0.3);
         remoteSound.setLocalDirectionToMesh(new Vector3(0, 0, 1));
+
+        const connected = new Sound(
+            "Connected",
+            "/asset/3d-app/hillvalley/car.mp3",
+            this.scene,
+            () => {
+                connected.play();
+            },
+            {
+                loop: false,
+                autoplay: false,
+                spatialSound: true,
+                distanceModel: "exponential",
+                maxDistance: 100,
+                rolloffFactor: 1.3,
+            }
+        );
+        connected.attachToMesh(this.mesh);
+        connected.setDirectionalCone(90, 180, 0.3);
+        connected.setLocalDirectionToMesh(new Vector3(0, 0, 1));
     }
 
     async showVideo({ stream }: MyStream): Promise<void> {

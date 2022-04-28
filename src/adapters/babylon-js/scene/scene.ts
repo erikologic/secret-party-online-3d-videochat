@@ -10,6 +10,7 @@ import {
     PBRMaterial,
     Scene,
     SceneLoader,
+    Sound,
     StandardMaterial,
     Vector3,
 } from "@babylonjs/core";
@@ -66,6 +67,27 @@ function loadScene(engine: Engine, rootUrl: string, sceneFilename: string) {
     });
 }
 
+function playTheme(scene: Scene) {
+    const key = "lastPlayed";
+    const lastPlayed = Number(window.localStorage.getItem(key));
+    const now = Date.now();
+    window.localStorage.setItem(key, now.toString());
+    const mins = 60 * 1000;
+    const shouldPlay = lastPlayed < now - 10 * mins;
+    if (shouldPlay)
+        new Sound(
+            "Theme",
+            "/asset/3d-app/hillvalley/Back_to_the_Future_Theme_Song.mp3",
+            scene,
+            null,
+            {
+                loop: false,
+                autoplay: true,
+                volume: 0.2,
+            }
+        );
+}
+
 async function createHillValleyScene(
     engine: Engine,
     canvas: HTMLCanvasElement
@@ -82,6 +104,7 @@ async function createHillValleyScene(
     lights.addTo(scene, { sun: false });
     createCamera(scene, canvas);
     // scene.debugLayer.show()
+    playTheme(scene);
     return scene;
 }
 
