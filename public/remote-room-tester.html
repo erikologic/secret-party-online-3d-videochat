@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Remote room tester</title>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+</head>
+    <body>
+    <div id="inputs">
+        <div>
+            <label for="name">What's your name? </label>
+            <input type="text" id="name">
+        </div>
+        <div>
+            <label for="color">Choose avatar color: </label>
+            <input type="color" id="color">
+        </div>
+        <button id="testRemoteRoom" >Connect</button>
+    </div>
+    <div id="local">
+        <video autoplay muted playsinline id="localVideo"></video>
+    </div>
+    <script src="/dist/index.js"> </script>
+    </body>
+
+</html>
