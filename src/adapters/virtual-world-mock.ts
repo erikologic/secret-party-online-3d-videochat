@@ -9,8 +9,8 @@ export class VirtualWordMock implements VirtualWorld {
         return new AvatarMock(peerId);
     }
 
-    setType(_type: PeerType): void {
-        throw new Error("not implemented");
+    setType(type: PeerType): void {
+        (document.getElementById("type")! as HTMLInputElement).value = type;
     }
 
     start(): Promise<void> {
