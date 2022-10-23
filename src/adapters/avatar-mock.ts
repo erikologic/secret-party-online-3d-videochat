@@ -7,13 +7,11 @@ export class AvatarMock implements Avatar {
         const div = document.createElement("div");
         div.id = `participant-${peerId}`;
         div.innerHTML = `
+              <div id="name-${peerId}"></div>
+              <div id="color-${peerId}"></div>
+              <div id="type-${peerId}"></div>
               <video id="video-${peerId}" autoplay></video>
               <audio id="audio-${peerId}" autoplay></audio>
-              <div class="info-bar">
-                <div id="name-${peerId}"></div>
-                <div id="color-${peerId}"></div>
-                <div id="type-${peerId}"></div>
-              </div>
         `;
         $("#local").parentElement!.appendChild(div);
     }
