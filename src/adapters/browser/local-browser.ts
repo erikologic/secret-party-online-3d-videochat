@@ -174,7 +174,10 @@ export class LocalBrowser implements Local {
             throw new Error("Cannot start");
         }
 
+        const isTest = document.URL.includes("test");
+
         if (
+            !isTest &&
             !nameEl.value.match(/tv/i) &&
             !window.confirm("Are you wearing headphones?")
         ) {
