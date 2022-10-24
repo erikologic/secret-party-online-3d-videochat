@@ -10,15 +10,15 @@ export class AvatarMock implements Avatar {
               <div id="name-${peerId}"></div>
               <div id="color-${peerId}"></div>
               <div id="type-${peerId}"></div>
+              <div id="position-${peerId}"></div>
               <video id="video-${peerId}" autoplay></video>
               <audio id="audio-${peerId}" autoplay></audio>
         `;
         $("#local").parentElement!.appendChild(div);
     }
 
-    moveTo: Listener<MyPosition> = async (_pos) => {
-        console.error("not implemented");
-        throw new Error("not implemented");
+    moveTo: Listener<MyPosition> = async (pos) => {
+        $(`#position-${this.peerId}`).innerHTML = JSON.stringify(pos);
     };
 
     remove: Listener<void> = async () => {

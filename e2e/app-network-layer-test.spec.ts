@@ -1,4 +1,5 @@
-import { Browser, expect, Page, test } from "@playwright/test";
+import { Browser, expect, Locator, Page, test } from "@playwright/test";
+import { MyPosition } from "../src/domain/types";
 
 test.use({
     permissions: ["microphone", "camera"],
@@ -24,6 +25,9 @@ async function checkVideoIsStarted(userPage: Page, peerVideoId: string) {
     expect(peerVideoSrcOb).not.toBeNull();
 }
 
+const getPeerId = async (peerName: Locator) =>
+    peerName.evaluate((n) => n.id).then((s) => s.replace("name-", ""));
+
 async function checkPeerIsVisible(userPage: Page, peerSettings: PeerSettings) {
     const peerType = peerSettings.name.toLowerCase().includes("tv")
         ? "tv"
@@ -31,10 +35,7 @@ async function checkPeerIsVisible(userPage: Page, peerSettings: PeerSettings) {
 
     const peerName = userPage.getByText(peerSettings.name);
     await expect(peerName).toBeVisible();
-
-    const peerId = await peerName
-        .evaluate((n) => n.id)
-        .then((s) => s.replace("name-", ""));
+    const peerId = await getPeerId(peerName);
 
     await expect(userPage.locator(`#color-${peerId}`)).toHaveText(
         peerSettings.color
@@ -58,42 +59,123 @@ const setUserSettingsAndLaunch = async (
     await page.getByText("Connect").click();
 };
 
+const checkPeerPosition = async (
+    page: Page,
+    name: string,
+    position: MyPosition
+) => {
+    const peerName = page.getByText(name);
+    const peerId = await getPeerId(peerName);
+    const receivedPosition = await page
+        .locator(`#position-${peerId}`)
+        .innerHTML();
+    await expect(JSON.parse(receivedPosition)).toEqual(position);
+};
+
+const r = (top: number) => Math.random() * top;
+const newPosition = (): MyPosition => ({
+    absoluteRotation: { w: r(3), x: r(3), y: r(3), z: r(3) },
+    globalPosition: { x: r(5), y: r(5), z: r(5) },
+});
+
 test("app network layer", async ({ browser }) => {
+    // when alice connects to the app
     const alicePage = await openNewPage(browser);
     const aliceSettings = {
         name: "alice",
         color: "#000000",
     };
     await setUserSettingsAndLaunch(aliceSettings, alicePage);
-
+    // then alice configuration loads
     await expect(alicePage.getByText("Type")).toHaveValue("peer");
+    // and alice 3d world start
     await expect(alicePage.getByText("Virtual World")).toHaveValue("Started");
+    // and alice webcam is shown
     await checkVideoIsStarted(alicePage, "#localVideo");
-
+    // and no other users will be shown
     await expect(alicePage.getByText("bob")).not.toBeVisible();
     await expect(alicePage.getByText("charlie")).not.toBeVisible();
 
+    // given bob connects to the app
     const bobPage = await openNewPage(browser);
     const bobSettings = {
         name: "bob",
         color: "#ffffff",
     };
     await setUserSettingsAndLaunch(bobSettings, bobPage);
+    // then bob configuration loads
     await expect(bobPage.getByText("Type")).toHaveValue("peer");
-
+    // and bob 3d world start
+    await expect(bobPage.getByText("Virtual World")).toHaveValue("Started");
+    // and bob webcam is shown
+    await checkVideoIsStarted(bobPage, "#localVideo");
+    // and bob sees alice
     await checkPeerIsVisible(bobPage, aliceSettings);
+    // and alice sees bob
     await checkPeerIsVisible(alicePage, bobSettings);
 
-    const charliePage = await openNewPage(browser);
-    const charlieSettings = {
-        name: "charlie",
+    // given charlie connects to the app
+    const charlieTvPage = await openNewPage(browser);
+    const charlieTvSettings = {
+        name: "charlieTv",
         color: "#ff0000",
     };
-    await setUserSettingsAndLaunch(charlieSettings, charliePage);
-    await expect(charliePage.getByText("Type")).toHaveValue("peer");
+    await setUserSettingsAndLaunch(charlieTvSettings, charlieTvPage);
+    // then charlie configuration loads
+    await expect(charlieTvPage.getByText("Type")).toHaveValue("tv");
+    // and charlie 3d world start
+    await expect(charlieTvPage.getByText("Virtual World")).toHaveValue(
+        "Started"
+    );
+    // and charlie webcam is shown
+    await checkVideoIsStarted(charlieTvPage, "#localVideo");
 
-    await checkPeerIsVisible(charliePage, aliceSettings);
-    await checkPeerIsVisible(charliePage, bobSettings);
-    await checkPeerIsVisible(bobPage, charlieSettings);
-    await checkPeerIsVisible(alicePage, charlieSettings);
+    // and charlie sees alice
+    await checkPeerIsVisible(charlieTvPage, aliceSettings);
+    // and charlie sees bob
+    await checkPeerIsVisible(charlieTvPage, bobSettings);
+    // and bob sees charlie
+    await checkPeerIsVisible(bobPage, charlieTvSettings);
+    // and alice sees charlie
+    await checkPeerIsVisible(alicePage, charlieTvSettings);
+
+    // when alice change position
+    const alicePosition = newPosition();
+    await alicePage.getByText(/^Position$/).fill(JSON.stringify(alicePosition));
+    await alicePage.getByText(/^Send position$/).click();
+    // then bob receives the new position
+    await checkPeerPosition(bobPage, "alice", alicePosition);
+    // then charlie receives the new position
+    await checkPeerPosition(charlieTvPage, "alice", alicePosition);
+
+    // when alice change the position again
+    const aliceNewPosition = newPosition();
+    await alicePage
+        .getByText(/^Position$/)
+        .fill(JSON.stringify(aliceNewPosition));
+    await alicePage.getByText(/^Send position$/).click();
+    // then bob receives the new position
+    await checkPeerPosition(bobPage, "alice", aliceNewPosition);
+    // then charlie receives the new position
+    await checkPeerPosition(charlieTvPage, "alice", aliceNewPosition);
+
+    // when bob change position
+    const bobPosition = newPosition();
+    await bobPage.getByText(/^Position$/).fill(JSON.stringify(bobPosition));
+    await bobPage.getByText(/^Send position$/).click();
+    // then alice receives the new position
+    await checkPeerPosition(alicePage, "bob", bobPosition);
+    // then charlie receives the new position
+    await checkPeerPosition(charlieTvPage, "bob", bobPosition);
+
+    // when charlie change position
+    const charliePosition = newPosition();
+    await charlieTvPage
+        .getByText(/^Position$/)
+        .fill(JSON.stringify(charliePosition));
+    await charlieTvPage.getByText(/^Send position$/).click();
+    // then alice receives the new position
+    await checkPeerPosition(alicePage, "charlieTv", charliePosition);
+    // then bob receives the new position
+    await checkPeerPosition(bobPage, "charlieTv", charliePosition);
 });
