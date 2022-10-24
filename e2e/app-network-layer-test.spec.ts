@@ -178,4 +178,12 @@ test("app network layer", async ({ browser }) => {
     await checkPeerPosition(alicePage, "charlieTv", charliePosition);
     // then bob receives the new position
     await checkPeerPosition(bobPage, "charlieTv", charliePosition);
+
+    // when charlie disconnect
+    await charlieTvPage.close();
+    // then alice does not see charlie
+    const timeout = 60_000; // TODO remove me
+    await expect(alicePage.getByText("charlie")).not.toBeVisible({ timeout });
+    // then bob does not see charlie
+    await expect(bobPage.getByText("charlie")).not.toBeVisible({ timeout });
 });

@@ -3,8 +3,11 @@ import { Listener } from "../shared/my-event-emitter";
 import { $ } from "../shared/selector";
 
 export class AvatarMock implements Avatar {
+    private div: HTMLDivElement;
+
     constructor(private peerId: string) {
         const div = document.createElement("div");
+        this.div = div;
         div.id = `participant-${peerId}`;
         div.innerHTML = `
               <div id="name-${peerId}"></div>
@@ -22,8 +25,7 @@ export class AvatarMock implements Avatar {
     };
 
     remove: Listener<void> = async () => {
-        console.error("not implemented");
-        throw new Error("not implemented");
+        this.div.remove();
     };
 
     showAudio: Listener<MyStream> = async ({ stream }) => {
