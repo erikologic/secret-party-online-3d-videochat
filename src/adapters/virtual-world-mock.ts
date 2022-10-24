@@ -15,7 +15,7 @@ export class VirtualWordMock implements VirtualWorld {
         $<HTMLInputElement>(`#type`).value = type;
     }
 
-    start(): Promise<void> {
-        return Promise.resolve(undefined);
+    async start(): Promise<void> {
+        $<HTMLInputElement>(`#virtual-world`).value = "Started";
     }
 }

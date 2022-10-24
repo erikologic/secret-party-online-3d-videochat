@@ -67,6 +67,7 @@
     "start": "npm run server:start",
     "build:start": "npm run build && npm start",
     "test": "jest",
+    "test:e2e": "playwright test",
     "type:check": "tsc --noEmit"
   },
   "repository": {

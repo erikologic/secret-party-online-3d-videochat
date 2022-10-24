@@ -17,41 +17,83 @@ const openNewPage = async (browser: Browser) => {
     return page;
 };
 
-async function checkPeerIsVisible(userPage: Page, peer: string) {
-    const peerName = userPage.getByText(peer);
-    await expect(peerName).toBeVisible();
-    const peerId = await peerName
-        .evaluate((n) => n.id)
-        .then((s) => s.replace("name-", ""));
+async function checkVideoIsStarted(userPage: Page, peerVideoId: string) {
     const peerVideoSrcOb = await userPage
-        .locator(`#video-${peerId}`)
+        .locator(peerVideoId)
         .evaluate((n) => (n as HTMLVideoElement).srcObject);
     expect(peerVideoSrcOb).not.toBeNull();
 }
 
+async function checkPeerIsVisible(userPage: Page, peerSettings: PeerSettings) {
+    const peerType = peerSettings.name.toLowerCase().includes("tv")
+        ? "tv"
+        : "peer";
+
+    const peerName = userPage.getByText(peerSettings.name);
+    await expect(peerName).toBeVisible();
+
+    const peerId = await peerName
+        .evaluate((n) => n.id)
+        .then((s) => s.replace("name-", ""));
+
+    await expect(userPage.locator(`#color-${peerId}`)).toHaveText(
+        peerSettings.color
+    );
+    await expect(userPage.locator(`#type-${peerId}`)).toHaveText(peerType);
+
+    const peerVideoId = `#video-${peerId}`;
+    await checkVideoIsStarted(userPage, peerVideoId);
+}
+
+interface PeerSettings {
+    color: string;
+    name: string;
+}
+const setUserSettingsAndLaunch = async (
+    peerSettings: PeerSettings,
+    page: Page
+) => {
+    await page.getByText("What's your name?").fill(peerSettings.name);
+    await page.getByText("Choose avatar color:").fill(peerSettings.color);
+    await page.getByText("Connect").click();
+};
+
 test("app network layer", async ({ browser }) => {
     const alicePage = await openNewPage(browser);
-    await alicePage.locator("#name").fill("alice");
-    await alicePage.locator("#testRemoteRoom").click();
-    await expect(alicePage.locator("#type")).toHaveValue("peer");
+    const aliceSettings = {
+        name: "alice",
+        color: "#000000",
+    };
+    await setUserSettingsAndLaunch(aliceSettings, alicePage);
+
+    await expect(alicePage.getByText("Type")).toHaveValue("peer");
+    await expect(alicePage.getByText("Virtual World")).toHaveValue("Started");
+    await checkVideoIsStarted(alicePage, "#localVideo");
 
     await expect(alicePage.getByText("bob")).not.toBeVisible();
+    await expect(alicePage.getByText("charlie")).not.toBeVisible();
 
     const bobPage = await openNewPage(browser);
-    await bobPage.locator("#name").fill("bob");
-    await bobPage.locator("#testRemoteRoom").click();
-    await expect(bobPage.locator("#type")).toHaveValue("peer");
+    const bobSettings = {
+        name: "bob",
+        color: "#ffffff",
+    };
+    await setUserSettingsAndLaunch(bobSettings, bobPage);
+    await expect(bobPage.getByText("Type")).toHaveValue("peer");
 
-    await checkPeerIsVisible(bobPage, "alice");
-    await checkPeerIsVisible(alicePage, "bob");
+    await checkPeerIsVisible(bobPage, aliceSettings);
+    await checkPeerIsVisible(alicePage, bobSettings);
 
     const charliePage = await openNewPage(browser);
-    await charliePage.locator("#name").fill("charlie");
-    await charliePage.locator("#testRemoteRoom").click();
-    await expect(charliePage.locator("#type")).toHaveValue("peer");
+    const charlieSettings = {
+        name: "charlie",
+        color: "#ff0000",
+    };
+    await setUserSettingsAndLaunch(charlieSettings, charliePage);
+    await expect(charliePage.getByText("Type")).toHaveValue("peer");
 
-    await checkPeerIsVisible(charliePage, "alice");
-    await checkPeerIsVisible(charliePage, "bob");
-    await checkPeerIsVisible(bobPage, "charlie");
-    await checkPeerIsVisible(alicePage, "charlie");
+    await checkPeerIsVisible(charliePage, aliceSettings);
+    await checkPeerIsVisible(charliePage, bobSettings);
+    await checkPeerIsVisible(bobPage, charlieSettings);
+    await checkPeerIsVisible(alicePage, charlieSettings);
 });
