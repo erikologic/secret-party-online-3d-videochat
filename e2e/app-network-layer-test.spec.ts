@@ -18,11 +18,11 @@ const openNewPage = async (browser: Browser) => {
     return page;
 };
 
-async function checkVideoIsStarted(userPage: Page, peerVideoId: string) {
-    const peerVideoSrcOb = await userPage
-        .locator(peerVideoId)
-        .evaluate((n) => (n as HTMLVideoElement).srcObject);
-    expect(peerVideoSrcOb).not.toBeNull();
+async function checkMediaIsStarted(userPage: Page, peerMediaId: string) {
+    const peerMediaSrcOb = await userPage
+        .locator(peerMediaId)
+        .evaluate((n) => (n as HTMLMediaElement).srcObject);
+    expect(peerMediaSrcOb).not.toBeNull();
 }
 
 const getPeerId = async (peerName: Locator) =>
@@ -42,8 +42,8 @@ async function checkPeerIsVisible(userPage: Page, peerSettings: PeerSettings) {
     );
     await expect(userPage.locator(`#type-${peerId}`)).toHaveText(peerType);
 
-    const peerVideoId = `#video-${peerId}`;
-    await checkVideoIsStarted(userPage, peerVideoId);
+    await checkMediaIsStarted(userPage, `#video-${peerId}`);
+    await checkMediaIsStarted(userPage, `#audio-${peerId}`);
 }
 
 interface PeerSettings {
@@ -91,7 +91,7 @@ test("app network layer", async ({ browser }) => {
     // and alice 3d world start
     await expect(alicePage.getByText("Virtual World")).toHaveValue("Started");
     // and alice webcam is shown
-    await checkVideoIsStarted(alicePage, "#localVideo");
+    await checkMediaIsStarted(alicePage, "#localVideo");
     // and no other users will be shown
     await expect(alicePage.getByText("bob")).not.toBeVisible();
     await expect(alicePage.getByText("charlie")).not.toBeVisible();
@@ -108,7 +108,7 @@ test("app network layer", async ({ browser }) => {
     // and bob 3d world start
     await expect(bobPage.getByText("Virtual World")).toHaveValue("Started");
     // and bob webcam is shown
-    await checkVideoIsStarted(bobPage, "#localVideo");
+    await checkMediaIsStarted(bobPage, "#localVideo");
     // and bob sees alice
     await checkPeerIsVisible(bobPage, aliceSettings);
     // and alice sees bob
@@ -128,7 +128,7 @@ test("app network layer", async ({ browser }) => {
         "Started"
     );
     // and charlie webcam is shown
-    await checkVideoIsStarted(charlieTvPage, "#localVideo");
+    await checkMediaIsStarted(charlieTvPage, "#localVideo");
 
     // and charlie sees alice
     await checkPeerIsVisible(charlieTvPage, aliceSettings);
