@@ -111,55 +111,10 @@ describe("when entering a room", () => {
         });
 
         describe("initialisation", () => {
-            test("initialise the local env", () => {
-                expect(local.init).toHaveBeenCalled();
-            });
-
-            it("join remote room", async () => {
-                expect(remoteRoom.join).toHaveBeenCalled();
-            });
-
             test.todo("cannot access remote room");
-
-            it("show the local webcam video to the local user", async () => {
-                expect(local.showLocalVideo).toHaveBeenCalled();
-            });
-
-            it("send local webcam AV to the other peers", () => {
-                expect(remoteRoom.sendLocalStream).toHaveBeenCalledWith(
-                    myStream
-                );
-            });
-
-            it("spin up the virtual world", () => {
-                expect(virtualWorld.start).toHaveBeenCalled();
-            });
-
-            it("fetch other peers in the room", () => {
-                expect(remoteRoom.getPeers).toHaveBeenCalled();
-            });
         });
 
         describe("connecting to other peers", () => {
-            test("when a peer is found will create its avatar", () => {
-                expect(virtualWorld.createAvatar).toHaveBeenCalled();
-            });
-
-            test("when several peers are found, creates an avatar for each peer found", async () => {
-                jest.clearAllMocks();
-                const fivePeers = Array(5).fill(peer);
-                asMock(remoteRoom.getPeers).mockResolvedValue(fivePeers);
-
-                const room = new RoomController(
-                    local,
-                    remoteRoom,
-                    virtualWorld
-                );
-                await room.join();
-
-                expect(virtualWorld.createAvatar).toHaveBeenCalledTimes(5);
-            });
-
             describe("when peer provides a configuration", () => {
                 beforeEach(async () => {
                     await peer.onConfig.emit({
@@ -168,19 +123,6 @@ describe("when entering a room", () => {
                         type: "peer",
                     });
                     await flushPromises();
-                });
-
-                test("sets the avatar color", () => {
-                    expect(avatar.setColor).toHaveBeenCalledWith("e66465");
-                });
-
-                test("sets the avatar name", () => {
-                    expect(avatar.setName).toHaveBeenCalledWith("l0rdP33r");
-                });
-
-                test("send my configuration", async () => {
-                    jest.advanceTimersByTime(2000);
-                    expect(peer.sendConfig).toHaveBeenCalledWith(myConfig);
                 });
 
                 describe("connecting to the stream", () => {
@@ -326,52 +268,10 @@ describe("when entering a room", () => {
                         });
                     });
                 });
-
-                test("when the peer moves, its avatar will move in the virtual world", () => {
-                    peer.onPositionUpdate.emit(position);
-                    expect(avatar.moveTo).toHaveBeenCalledWith(position);
-                });
             });
         });
 
         test.todo("syncs users known with users in the room");
-
-        test("local movements will be broadcast", async () => {
-            await virtualWorld.onPositionUpdate.emit(position);
-            expect(remoteRoom.broadcastLocalPosition).toHaveBeenCalledWith(
-                position
-            );
-        });
-
-        test("when a new user will connect creates its avatar", async () => {
-            const newPeer: Peer = {
-                ...peer,
-                id: "newPeer",
-            };
-            await remoteRoom.onNewPeer.emit(newPeer);
-            expect(virtualWorld.createAvatar).toHaveBeenCalledTimes(2);
-        });
-
-        describe("when a peer disconnect", () => {
-            beforeEach(async () => {
-                await peer.onDisconnect.emit();
-            });
-
-            it("removes the avatar", () => {
-                expect(avatar.remove).toHaveBeenCalledTimes(1);
-            });
-
-            it("stops listening to peer position updates", async () => {
-                await peer.onPositionUpdate.emit(position);
-                expect(avatar.moveTo).not.toHaveBeenCalled();
-            });
-
-            it("stops getting the distance", () => {
-                jest.clearAllMocks();
-                jest.advanceTimersByTime(1200);
-                expect(avatar.calcDistance).not.toHaveBeenCalled();
-            });
-        });
     });
 
     describe("given I am a TV", () => {
@@ -451,10 +351,6 @@ describe("when entering a room", () => {
 
             jest.advanceTimersByTime(1000);
             await flushPromises();
-        });
-
-        test("shows it on a huge TV!", () => {
-            expect(avatar.setType).toHaveBeenCalledWith("tv");
         });
 
         test("never send audio or video", async () => {

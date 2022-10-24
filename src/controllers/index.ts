@@ -2,6 +2,7 @@ import { RoomController } from "../domain/room-controller";
 import { RemoteRoomSwarmSignalHub } from "../adapters/webrtc-swarm/remote-room";
 import { VirtualWorldBabylonJs } from "../adapters/babylon-js/virtual-world-babylon-js";
 import { LocalBrowser } from "../adapters/browser/local-browser";
+import { VirtualWordMock } from "../adapters/virtual-world-mock";
 
 console.log("config", {
     HUB_URL: process.env.HUB_URL,
@@ -18,3 +19,14 @@ function init(): void {
 
 const startButton = document.getElementById("startButton");
 startButton?.addEventListener("click", init);
+
+// -------------- TEST REMOTE ROOM
+function testRoom(): void {
+    const local = new LocalBrowser();
+    const remoteRoom = new RemoteRoomSwarmSignalHub();
+    const virtualWorld = new VirtualWordMock();
+    const roomController = new RoomController(local, remoteRoom, virtualWorld);
+    roomController.join().catch(console.error);
+}
+
+document.getElementById("testRemoteRoom")?.addEventListener("click", testRoom);

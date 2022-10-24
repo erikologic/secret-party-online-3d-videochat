@@ -43,7 +43,9 @@ export class RoomController {
             this.remoteRoom.broadcastLocalPosition(pos)
         );
 
-        this.remoteRoom.onNewPeer.subscribe((peer) => this.createAvatar(peer));
+        this.remoteRoom.onNewPeer.subscribe((peer) =>
+            this.createAvatar(peer).catch(console.error)
+        );
         await this.remoteRoom
             .getPeers()
             .then((peers) =>
@@ -60,7 +62,7 @@ export class RoomController {
 
         let peerConfig: PeerConfig | undefined; // TODO  not nice - prob this fn needs a class
         peer.onConfig.subscribe(async (config) => {
-            console.log(`PEER ID ${peer.id} --> Got config: ${config.name}`);
+            console.log(`PEER ID ${peer.id} --> Got config: `, config);
             avatar.setColor(config.color);
             avatar.setName(config.name);
             avatar.setType(config.type);
@@ -74,7 +76,7 @@ export class RoomController {
         const showAudioVideo = async () => {
             if (!(peerConfig?.type === "peer")) {
                 console.log(
-                    `PEER ID ${peer.id} --> do not showAudioVideo`,
+                    `PEER ID ${peer.id} --> do not showAudioVideo --> not a peer`,
                     peerConfig
                 );
                 return;
