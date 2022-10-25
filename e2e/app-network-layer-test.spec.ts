@@ -14,7 +14,7 @@ test.use({
 
 const openNewPage = async (browser: Browser) => {
     const page = await browser.newContext().then((c) => c.newPage());
-    await page.goto("https://localhost:9000/remote-room-tester.html");
+    await page.goto("https://localhost:9000?useVirtualWordHtml=true");
     return page;
 };
 
@@ -56,7 +56,7 @@ const setUserSettingsAndLaunch = async (
 ) => {
     await page.getByText("What's your name?").fill(peerSettings.name);
     await page.getByText("Choose avatar color:").fill(peerSettings.color);
-    await page.getByText("Connect").click();
+    await page.getByText("Enter the party!").click();
 };
 
 const checkPeerPosition = async (

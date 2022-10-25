@@ -174,8 +174,9 @@ export class LocalBrowser implements Local {
             throw new Error("Cannot start");
         }
 
-        const isTest = document.URL.includes("test");
-
+        const isTest =
+            new URL(document.URL).searchParams.get("useVirtualWordHtml") ===
+            "true";
         if (
             !isTest &&
             !nameEl.value.match(/tv/i) &&
