@@ -1,7 +1,7 @@
 {
   "name": "secret-party-online-3d-videochat",
   "version": "0.0.1",
-  "description": "People can socialise in video chat like in real life situations where conversations spark in different places",
+  "description": "Virtual socials like they should be",
   "main": "index.ts",
   "dependencies": {
     "@babylonjs/core": "^4.2.0",
