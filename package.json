@@ -72,12 +72,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mrenrich84/secret-party-online-3d-videochat.git"
+    "url": "git+https://github.com/erikologic/secret-party-online-3d-videochat.git"
   },
-  "author": "mrenrich84@gmail.com",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/mrenrich84/secret-party-online-3d-videochat/issues"
+    "url": "https://github.com/erikologic/secret-party-online-3d-videochat/issues"
   },
   "husky": {
     "hooks": {
@@ -90,5 +89,5 @@
       "eslint --fix"
     ]
   },
-  "homepage": "https://github.com/mrenrich84/secret-party-online-3d-videochat#readme"
+  "homepage": "https://github.com/erikologic/secret-party-online-3d-videochat#readme"
 }
